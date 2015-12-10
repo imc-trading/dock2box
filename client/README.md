@@ -305,7 +305,6 @@ type Image struct {
     BootImageRef string         `json:"bootImageRef,omitempty"`
     BootImage    string         `json:"bootImage,omitempty"`
     Versions     []ImageVersion `json:"versions,omitempty"`
-    // contains filtered or unexported fields
 }
 ```
 Image structure.

@@ -66,5 +66,5 @@ func (r *BootImageResource) All() (*[]BootImage, error) {
 		return nil, err
 	}
 
-	return boot_images, nil
+	return bootImages, nil
 }
