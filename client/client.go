@@ -9,6 +9,7 @@ import (
 	"net/http"
 )
 
+// Client structure.
 type Client struct {
 	URL          string
 	Host         HostResource
@@ -21,7 +22,7 @@ type Client struct {
 	Debug        bool
 }
 
-// New client
+// New client.
 func New(url string) *Client {
 	c := Client{
 		URL: url,
@@ -36,11 +37,12 @@ func New(url string) *Client {
 	return &c
 }
 
+// SetDebug enable debug.
 func (c Client) SetDebug() {
 	c.Debug = true
 }
 
-// Create resource
+// Create resource.
 func (c Client) Create(endp string, s interface{}) ([]byte, error) {
 	url := c.URL + endp
 	log.Printf("header: application/json, method: POST, url: %s", url)
@@ -65,7 +67,7 @@ func (c Client) Create(endp string, s interface{}) ([]byte, error) {
 	return body, nil
 }
 
-// Get resource
+// Get resource.
 func (c Client) Get(endp string, name string) ([]byte, error) {
 	url := c.URL + endp + "/" + name
 	log.Printf("url: %s", url)
@@ -88,7 +90,7 @@ func (c Client) Get(endp string, name string) ([]byte, error) {
 	return cont, nil
 }
 
-// Exist resource
+// Exist resource.
 func (c Client) Exist(endp string, name string) (bool, error) {
 	url := c.URL + endp + "/" + name
 	log.Printf("url: %s", url)
@@ -107,7 +109,7 @@ func (c Client) Exist(endp string, name string) (bool, error) {
 	return false, fmt.Errorf("Get %s: failed with status code %d", url, resp.StatusCode)
 }
 
-// All resources
+// All resources.
 func (c Client) All(endp string) ([]byte, error) {
 	url := c.URL + endp
 	log.Printf("url: %s", url)

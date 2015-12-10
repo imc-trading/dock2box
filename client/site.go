@@ -2,10 +2,12 @@ package client
 
 import "encoding/json"
 
+// SiteResource structure.
 type SiteResource struct {
 	Client *Client
 }
 
+// Site structure.
 type Site struct {
 	ID                 string   `json:"id"`
 	Site               string   `json:"site"`
@@ -16,7 +18,7 @@ type Site struct {
 	NamingScheme       string   `json:"namingScheme"`
 }
 
-// Create site
+// Create site.
 func (r *SiteResource) Create(s *Site) (*Site, error) {
 	c := *r.Client
 	j, err := c.Create("/sites", s)
@@ -32,7 +34,7 @@ func (r *SiteResource) Create(s *Site) (*Site, error) {
 	return site, nil
 }
 
-// Get site
+// Get site.
 func (r *SiteResource) Get(name string) (*Site, error) {
 	c := *r.Client
 	j, err := c.Get("/sites", name)
@@ -48,7 +50,7 @@ func (r *SiteResource) Get(name string) (*Site, error) {
 	return site, nil
 }
 
-// All sites
+// All sites.
 func (r *SiteResource) All() (*[]Site, error) {
 	c := *r.Client
 	j, err := c.All("/sites")

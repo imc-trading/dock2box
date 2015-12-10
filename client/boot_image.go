@@ -2,10 +2,12 @@ package client
 
 import "encoding/json"
 
+// BootImageResource structure.
 type BootImageResource struct {
 	Client *Client
 }
 
+// BootImage structure.
 type BootImage struct {
 	ID       string             `json:"id"`
 	Image    string             `json:"image"`
@@ -13,6 +15,7 @@ type BootImage struct {
 	Versions []BootImageVersion `json:"versions"`
 }
 
+// BootImageVersion structure.
 type BootImageVersion struct {
 	Version string `json:"version"`
 	Created string `json:"created"`
@@ -26,12 +29,12 @@ func (r *BootImageResource) Create(s *BootImage) (*BootImage, error) {
 		return nil, err
 	}
 
-	boot_image := &BootImage{}
-	if err := json.Unmarshal(j, boot_image); err != nil {
+	bootImage := &BootImage{}
+	if err := json.Unmarshal(j, bootImage); err != nil {
 		return nil, err
 	}
 
-	return boot_image, nil
+	return bootImage, nil
 }
 
 // Get boot_image
@@ -42,12 +45,12 @@ func (r *BootImageResource) Get(name string) (*BootImage, error) {
 		return nil, err
 	}
 
-	boot_image := &BootImage{}
-	if err := json.Unmarshal(j, boot_image); err != nil {
+	bootImage := &BootImage{}
+	if err := json.Unmarshal(j, bootImage); err != nil {
 		return nil, err
 	}
 
-	return boot_image, nil
+	return bootImage, nil
 }
 
 // All boot_images
@@ -58,8 +61,8 @@ func (r *BootImageResource) All() (*[]BootImage, error) {
 		return nil, err
 	}
 
-	boot_images := &[]BootImage{}
-	if err := json.Unmarshal(j, boot_images); err != nil {
+	bootImages := &[]BootImage{}
+	if err := json.Unmarshal(j, bootImages); err != nil {
 		return nil, err
 	}
 

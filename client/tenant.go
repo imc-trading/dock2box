@@ -2,16 +2,18 @@ package client
 
 import "encoding/json"
 
+// TenantResource structure.
 type TenantResource struct {
 	Client *Client
 }
 
+// Tenant structure.
 type Tenant struct {
 	ID     string `json:"id"`
 	Tenant string `json:"tenant"`
 }
 
-// Create tenant
+// Create tenant.
 func (r *TenantResource) Create(s *Tenant) (*Tenant, error) {
 	c := *r.Client
 	j, err := c.Create("/tenants", s)
@@ -27,7 +29,7 @@ func (r *TenantResource) Create(s *Tenant) (*Tenant, error) {
 	return tenant, nil
 }
 
-// Get tenant
+// Get tenant.
 func (r *TenantResource) Get(name string) (*Tenant, error) {
 	c := *r.Client
 	j, err := c.Get("/tenants", name)
@@ -43,7 +45,7 @@ func (r *TenantResource) Get(name string) (*Tenant, error) {
 	return tenant, nil
 }
 
-// All tenants
+// All tenants.
 func (r *TenantResource) All() (*[]Tenant, error) {
 	c := *r.Client
 	j, err := c.All("/tenants")

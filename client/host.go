@@ -2,10 +2,12 @@ package client
 
 import "encoding/json"
 
+// HostResource structure.
 type HostResource struct {
 	Client *Client
 }
 
+// Host structure.
 type Host struct {
 	Host       string          `json:"host"`
 	Build      bool            `json:"build"`
@@ -20,6 +22,7 @@ type Host struct {
 	Interfaces []HostInterface `json:"interfaces,omitempty"`
 }
 
+// HostInterface structure.
 type HostInterface struct {
 	Interface string `json:"interface"`
 	DHCP      bool   `json:"dhcp"`
@@ -28,17 +31,19 @@ type HostInterface struct {
 	SubnetID  string `json:"subnetId,omitempty"`
 }
 
+// JSON output for a host.
 func (h *Host) JSON() []byte {
 	b, _ := json.MarshalIndent(h, "", "  ")
 	return b
 }
 
+// JSON output for a host interface.
 func (i *HostInterface) JSON() []byte {
 	b, _ := json.MarshalIndent(i, "", "  ")
 	return b
 }
 
-// Create host
+// Create host.
 func (r *HostResource) Create(h *Host) (*Host, error) {
 	c := *r.Client
 	j, err := c.Create("/hosts", h)
@@ -54,7 +59,7 @@ func (r *HostResource) Create(h *Host) (*Host, error) {
 	return host, nil
 }
 
-// Exist host
+// Exist host.
 func (r *HostResource) Exist(name string) (bool, error) {
 	c := *r.Client
 	s, err := c.Exist("/hosts", name)
@@ -65,7 +70,7 @@ func (r *HostResource) Exist(name string) (bool, error) {
 	return s, nil
 }
 
-// Get host
+// Get host.
 func (r *HostResource) Get(name string) (*Host, error) {
 	c := *r.Client
 	j, err := c.Get("/hosts", name)
@@ -81,7 +86,7 @@ func (r *HostResource) Get(name string) (*Host, error) {
 	return host, nil
 }
 
-// GetByID host
+// GetByID host.
 func (r *HostResource) GetByID(id string) (*Host, error) {
 	c := *r.Client
 	j, err := c.Get("/hosts/id", id)
@@ -97,7 +102,7 @@ func (r *HostResource) GetByID(id string) (*Host, error) {
 	return host, nil
 }
 
-// All hosts
+// All hosts.
 func (r *HostResource) All() (*[]Host, error) {
 	c := *r.Client
 	j, err := c.All("/hosts")

@@ -2,10 +2,12 @@ package client
 
 import "encoding/json"
 
+// ImageResource structure.
 type ImageResource struct {
 	Client *Client
 }
 
+// Image structure.
 type Image struct {
 	ID           string         `json:"id,omitempty"`
 	Image        string         `json:"image,omitempty"`
@@ -17,7 +19,7 @@ type Image struct {
 	client       *Client
 }
 
-// Create image
+// Create image.
 func (r *ImageResource) Create(i *Image) (*Image, error) {
 	c := *r.Client
 	j, err := c.Create("/images", i)
@@ -33,7 +35,7 @@ func (r *ImageResource) Create(i *Image) (*Image, error) {
 	return image, nil
 }
 
-// Get image
+// Get image.
 func (r *ImageResource) Get(name string) (*Image, error) {
 	c := *r.Client
 	j, err := c.Get("/images", name)
@@ -49,7 +51,7 @@ func (r *ImageResource) Get(name string) (*Image, error) {
 	return image, nil
 }
 
-// All images
+// All images.
 func (r *ImageResource) All() (*[]Image, error) {
 	c := *r.Client
 	j, err := c.All("/images")

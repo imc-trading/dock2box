@@ -2,10 +2,12 @@ package client
 
 import "encoding/json"
 
+// SubnetResource structure.
 type SubnetResource struct {
 	Client *Client
 }
 
+// Subnet structure.
 type Subnet struct {
 	ID       string `json:"id"`
 	Subnet   string `json:"subnet"`
@@ -14,7 +16,7 @@ type Subnet struct {
 	SubnetID string `json:"subnetId"`
 }
 
-// Create subnet
+// Create subnet.
 func (r *SubnetResource) Create(s *Subnet) (*Subnet, error) {
 	c := *r.Client
 	j, err := c.Create("/subnets", s)
@@ -30,7 +32,7 @@ func (r *SubnetResource) Create(s *Subnet) (*Subnet, error) {
 	return subnet, nil
 }
 
-// Get subnet
+// Get subnet.
 func (r *SubnetResource) Get(name string) (*Subnet, error) {
 	c := *r.Client
 	j, err := c.Get("/subnets", name)
@@ -46,7 +48,7 @@ func (r *SubnetResource) Get(name string) (*Subnet, error) {
 	return subnet, nil
 }
 
-// All subnets
+// All subnets.
 func (r *SubnetResource) All() (*[]Subnet, error) {
 	c := *r.Client
 	j, err := c.All("/subnets")
