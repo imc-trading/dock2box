@@ -4,7 +4,8 @@ import (
 	"os"
 
 	"github.com/codegangsta/cli"
-	"github.com/mickep76/dock2box/cli/command"
+
+	"github.com/imc-trading/dock2box/d2bcli/command"
 )
 
 func main() {

@@ -6,8 +6,8 @@ import (
 
 	"github.com/codegangsta/cli"
 
-	"github.com/mickep76/dock2box/cli/prompt"
-	"github.com/mickep76/dock2box/client"
+	"github.com/imc-trading/dock2box/client"
+	"github.com/imc-trading/dock2box/d2bcli/prompt"
 )
 
 func NewCreateHostCommand() cli.Command {
