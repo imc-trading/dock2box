@@ -11,6 +11,14 @@ go get github.com/imc-trading/dock2box/d2bcli
 
 # Test server
 
+First you need to install and run MongoDB.
+
+**Install MongoDB on Mac OS X:**
+
+```bash
+brew install mongodb
+```
+
 **Start server:**
 
 ```bash
