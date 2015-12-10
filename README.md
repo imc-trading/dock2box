@@ -26,7 +26,6 @@ launchctl load ~/Library/LaunchAgents/homebrew.mxcl.mongodb.plist
 ```bash
 cd $GOPATH/github.com/imc-trading/dock2box/d2bsrv
 ./d2bsrv
-./test.sh
 ```
 
 **Test server:**
