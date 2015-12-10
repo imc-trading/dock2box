@@ -32,9 +32,9 @@ create() {
 get() {
     local endp="$1" id="$2"
 
-    echo "GET: http://localhost:8080/${APIVERS}/${endp}-by-id/${id}"
+    echo "GET: http://localhost:8080/${APIVERS}/${endp}/id/${id}"
     echo "DATA:"
-    curl -s -H "Content-Type: application/json" "http://localhost:8080/${APIVERS}/${endp}-by-id/${id}"
+    curl -s -H "Content-Type: application/json" "http://localhost:8080/${APIVERS}/${endp}/id/${id}"
 }
 
 cpt() {

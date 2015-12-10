@@ -15,6 +15,7 @@ func NewCreateHostCommand() cli.Command {
 		Name:  "host",
 		Usage: "Create host",
 		Flags: []cli.Flag{
+			cli.BoolFlag{Name: "prompt, p", Usage: "Prompt for resource input"},
 			cli.BoolFlag{Name: "disable-build", Usage: "Disable PXE build, this prevents a host from being provisioned (enabled by default)"},
 			cli.BoolFlag{Name: "debug", Usage: "Enable debug during host provisioning (disabled by default)"},
 			cli.BoolFlag{Name: "gpt", Usage: "Enable use of GUID Partition Table (disabled by default)"},
@@ -97,7 +98,7 @@ func createHostCommandFunc(c *cli.Context) {
 
 	clnt := client.New(c.GlobalString("server"))
 
-	if c.GlobalBool("prompt") {
+	if c.Bool("prompt") {
 		h := client.Host{
 			Host:    hostname,
 			Build:   prompt.Bool("Build", true),
