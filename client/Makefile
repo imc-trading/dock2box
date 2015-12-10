@@ -12,4 +12,4 @@ test: syntax
 
 readme:
 	cp README_HEAD.md README.md
-	godoc2md github.com/mickep76/etcdmap | grep -v Generated >>README.md
+	godoc2md github.com/imc-trading/dock2box/client | grep -v Generated >>README.md

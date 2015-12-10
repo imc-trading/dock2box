@@ -7,76 +7,603 @@ Go client for Dock2Box.
 # Documentation
 
 
-# etcdmap
-    import "github.com/mickep76/etcdmap"
-
-Package etcdmap provides methods for interacting with etcd using struct, map or JSON.
+# client
+    import "github.com/imc-trading/dock2box/client"
 
 
 
 
 
 
-## func Array
+
+## type BootImage
 ``` go
-func Array(root *client.Node) []interface{}
+type BootImage struct {
+    ID       string             `json:"id"`
+    Image    string             `json:"image"`
+    KOpts    string             `json:"kOpts"`
+    Versions []BootImageVersion `json:"versions"`
+}
 ```
-Array returns a []interface{} including the directory name inside each entry from a etcd directory.
+BootImage structure.
 
 
-## func ArrayJSON
+
+
+
+
+
+
+
+
+
+## type BootImageResource
 ``` go
-func ArrayJSON(root *client.Node) ([]byte, error)
+type BootImageResource struct {
+    Client *Client
+}
 ```
-JSON returns an etcd directory as JSON []byte.
+BootImageResource structure.
 
 
-## func ArrayJSONIndent
+
+
+
+
+
+
+
+
+
+### func (\*BootImageResource) All
 ``` go
-func ArrayJSONIndent(root *client.Node, indent string) ([]byte, error)
+func (r *BootImageResource) All() (*[]BootImage, error)
 ```
-JSONIndent returns an etcd directory as indented JSON []byte.
+All boot_images
 
 
-## func Create
+
+### func (\*BootImageResource) Create
 ``` go
-func Create(kapi client.KeysAPI, path string, val reflect.Value) error
+func (r *BootImageResource) Create(s *BootImage) (*BootImage, error)
 ```
-Create etcd directory structure from a map, slice or struct.
+Create boot_image
 
 
-## func CreateJSON
+
+### func (\*BootImageResource) Get
 ``` go
-func CreateJSON(kapi client.KeysAPI, dir string, j []byte) error
+func (r *BootImageResource) Get(name string) (*BootImage, error)
 ```
-CreateJSON etcd directory structure from JSON.
+Get boot_image
 
 
-## func JSON
+
+## type BootImageVersion
 ``` go
-func JSON(root *client.Node) ([]byte, error)
+type BootImageVersion struct {
+    Version string `json:"version"`
+    Created string `json:"created"`
+}
 ```
-JSON returns an etcd directory as JSON []byte.
+BootImageVersion structure.
 
 
-## func JSONIndent
+
+
+
+
+
+
+
+
+
+## type Client
 ``` go
-func JSONIndent(root *client.Node, indent string) ([]byte, error)
+type Client struct {
+    URL          string
+    Host         HostResource
+    Image        ImageResource
+    ImageVersion ImageVersionResource
+    Site         SiteResource
+    Tenant       TenantResource
+    Subnet       SubnetResource
+    BootImage    BootImageResource
+    Debug        bool
+}
 ```
-JSONIndent returns an etcd directory as indented JSON []byte.
+Client structure.
 
 
-## func Map
+
+
+
+
+
+
+
+### func New
 ``` go
-func Map(root *client.Node) map[string]interface{}
+func New(url string) *Client
 ```
-Map returns a map[string]interface{} from a etcd directory.
+New client.
 
 
-## func Struct
+
+
+### func (Client) All
 ``` go
-func Struct(root *client.Node, val reflect.Value) error
+func (c Client) All(endp string) ([]byte, error)
 ```
+All resources.
+
+
+
+### func (Client) Create
+``` go
+func (c Client) Create(endp string, s interface{}) ([]byte, error)
+```
+Create resource.
+
+
+
+### func (Client) Exist
+``` go
+func (c Client) Exist(endp string, name string) (bool, error)
+```
+Exist resource.
+
+
+
+### func (Client) Get
+``` go
+func (c Client) Get(endp string, name string) ([]byte, error)
+```
+Get resource.
+
+
+
+### func (Client) SetDebug
+``` go
+func (c Client) SetDebug()
+```
+SetDebug enable debug.
+
+
+
+## type Host
+``` go
+type Host struct {
+    Host       string          `json:"host"`
+    Build      bool            `json:"build"`
+    Debug      bool            `json:"debug"`
+    GPT        bool            `json:"gpt"`
+    ImageID    string          `json:"imageId"`
+    Version    string          `json:"version"`
+    KOpts      string          `json:"kOpts"`
+    TenantID   string          `json:"tenantId"`
+    Labels     []string        `json:"labels"`
+    SiteID     string          `json:"siteId"`
+    Interfaces []HostInterface `json:"interfaces,omitempty"`
+}
+```
+Host structure.
+
+
+
+
+
+
+
+
+
+
+
+### func (\*Host) JSON
+``` go
+func (h *Host) JSON() []byte
+```
+JSON output for a host.
+
+
+
+## type HostInterface
+``` go
+type HostInterface struct {
+    Interface string `json:"interface"`
+    DHCP      bool   `json:"dhcp"`
+    IPv4      string `json:"ipv4,omitempty"`
+    HwAddr    string `json:"hwAddr"`
+    SubnetID  string `json:"subnetId,omitempty"`
+}
+```
+HostInterface structure.
+
+
+
+
+
+
+
+
+
+
+
+### func (\*HostInterface) JSON
+``` go
+func (i *HostInterface) JSON() []byte
+```
+JSON output for a host interface.
+
+
+
+## type HostResource
+``` go
+type HostResource struct {
+    Client *Client
+}
+```
+HostResource structure.
+
+
+
+
+
+
+
+
+
+
+
+### func (\*HostResource) All
+``` go
+func (r *HostResource) All() (*[]Host, error)
+```
+All hosts.
+
+
+
+### func (\*HostResource) Create
+``` go
+func (r *HostResource) Create(h *Host) (*Host, error)
+```
+Create host.
+
+
+
+### func (\*HostResource) Exist
+``` go
+func (r *HostResource) Exist(name string) (bool, error)
+```
+Exist host.
+
+
+
+### func (\*HostResource) Get
+``` go
+func (r *HostResource) Get(name string) (*Host, error)
+```
+Get host.
+
+
+
+### func (\*HostResource) GetByID
+``` go
+func (r *HostResource) GetByID(id string) (*Host, error)
+```
+GetByID host.
+
+
+
+## type Image
+``` go
+type Image struct {
+    ID           string         `json:"id,omitempty"`
+    Image        string         `json:"image,omitempty"`
+    Type         string         `json:"type,omitempty"`
+    BootImageID  string         `json:"bootImageId,omitempty"`
+    BootImageRef string         `json:"bootImageRef,omitempty"`
+    BootImage    string         `json:"bootImage,omitempty"`
+    Versions     []ImageVersion `json:"versions,omitempty"`
+    // contains filtered or unexported fields
+}
+```
+Image structure.
+
+
+
+
+
+
+
+
+
+
+
+## type ImageResource
+``` go
+type ImageResource struct {
+    Client *Client
+}
+```
+ImageResource structure.
+
+
+
+
+
+
+
+
+
+
+
+### func (\*ImageResource) All
+``` go
+func (r *ImageResource) All() (*[]Image, error)
+```
+All images.
+
+
+
+### func (\*ImageResource) Create
+``` go
+func (r *ImageResource) Create(i *Image) (*Image, error)
+```
+Create image.
+
+
+
+### func (\*ImageResource) Get
+``` go
+func (r *ImageResource) Get(name string) (*Image, error)
+```
+Get image.
+
+
+
+## type ImageVersion
+``` go
+type ImageVersion struct {
+    Version string `json:"version,omitempty"`
+    Created string `json:"created,omitempty"`
+}
+```
+ImageVersion structure.
+
+
+
+
+
+
+
+
+
+
+
+## type ImageVersionResource
+``` go
+type ImageVersionResource struct {
+    Client *Client
+}
+```
+ImageVersionResource structure.
+
+
+
+
+
+
+
+
+
+
+
+### func (\*ImageVersionResource) All
+``` go
+func (r *ImageVersionResource) All(name string) (*[]ImageVersion, error)
+```
+All versions.
+
+
+
+### func (\*ImageVersionResource) AllByID
+``` go
+func (r *ImageVersionResource) AllByID(id string) (*[]ImageVersion, error)
+```
+AllByID versions.
+
+
+
+## type Site
+``` go
+type Site struct {
+    ID                 string   `json:"id"`
+    Site               string   `json:"site"`
+    Domain             string   `json:"domain"`
+    DNS                []string `json:"dns"`
+    DockerRegistry     string   `json:"dockerRegistry"`
+    ArtifactRepository string   `json:"artifactRepository"`
+    NamingScheme       string   `json:"namingScheme"`
+}
+```
+Site structure.
+
+
+
+
+
+
+
+
+
+
+
+## type SiteResource
+``` go
+type SiteResource struct {
+    Client *Client
+}
+```
+SiteResource structure.
+
+
+
+
+
+
+
+
+
+
+
+### func (\*SiteResource) All
+``` go
+func (r *SiteResource) All() (*[]Site, error)
+```
+All sites.
+
+
+
+### func (\*SiteResource) Create
+``` go
+func (r *SiteResource) Create(s *Site) (*Site, error)
+```
+Create site.
+
+
+
+### func (\*SiteResource) Get
+``` go
+func (r *SiteResource) Get(name string) (*Site, error)
+```
+Get site.
+
+
+
+## type Subnet
+``` go
+type Subnet struct {
+    ID       string `json:"id"`
+    Subnet   string `json:"subnet"`
+    Mask     string `json:"mask"`
+    Gw       string `json:"gw"`
+    SubnetID string `json:"subnetId"`
+}
+```
+Subnet structure.
+
+
+
+
+
+
+
+
+
+
+
+## type SubnetResource
+``` go
+type SubnetResource struct {
+    Client *Client
+}
+```
+SubnetResource structure.
+
+
+
+
+
+
+
+
+
+
+
+### func (\*SubnetResource) All
+``` go
+func (r *SubnetResource) All() (*[]Subnet, error)
+```
+All subnets.
+
+
+
+### func (\*SubnetResource) Create
+``` go
+func (r *SubnetResource) Create(s *Subnet) (*Subnet, error)
+```
+Create subnet.
+
+
+
+### func (\*SubnetResource) Get
+``` go
+func (r *SubnetResource) Get(name string) (*Subnet, error)
+```
+Get subnet.
+
+
+
+## type Tenant
+``` go
+type Tenant struct {
+    ID     string `json:"id"`
+    Tenant string `json:"tenant"`
+}
+```
+Tenant structure.
+
+
+
+
+
+
+
+
+
+
+
+## type TenantResource
+``` go
+type TenantResource struct {
+    Client *Client
+}
+```
+TenantResource structure.
+
+
+
+
+
+
+
+
+
+
+
+### func (\*TenantResource) All
+``` go
+func (r *TenantResource) All() (*[]Tenant, error)
+```
+All tenants.
+
+
+
+### func (\*TenantResource) Create
+``` go
+func (r *TenantResource) Create(s *Tenant) (*Tenant, error)
+```
+Create tenant.
+
+
+
+### func (\*TenantResource) Get
+``` go
+func (r *TenantResource) Get(name string) (*Tenant, error)
+```
+Get tenant.
+
 
 
 
