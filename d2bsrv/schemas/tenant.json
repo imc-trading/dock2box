@@ -1,0 +1,16 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Tenant Schema",
+    "type": "object",
+    "required": [ "id", "tenant" ],
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "$ref": "types.json#definitions/id"
+        },
+        "tenant": {
+            "type": "string",
+            "pattern": "^[a-zA-Z][a-zA-Z0-9-]+$"
+        }
+    }
+}

@@ -1,0 +1,53 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Host Schema",
+    "type": "object",
+    "required": [ "id", "host", "build", "debug", "gpt", "imageId", "version", "kOpts", "tenantId", "labels", "siteId" ],
+    "properties": {
+        "id": {
+            "$ref": "types.json#definitions/id"
+        },
+        "host": {
+            "$ref": "types.json#definitions/hostname"
+        },
+        "build": {
+            "type": "boolean"
+        },
+        "debug": {
+            "type": "boolean"
+        },
+        "gpt": {
+            "type": "boolean"
+        },
+        "imageId": {
+            "$ref": "types.json#definitions/id"
+        },
+        "version": {
+            "$ref": "types.json#definitions/version"
+        },
+        "kOpts": {
+            "type": "string"
+        },
+        "tenantId": {
+            "$ref": "types.json#definitions/id"
+        },
+        "labels": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "pattern": "^[a-zA-Z][a-zA-Z0-9-]+$"
+            },
+            "uniqueItems": true
+        },
+        "siteId": {
+            "$ref": "types.json#definitions/id"
+        },
+        "interfaces": {
+            "type": "array",
+            "items": {
+                "$ref": "interface.json#"
+            },
+            "uniqueItems": true
+        }
+    }
+}

@@ -1,0 +1,26 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Subnet Schema",
+    "type": "object",
+    "required": [ "id", "subnet", "mask", "gw", "siteId" ],
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "$ref": "types.json#definitions/id"
+        },
+        "subnet": {
+            "type": "string"
+        },
+        "mask": {
+            "type": "string",
+            "format": "ipv4"
+        },
+        "gw": {
+            "type": "string",
+            "format": "ipv4"
+        },
+        "siteId": {
+            "$ref": "types.json#definitions/id"
+        }
+    }
+}

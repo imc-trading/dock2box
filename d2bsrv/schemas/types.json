@@ -1,0 +1,16 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Types Schema",
+    "definitions": {
+        "id": {
+            "$ref": "types.json#definitions/id"
+        },
+        "hostname": {
+            "type": "string",
+            "format": "hostname"
+        },
+        "version": {
+            "$ref": "types.json#definitions/version"
+        }
+    }
+}

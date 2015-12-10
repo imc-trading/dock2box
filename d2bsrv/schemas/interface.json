@@ -1,0 +1,55 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Interface Schema",
+    "oneOf": [
+        { "$ref": "#/definitions/fixed" },
+        { "$ref": "#/definitions/dhcp" }
+    ],
+    "definitions": {
+        "fixed": {
+            "type": "object",
+            "required": [ "interface", "dhcp", "hwAddr", "ipv4", "subnetId" ],
+            "additionalProperties": false,
+            "properties": {
+                "interface": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9]+$"
+                },
+                "dhcp": {
+                    "type": "boolean",
+                    "enum": [ false ]
+                },
+                "hwAddr": {
+                    "type": "string",
+                    "pattern": "^([0-9a-f]{2}:){5}[0-9a-f]{2}$"
+                },
+                "ipv4": {
+                    "type": "string",
+                    "format": "ipv4"
+                },
+                "subnetId": {
+                    "$ref": "types.json#definitions/id"
+                }
+            }
+        },
+        "dhcp": {
+            "type": "object",
+            "required": [ "interface", "dhcp", "hwAddr" ],
+            "additionalProperties": false,
+            "properties": {
+                "interface": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9]+$"
+                },
+                "dhcp": {
+                    "type": "boolean",
+                    "enum": [ true ]
+                },
+                "hwAddr": {
+                    "type": "string",
+                    "pattern": "^([0-9a-f]{2}:){5}[0-9a-f]{2}$"
+                }
+            }
+        }
+    }
+}
