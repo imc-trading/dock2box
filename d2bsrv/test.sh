@@ -53,12 +53,6 @@ which jq &>/dev/null || fatal "Missing pre. requisite: jq"
 which curl &>/dev/null || fatal "Missing pre. requisite: curl"
 
 #
-# Drop database
-#
-cpt "Drop Database"
-printf "use d2b\ndb.dropDatabase()\n" | mongo
-
-#
 # Tenant
 #
 cat << EOF > $TMPFILE
