@@ -17,6 +17,8 @@ First you need to install and run MongoDB.
 
 ```bash
 brew install mongodb
+ln -sfv /usr/local/opt/mongodb/*.plist ~/Library/LaunchAgents
+launchctl load ~/Library/LaunchAgents/homebrew.mxcl.mongodb.plist
 ```
 
 **Start server:**
