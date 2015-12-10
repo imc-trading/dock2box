@@ -49,8 +49,8 @@ fatal() {
 }
 
 # Check for pre. requisites
-which jq || fatal "Missing pre. requisite: jq"
-which curl || fatal "Missing pre. requisite: curl"
+which jq &>/dev/null || fatal "Missing pre. requisite: jq"
+which curl &>/dev/null || fatal "Missing pre. requisite: curl"
 
 #
 # Drop database
