@@ -10,8 +10,8 @@ import (
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 
-	"github.com/mickep76/d2b-api/models"
-	"github.com/mickep76/d2b-api/version"
+	"github.com/imc-trading/dock2box/d2bsrv/models"
+	"github.com/imc-trading/dock2box/d2bsrv/version"
 )
 
 type ImageController struct {

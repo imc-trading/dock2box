@@ -9,8 +9,8 @@ import (
 	"github.com/gorilla/mux"
 	"gopkg.in/mgo.v2"
 
-	"github.com/mickep76/d2b-api/controllers"
-	"github.com/mickep76/d2b-api/version"
+	"github.com/imc-trading/dock2box/d2bsrv/controllers"
+	"github.com/imc-trading/dock2box/d2bsrv/version"
 )
 
 func main() {
