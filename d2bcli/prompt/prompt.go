@@ -38,7 +38,11 @@ func Choice(msg string, list []string) int {
 
 func Bool(msg string, def bool) bool {
 	for {
-		fmt.Printf("%s: [true/false]? (%v) ", msg, def)
+		if def == true {
+			fmt.Printf("%s: [yes/no]? (yes) ", msg)
+		} else {
+			fmt.Printf("%s: [yes/no]? (no) ", msg)
+		}
 
 		var inp string
 		fmt.Scanln(&inp)
@@ -46,9 +50,9 @@ func Bool(msg string, def bool) bool {
 		switch {
 		case inp == "":
 			return def
-		case strings.ToLower(inp) == "true":
+		case strings.ToLower(inp) == "yes":
 			return true
-		case strings.ToLower(inp) == "false":
+		case strings.ToLower(inp) == "no":
 			return false
 		}
 	}

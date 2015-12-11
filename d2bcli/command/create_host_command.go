@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"os"
 	"strings"
 
 	"github.com/codegangsta/cli"
@@ -177,6 +178,16 @@ func createHostCommandFunc(c *cli.Context) {
 			h.Interfaces[0].IPv4 = prompt.String("IP Address", prompt.Prompt{NoDefault: true, FuncPtr: validateIPv4})
 			h.Interfaces[0].SubnetID = *chooseSubnet(clnt, h.SiteID)
 			// Check subnet match IPv4
+		}
+
+		// Add another network interface?
+		if !prompt.Bool("Do you want to add another network interface", false) {
+		}
+
+		// Is this correct?
+		fmt.Println(string(h.JSON()))
+		if !prompt.Bool("Is this correct", true) {
+			os.Exit(1)
 		}
 
 		// Create host
