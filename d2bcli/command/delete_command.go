@@ -11,6 +11,10 @@ func NewDeleteCommand() cli.Command {
 		Usage: "delete resource",
 		Subcommands: []cli.Command{
 			NewDeleteHostCommand(),
+			NewDeleteImageCommand(),
+			NewDeleteSubnetCommand(),
+			NewDeleteSiteCommand(),
+			NewDeleteBootImageCommand(),
 		},
 	}
 }
