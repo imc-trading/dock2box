@@ -21,7 +21,7 @@ type BootImageVersion struct {
 	Created string `json:"created"`
 }
 
-// JSON output for a host.
+// JSON output for a boot image.
 func (i *BootImage) JSON() []byte {
 	b, _ := json.MarshalIndent(i, "", "  ")
 	return b

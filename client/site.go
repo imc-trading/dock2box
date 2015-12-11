@@ -18,6 +18,12 @@ type Site struct {
 	NamingScheme       string   `json:"namingScheme"`
 }
 
+// JSON output for a site.
+func (s *Site) JSON() []byte {
+	b, _ := json.MarshalIndent(s, "", "  ")
+	return b
+}
+
 // Create site.
 func (r *SiteResource) Create(s *Site) (*Site, error) {
 	c := *r.Client

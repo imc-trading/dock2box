@@ -13,6 +13,12 @@ type Tenant struct {
 	Tenant string `json:"tenant"`
 }
 
+// JSON output for a tenant.
+func (t *Tenant) JSON() []byte {
+	b, _ := json.MarshalIndent(t, "", "  ")
+	return b
+}
+
 // Create tenant.
 func (r *TenantResource) Create(s *Tenant) (*Tenant, error) {
 	c := *r.Client

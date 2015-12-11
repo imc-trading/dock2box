@@ -16,7 +16,7 @@ type Subnet struct {
 	SiteID string `json:"siteId"`
 }
 
-// JSON output for a host.
+// JSON output for a subnet.
 func (s *Subnet) JSON() []byte {
 	b, _ := json.MarshalIndent(s, "", "  ")
 	return b

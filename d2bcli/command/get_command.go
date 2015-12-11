@@ -14,6 +14,8 @@ func NewGetCommand() cli.Command {
 			NewGetImageCommand(),
 			NewGetSubnetCommand(),
 			NewGetBootImageCommand(),
+			NewGetSiteCommand(),
+			NewGetTenantCommand(),
 		},
 	}
 }
