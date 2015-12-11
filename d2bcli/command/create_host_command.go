@@ -97,6 +97,9 @@ func createHostCommandFunc(c *cli.Context) {
 	}
 
 	clnt := client.New(c.GlobalString("server"))
+	if c.GlobalBool("debug") {
+		clnt.SetDebug()
+	}
 
 	if c.Bool("prompt") {
 		h := client.Host{

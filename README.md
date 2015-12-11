@@ -48,3 +48,10 @@ d2bcli get host test1.example.com
 ```bash
 d2bcli create host test2.example.com -p
 ```
+
+# Generate Bash auto completion
+
+```
+sudo cp autocomplete/bash /etc/bash_completion.d/d2bcli
+source /etc/bash_completion.d/d2bcli
+```

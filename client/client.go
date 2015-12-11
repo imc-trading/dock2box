@@ -42,10 +42,34 @@ func (c Client) SetDebug() {
 	c.Debug = true
 }
 
+// Info log
+func (c Client) Info(msg string) {
+	if c.Debug {
+		log.Print(msg)
+	}
+}
+
+// Infof log
+func (c Client) Infof(fmt string, args ...interface{}) {
+	if c.Debug {
+		log.Printf(fmt, args...)
+	}
+}
+
+// Fatal log and exit
+func (c Client) Fatal(msg string) {
+	log.Fatal(msg)
+}
+
+// Fatalf log and exit
+func (c Client) Fatalf(fmt string, args ...interface{}) {
+	log.Fatalf(fmt, args...)
+}
+
 // Create resource.
 func (c Client) Create(endp string, s interface{}) ([]byte, error) {
 	url := c.URL + endp
-	log.Printf("header: application/json, method: POST, url: %s", url)
+	c.Infof("header: application/json, method: POST, url: %s", url)
 
 	b, _ := json.MarshalIndent(&s, "", "  ")
 	fmt.Printf("Payload:\n%s\n", string(b))
@@ -70,7 +94,7 @@ func (c Client) Create(endp string, s interface{}) ([]byte, error) {
 // Get resource.
 func (c Client) Get(endp string, name string) ([]byte, error) {
 	url := c.URL + endp + "/" + name
-	log.Printf("url: %s", url)
+	c.Infof("url: %s", url)
 
 	resp, err := http.Get(url + "?envelope=false")
 	if err != nil {
@@ -93,7 +117,7 @@ func (c Client) Get(endp string, name string) ([]byte, error) {
 // Exist resource.
 func (c Client) Exist(endp string, name string) (bool, error) {
 	url := c.URL + endp + "/" + name
-	log.Printf("url: %s", url)
+	c.Infof("url: %s", url)
 
 	resp, err := http.Get(url + "?envelope=false")
 	if err != nil {
@@ -112,7 +136,7 @@ func (c Client) Exist(endp string, name string) (bool, error) {
 // All resources.
 func (c Client) All(endp string) ([]byte, error) {
 	url := c.URL + endp
-	log.Printf("url: %s", url)
+	c.Infof("url: %s", url)
 
 	resp, err := http.Get(url + "?envelope=false")
 	if err != nil {
