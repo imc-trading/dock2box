@@ -37,6 +37,14 @@ BootImage structure.
 
 
 
+### func (\*BootImage) JSON
+``` go
+func (i *BootImage) JSON() []byte
+```
+JSON output for a boot image.
+
+
+
 ## type BootImageResource
 ``` go
 type BootImageResource struct {
@@ -375,6 +383,14 @@ Image structure.
 
 
 
+### func (\*Image) JSON
+``` go
+func (i *Image) JSON() []byte
+```
+JSON output for a image.
+
+
+
 ## type ImageResource
 ``` go
 type ImageResource struct {
@@ -502,6 +518,14 @@ Site structure.
 
 
 
+### func (\*Site) JSON
+``` go
+func (s *Site) JSON() []byte
+```
+JSON output for a site.
+
+
+
 ## type SiteResource
 ``` go
 type SiteResource struct {
@@ -574,6 +598,14 @@ Subnet structure.
 
 
 
+### func (\*Subnet) JSON
+``` go
+func (s *Subnet) JSON() []byte
+```
+JSON output for a subnet.
+
+
+
 ## type SubnetResource
 ``` go
 type SubnetResource struct {
@@ -640,6 +672,14 @@ Tenant structure.
 
 
 
+
+
+
+### func (\*Tenant) JSON
+``` go
+func (t *Tenant) JSON() []byte
+```
+JSON output for a tenant.
 
 
 
