@@ -52,6 +52,7 @@ d2bcli create host test2.example.com -p
 # Generate Bash auto completion
 
 ```
+cd $GOPATH/github.com/imc-trading/dock2box/d2bcli
 sudo cp autocomplete/bash /etc/bash_completion.d/d2bcli
 source /etc/bash_completion.d/d2bcli
 ```
