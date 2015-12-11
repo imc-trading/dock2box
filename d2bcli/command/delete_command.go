@@ -15,6 +15,7 @@ func NewDeleteCommand() cli.Command {
 			NewDeleteSubnetCommand(),
 			NewDeleteSiteCommand(),
 			NewDeleteBootImageCommand(),
+			NewDeleteTenantCommand(),
 		},
 	}
 }
