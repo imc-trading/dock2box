@@ -95,23 +95,30 @@ func (c Client) Create(endp string, s interface{}) ([]byte, error) {
 }
 
 // Delete resource.
-func (c Client) Delete(endp string) error {
-	url := c.URL + endp
-	c.Infof("header: application/json, method: DELETE, url: %s", url)
+func (c Client) Delete(endp string, name string) ([]byte, error) {
+	url := c.URL + endp + "/" + name
+	c.Infof("url: %s", url)
 
-	req, err := http.NewRequest("DELETE", url, bytes.NewBuffer([]byte{}))
-	//    req.Header.Set("Content-Type", "application/json")
+	req, err := http.NewRequest("DELETE", url+"?envelope=false", bytes.NewBuffer([]byte{}))
+	req.Header.Set("Content-Type", "application/json")
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		return err
+		return []byte{}, err
 	}
 
-	fmt.Println("Status:", resp.Status)
-	fmt.Println("Headers:", resp.Header)
+	if resp.StatusCode != 200 {
+		return []byte{}, fmt.Errorf("Delete %s: failed with status code %d", url, resp.StatusCode)
+	}
 
-	return nil
+	defer resp.Body.Close()
+	cont, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return []byte{}, err
+	}
+
+	return cont, nil
 }
 
 // Get resource.

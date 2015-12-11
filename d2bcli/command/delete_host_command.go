@@ -1,6 +1,7 @@
 package command
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/codegangsta/cli"
@@ -29,8 +30,9 @@ func deleteHostCommandFunc(c *cli.Context) {
 
 	clnt := client.New(c.GlobalString("server"))
 
-	err := clnt.Host.Delete(hostname)
+	h, err := clnt.Host.Delete(hostname)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
+	fmt.Printf("%v\n", string(h.JSON()))
 }

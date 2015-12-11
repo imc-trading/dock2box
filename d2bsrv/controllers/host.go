@@ -262,6 +262,15 @@ func (c HostController) Remove(w http.ResponseWriter, r *http.Request) {
 	// Get name
 	name := mux.Vars(r)["name"]
 
+	// Initialize empty struct
+	s := models.Host{}
+
+	// Get entry
+	if err := c.session.DB(c.database).C("hosts").Find(bson.M{"host": name}).One(&s); err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
 	// Remove entry
 	if err := c.session.DB(c.database).C("hosts").Remove(bson.M{"host": name}); err != nil {
 		w.WriteHeader(http.StatusNotFound)
@@ -269,7 +278,7 @@ func (c HostController) Remove(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Write status
-	jsonWriter(w, r, nil, http.StatusOK)
+	jsonWriter(w, r, s, http.StatusOK)
 }
 
 func (c HostController) RemoveByID(w http.ResponseWriter, r *http.Request) {
@@ -285,6 +294,15 @@ func (c HostController) RemoveByID(w http.ResponseWriter, r *http.Request) {
 	// Get new ID
 	oid := bson.ObjectIdHex(id)
 
+	// Initialize empty struct
+	s := models.Host{}
+
+	// Get entry
+	if err := c.session.DB(c.database).C("hosts").FindId(oid).One(&s); err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
 	// Remove entry
 	if err := c.session.DB(c.database).C("hosts").RemoveId(oid); err != nil {
 		w.WriteHeader(http.StatusNotFound)
@@ -292,5 +310,5 @@ func (c HostController) RemoveByID(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Write status
-	jsonWriter(w, r, nil, http.StatusOK)
+	jsonWriter(w, r, s, http.StatusOK)
 }

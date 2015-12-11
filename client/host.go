@@ -60,14 +60,19 @@ func (r *HostResource) Create(h *Host) (*Host, error) {
 }
 
 // Delete host.
-func (r *HostResource) Delete(name string) error {
+func (r *HostResource) Delete(name string) (*Host, error) {
 	c := *r.Client
-	err := c.Delete("/hosts/" + name)
+	j, err := c.Delete("/hosts", name)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	host := &Host{}
+	if err := json.Unmarshal(j, host); err != nil {
+		return nil, err
+	}
+
+	return host, nil
 }
 
 // Exist host.
