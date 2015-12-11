@@ -1,10 +1,11 @@
 package command
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/codegangsta/cli"
+
+	"github.com/imc-trading/dock2box/client"
 )
 
 func NewDeleteHostCommand() cli.Command {
@@ -25,5 +26,11 @@ func deleteHostCommandFunc(c *cli.Context) {
 	} else {
 		hostname = c.Args()[0]
 	}
-	fmt.Println("Delete Host: ", hostname)
+
+	clnt := client.New(c.GlobalString("server"))
+
+	err := clnt.Host.Delete(hostname)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
 }

@@ -94,6 +94,26 @@ func (c Client) Create(endp string, s interface{}) ([]byte, error) {
 	return body, nil
 }
 
+// Delete resource.
+func (c Client) Delete(endp string) error {
+	url := c.URL + endp
+	c.Infof("header: application/json, method: DELETE, url: %s", url)
+
+	req, err := http.NewRequest("DELETE", url, bytes.NewBuffer([]byte{}))
+	//    req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return err
+	}
+
+	fmt.Println("Status:", resp.Status)
+	fmt.Println("Headers:", resp.Header)
+
+	return nil
+}
+
 // Get resource.
 func (c Client) Get(endp string, name string) ([]byte, error) {
 	url := c.URL + endp + "/" + name

@@ -59,6 +59,17 @@ func (r *HostResource) Create(h *Host) (*Host, error) {
 	return host, nil
 }
 
+// Delete host.
+func (r *HostResource) Delete(name string) error {
+	c := *r.Client
+	err := c.Delete("/hosts/" + name)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // Exist host.
 func (r *HostResource) Exist(name string) (bool, error) {
 	c := *r.Client
