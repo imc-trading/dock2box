@@ -13,6 +13,7 @@ func NewGetCommand() cli.Command {
 			NewGetHostCommand(),
 			NewGetImageCommand(),
 			NewGetSubnetCommand(),
+			NewGetBootImageCommand(),
 		},
 	}
 }

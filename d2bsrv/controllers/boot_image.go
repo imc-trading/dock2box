@@ -62,7 +62,7 @@ func (c BootImageController) Get(w http.ResponseWriter, r *http.Request) {
 	s := models.BootImage{}
 
 	// Get entry
-	if err := c.session.DB(c.database).C("boot_images").Find(bson.M{"boot-image": name}).One(&s); err != nil {
+	if err := c.session.DB(c.database).C("boot_images").Find(bson.M{"image": name}).One(&s); err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
@@ -144,7 +144,7 @@ func (c BootImageController) Remove(w http.ResponseWriter, r *http.Request) {
 	name := mux.Vars(r)["name"]
 
 	// Remove entry
-	if err := c.session.DB(c.database).C("boot_images").Remove(bson.M{"boot-image": name}); err != nil {
+	if err := c.session.DB(c.database).C("boot_images").Remove(bson.M{"image": name}); err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}

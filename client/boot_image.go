@@ -21,6 +21,12 @@ type BootImageVersion struct {
 	Created string `json:"created"`
 }
 
+// JSON output for a host.
+func (i *BootImage) JSON() []byte {
+	b, _ := json.MarshalIndent(i, "", "  ")
+	return b
+}
+
 // Create boot image.
 func (r *BootImageResource) Create(s *BootImage) (*BootImage, error) {
 	c := *r.Client
@@ -56,7 +62,7 @@ func (r *BootImageResource) Delete(name string) (*BootImage, error) {
 // Get boot image.
 func (r *BootImageResource) Get(name string) (*BootImage, error) {
 	c := *r.Client
-	j, err := c.Get("boot-images", name)
+	j, err := c.Get("/boot-images", name)
 	if err != nil {
 		return nil, err
 	}
@@ -72,7 +78,7 @@ func (r *BootImageResource) Get(name string) (*BootImage, error) {
 // All boot images.
 func (r *BootImageResource) All() (*[]BootImage, error) {
 	c := *r.Client
-	j, err := c.All("boot-images")
+	j, err := c.All("/boot-images")
 	if err != nil {
 		return nil, err
 	}
