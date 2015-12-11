@@ -1,5 +1,8 @@
 package client
 
+// TODO
+// - Change logging to have levels debug, info, warn, error, fatal
+
 import (
 	"bytes"
 	"encoding/json"

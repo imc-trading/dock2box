@@ -1,6 +1,7 @@
 package command
 
 import (
+	//	"fmt"
 	"log"
 	"strings"
 
@@ -25,6 +26,11 @@ func NewCreateHostCommand() cli.Command {
 			cli.StringFlag{Name: "tenant, t", Usage: "Tenant"},
 			cli.StringFlag{Name: "labels, l", Usage: "Comma-separated list of labels"},
 			cli.StringFlag{Name: "site, s", Usage: "Site"},
+			cli.StringFlag{Name: "interface, I", Value: "eth0", Usage: "Interface"},
+			cli.BoolFlag{Name: "dhcp, D", Usage: "DHCP"},
+			cli.StringFlag{Name: "hwaddr, H", Usage: "Hardware address"},
+			cli.StringFlag{Name: "ipv4, P", Usage: "IPv4 address"},
+			cli.StringFlag{Name: "subnet, S", Usage: "Subnet address using prefix ex. 192.168.0.1/24"},
 		},
 		Action: func(c *cli.Context) {
 			createHostCommandFunc(c)
@@ -88,6 +94,23 @@ func chooseSite(clnt *client.Client) *string {
 	return &sites[prompt.Choice("Choose site", list)].ID
 }
 
+func chooseSubnet(clnt *client.Client, siteID string) *string {
+	r, err := clnt.Subnet.All()
+	if err != nil {
+		log.Fatalf(err.Error())
+	}
+
+	subnets := *r
+	var list []string
+	for _, v := range subnets {
+		// UGLY: keep until backend supports filters
+		if v.SiteID == siteID {
+			list = append(list, v.Subnet)
+		}
+	}
+	return &subnets[prompt.Choice("Choose subnet", list)].ID
+}
+
 func createHostCommandFunc(c *cli.Context) {
 	var hostname string
 	if len(c.Args()) == 0 {
@@ -114,16 +137,29 @@ func createHostCommandFunc(c *cli.Context) {
 		h.Version = chooseImageVersion(clnt, h.ImageID)
 
 		// Get labels
-		labels := prompt.String("Comma-separated list of labels")
+		labels := prompt.String("Comma-separated list of labels", prompt.Prompt{Default: "", FuncPtr: prompt.Regex, FuncInp: "^([a-zA-Z][a-zA-Z0-9-]+,)*([a-zA-Z][a-zA-Z0-9-]+)$"})
 		if labels == "" {
 			h.Labels = []string{}
 		} else {
 			h.Labels = strings.Split(labels, ",")
 		}
 
-		h.KOpts = prompt.String("KOpts")
+		h.KOpts = prompt.String("KOpts", prompt.Prompt{Default: "", FuncPtr: prompt.Regex, FuncInp: "^(|[a-zA-Z0-9- ])+$"})
 		h.TenantID = *chooseTenants(clnt)
 		h.SiteID = *chooseSite(clnt)
+
+		h.Interfaces = []client.HostInterface{
+			{
+				Interface: prompt.String("Interface", prompt.Prompt{Default: "eth0", FuncPtr: prompt.Regex, FuncInp: "^[a-z][a-z0-9]+$"}),
+				DHCP:      prompt.Bool("DHCP", false),
+				HwAddr:    prompt.String("Hardware Address", prompt.Prompt{NoDefault: true, FuncPtr: prompt.Regex, FuncInp: "^([0-9a-f]{2}:){5}[0-9a-f]{2}$"}),
+			},
+		}
+
+		if !h.Interfaces[0].DHCP {
+			h.Interfaces[0].IPv4 = prompt.String("IP Address", prompt.Prompt{NoDefault: true, FuncPtr: prompt.Regex, FuncInp: "^([0-9]{1,3}\\.){3}[0-9]{1,3}$"})
+			h.Interfaces[0].SubnetID = *chooseSubnet(clnt, h.SiteID)
+		}
 
 		// Create host
 		clnt.Host.Create(&h)

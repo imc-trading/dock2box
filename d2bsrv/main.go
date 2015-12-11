@@ -1,5 +1,8 @@
 package main
 
+// TODO
+// - Add filters for /subnets
+
 import (
 	"log"
 	"net/http"
