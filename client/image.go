@@ -18,6 +18,12 @@ type Image struct {
 	Versions     []ImageVersion `json:"versions,omitempty"`
 }
 
+// JSON output for a host.
+func (i *Image) JSON() []byte {
+	b, _ := json.MarshalIndent(i, "", "  ")
+	return b
+}
+
 // Create image.
 func (r *ImageResource) Create(i *Image) (*Image, error) {
 	c := *r.Client

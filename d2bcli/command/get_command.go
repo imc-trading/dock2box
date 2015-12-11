@@ -11,6 +11,8 @@ func NewGetCommand() cli.Command {
 		Usage: "get resource",
 		Subcommands: []cli.Command{
 			NewGetHostCommand(),
+			NewGetImageCommand(),
+			NewGetSubnetCommand(),
 		},
 	}
 }
