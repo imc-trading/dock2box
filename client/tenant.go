@@ -29,6 +29,22 @@ func (r *TenantResource) Create(s *Tenant) (*Tenant, error) {
 	return tenant, nil
 }
 
+// Delete tenant.
+func (r *TenantResource) Delete(name string) (*Tenant, error) {
+	c := *r.Client
+	j, err := c.Delete("/tenants", name)
+	if err != nil {
+		return nil, err
+	}
+
+	tenant := &Tenant{}
+	if err := json.Unmarshal(j, tenant); err != nil {
+		return nil, err
+	}
+
+	return tenant, nil
+}
+
 // Get tenant.
 func (r *TenantResource) Get(name string) (*Tenant, error) {
 	c := *r.Client

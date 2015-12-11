@@ -59,7 +59,7 @@ BootImageResource structure.
 ``` go
 func (r *BootImageResource) All() (*[]BootImage, error)
 ```
-All boot_images
+All boot images.
 
 
 
@@ -67,7 +67,15 @@ All boot_images
 ``` go
 func (r *BootImageResource) Create(s *BootImage) (*BootImage, error)
 ```
-Create boot_image
+Create boot image.
+
+
+
+### func (\*BootImageResource) Delete
+``` go
+func (r *BootImageResource) Delete(name string) (*BootImage, error)
+```
+Delete boot image.
 
 
 
@@ -75,7 +83,7 @@ Create boot_image
 ``` go
 func (r *BootImageResource) Get(name string) (*BootImage, error)
 ```
-Get boot_image
+Get boot image.
 
 
 
@@ -147,6 +155,14 @@ Create resource.
 
 
 
+### func (Client) Delete
+``` go
+func (c Client) Delete(endp string, name string) ([]byte, error)
+```
+Delete resource.
+
+
+
 ### func (Client) Exist
 ``` go
 func (c Client) Exist(endp string, name string) (bool, error)
@@ -155,11 +171,43 @@ Exist resource.
 
 
 
+### func (Client) Fatal
+``` go
+func (c Client) Fatal(msg string)
+```
+Fatal log and exit
+
+
+
+### func (Client) Fatalf
+``` go
+func (c Client) Fatalf(fmt string, args ...interface{})
+```
+Fatalf log and exit
+
+
+
 ### func (Client) Get
 ``` go
 func (c Client) Get(endp string, name string) ([]byte, error)
 ```
 Get resource.
+
+
+
+### func (Client) Info
+``` go
+func (c Client) Info(msg string)
+```
+Info log
+
+
+
+### func (Client) Infof
+``` go
+func (c Client) Infof(fmt string, args ...interface{})
+```
+Infof log
 
 
 
@@ -271,6 +319,14 @@ Create host.
 
 
 
+### func (\*HostResource) Delete
+``` go
+func (r *HostResource) Delete(name string) (*Host, error)
+```
+Delete host.
+
+
+
 ### func (\*HostResource) Exist
 ``` go
 func (r *HostResource) Exist(name string) (bool, error)
@@ -350,6 +406,14 @@ All images.
 func (r *ImageResource) Create(i *Image) (*Image, error)
 ```
 Create image.
+
+
+
+### func (\*ImageResource) Delete
+``` go
+func (r *ImageResource) Delete(name string) (*Image, error)
+```
+Delete image.
 
 
 
@@ -472,6 +536,14 @@ Create site.
 
 
 
+### func (\*SiteResource) Delete
+``` go
+func (r *SiteResource) Delete(name string) (*Site, error)
+```
+Delete site.
+
+
+
 ### func (\*SiteResource) Get
 ``` go
 func (r *SiteResource) Get(name string) (*Site, error)
@@ -483,11 +555,11 @@ Get site.
 ## type Subnet
 ``` go
 type Subnet struct {
-    ID       string `json:"id"`
-    Subnet   string `json:"subnet"`
-    Mask     string `json:"mask"`
-    Gw       string `json:"gw"`
-    SubnetID string `json:"subnetId"`
+    ID     string `json:"id"`
+    Subnet string `json:"subnet"`
+    Mask   string `json:"mask"`
+    Gw     string `json:"gw"`
+    SiteID string `json:"siteId"`
 }
 ```
 Subnet structure.
@@ -533,6 +605,14 @@ All subnets.
 func (r *SubnetResource) Create(s *Subnet) (*Subnet, error)
 ```
 Create subnet.
+
+
+
+### func (\*SubnetResource) Delete
+``` go
+func (r *SubnetResource) Delete(name string) (*Subnet, error)
+```
+Delete subnet.
 
 
 
@@ -594,6 +674,14 @@ All tenants.
 func (r *TenantResource) Create(s *Tenant) (*Tenant, error)
 ```
 Create tenant.
+
+
+
+### func (\*TenantResource) Delete
+``` go
+func (r *TenantResource) Delete(name string) (*Tenant, error)
+```
+Delete tenant.
 
 
 

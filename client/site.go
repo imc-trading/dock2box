@@ -34,6 +34,22 @@ func (r *SiteResource) Create(s *Site) (*Site, error) {
 	return site, nil
 }
 
+// Delete site.
+func (r *SiteResource) Delete(name string) (*Site, error) {
+	c := *r.Client
+	j, err := c.Delete("/sites", name)
+	if err != nil {
+		return nil, err
+	}
+
+	site := &Site{}
+	if err := json.Unmarshal(j, site); err != nil {
+		return nil, err
+	}
+
+	return site, nil
+}
+
 // Get site.
 func (r *SiteResource) Get(name string) (*Site, error) {
 	c := *r.Client
