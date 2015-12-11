@@ -1,8 +1,9 @@
 package command
 
 import (
-	//	"fmt"
+	"fmt"
 	"log"
+	"net"
 	"strings"
 
 	"github.com/codegangsta/cli"
@@ -111,6 +112,22 @@ func chooseSubnet(clnt *client.Client, siteID string) *string {
 	return &subnets[prompt.Choice("Choose subnet", list)].ID
 }
 
+func validateHwAddr(inp string, dmy string) bool {
+	if _, err := net.ParseMAC(inp); err != nil {
+		fmt.Println(err.Error())
+		return false
+	}
+	return true
+}
+
+func validateIPv4(inp string, dmy string) bool {
+	if net.ParseIP(inp) == nil {
+		fmt.Println("Invalid IPv4 address")
+		return false
+	}
+	return true
+}
+
 func createHostCommandFunc(c *cli.Context) {
 	var hostname string
 	if len(c.Args()) == 0 {
@@ -152,13 +169,14 @@ func createHostCommandFunc(c *cli.Context) {
 			{
 				Interface: prompt.String("Interface", prompt.Prompt{Default: "eth0", FuncPtr: prompt.Regex, FuncInp: "^[a-z][a-z0-9]+$"}),
 				DHCP:      prompt.Bool("DHCP", false),
-				HwAddr:    prompt.String("Hardware Address", prompt.Prompt{NoDefault: true, FuncPtr: prompt.Regex, FuncInp: "^([0-9a-f]{2}:){5}[0-9a-f]{2}$"}),
+				HwAddr:    prompt.String("Hardware Address", prompt.Prompt{NoDefault: true, FuncPtr: validateHwAddr}),
 			},
 		}
 
 		if !h.Interfaces[0].DHCP {
-			h.Interfaces[0].IPv4 = prompt.String("IP Address", prompt.Prompt{NoDefault: true, FuncPtr: prompt.Regex, FuncInp: "^([0-9]{1,3}\\.){3}[0-9]{1,3}$"})
+			h.Interfaces[0].IPv4 = prompt.String("IP Address", prompt.Prompt{NoDefault: true, FuncPtr: validateIPv4})
 			h.Interfaces[0].SubnetID = *chooseSubnet(clnt, h.SiteID)
+			// Check subnet match IPv4
 		}
 
 		// Create host
