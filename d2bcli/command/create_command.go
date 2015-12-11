@@ -8,7 +8,7 @@ import (
 func NewCreateCommand() cli.Command {
 	return cli.Command{
 		Name:  "create",
-		Usage: "create resource",
+		Usage: "Create resource",
 		Subcommands: []cli.Command{
 			NewCreateHostCommand(),
 		},

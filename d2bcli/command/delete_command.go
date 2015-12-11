@@ -8,7 +8,7 @@ import (
 func NewDeleteCommand() cli.Command {
 	return cli.Command{
 		Name:  "delete",
-		Usage: "delete resource",
+		Usage: "Delete resource",
 		Subcommands: []cli.Command{
 			NewDeleteHostCommand(),
 			NewDeleteImageCommand(),

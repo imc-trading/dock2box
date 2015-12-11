@@ -8,7 +8,7 @@ import (
 func NewGetCommand() cli.Command {
 	return cli.Command{
 		Name:  "get",
-		Usage: "get resource",
+		Usage: "Get resource",
 		Subcommands: []cli.Command{
 			NewGetHostCommand(),
 			NewGetImageCommand(),
