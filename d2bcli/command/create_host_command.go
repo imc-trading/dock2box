@@ -256,6 +256,26 @@ func createHostCommandFunc(c *cli.Context) {
 	}
 	h.SiteID = site.ID
 
+	// Host Interface
+	ifs := client.HostInterface{
+		Interface: c.String("interface"),
+		DHCP:      c.Bool("dhcp"),
+		HwAddr:    c.String("hwaddr"),
+	}
+
+	if !ifs.DHCP {
+		ifs.IPv4 = c.String("ipv4")
+
+		// Get subnet
+		subnet, err := clnt.Subnet.Get(c.String("subnet"))
+		if err != nil {
+			log.Fatalf(err.Error())
+		}
+		ifs.SubnetID = subnet.ID
+
+		h.Interfaces = []client.HostInterface{ifs}
+	}
+
 	// Create host
 	clnt.Host.Create(&h)
 }
