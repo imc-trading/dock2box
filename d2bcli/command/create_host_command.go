@@ -129,6 +129,22 @@ func validateIPv4(inp string, dmy string) bool {
 	return true
 }
 
+func addHostInterface(clnt *client.Client, siteID string) client.HostInterface {
+	ifs := client.HostInterface{
+		Interface: prompt.String("Interface", prompt.Prompt{Default: "eth0", FuncPtr: prompt.Regex, FuncInp: "^[a-z][a-z0-9]+$"}),
+		DHCP:      prompt.Bool("DHCP", false),
+		HwAddr:    prompt.String("Hardware Address", prompt.Prompt{NoDefault: true, FuncPtr: validateHwAddr}),
+	}
+
+	if !ifs.DHCP {
+		ifs.IPv4 = prompt.String("IP Address", prompt.Prompt{NoDefault: true, FuncPtr: validateIPv4})
+		ifs.SubnetID = *chooseSubnet(clnt, siteID)
+		// Check subnet match IPv4
+	}
+
+	return ifs
+}
+
 func createHostCommandFunc(c *cli.Context) {
 	var hostname string
 	if len(c.Args()) == 0 {
@@ -166,22 +182,9 @@ func createHostCommandFunc(c *cli.Context) {
 		h.TenantID = *chooseTenants(clnt)
 		h.SiteID = *chooseSite(clnt)
 
-		h.Interfaces = []client.HostInterface{
-			{
-				Interface: prompt.String("Interface", prompt.Prompt{Default: "eth0", FuncPtr: prompt.Regex, FuncInp: "^[a-z][a-z0-9]+$"}),
-				DHCP:      prompt.Bool("DHCP", false),
-				HwAddr:    prompt.String("Hardware Address", prompt.Prompt{NoDefault: true, FuncPtr: validateHwAddr}),
-			},
-		}
-
-		if !h.Interfaces[0].DHCP {
-			h.Interfaces[0].IPv4 = prompt.String("IP Address", prompt.Prompt{NoDefault: true, FuncPtr: validateIPv4})
-			h.Interfaces[0].SubnetID = *chooseSubnet(clnt, h.SiteID)
-			// Check subnet match IPv4
-		}
-
-		// Add another network interface?
-		if !prompt.Bool("Do you want to add another network interface", false) {
+		h.Interfaces = []client.HostInterface{addHostInterface(clnt, h.SiteID)}
+		if prompt.Bool("Do you want to add another network interface", false) {
+			h.Interfaces = append(h.Interfaces, addHostInterface(clnt, h.SiteID))
 		}
 
 		// Is this correct?
