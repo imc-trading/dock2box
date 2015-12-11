@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Peekaboo - {{.ShortHostname}}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-table.css">
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/js/bootstrap-table.js"></script>
+
+    <!-- Bootstrap custom CSS -->
+    <link rel="stylesheet" href="/css/main.css">
+
+    <meta name="author" content="Michael Persson" />
+    <meta name="copyright" content="Copyright (c) 2015, Michael Persson." />
+  </head>
+  <body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-inverse navbar-static-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/">Peekaboo</a>
+        </div>
+        <div>
+          <ul class="nav navbar-nav">
+            <li {{if eq .Title "Network"}}class="active"{{end}}><a href="/network">Network</a></li>
+{{if ne .Kernel "darwin"}}
+            <li {{if eq .Title "Storage"}}class="active"{{end}}><a href="/storage">Storage</a></li>
+            <li {{if eq .Title "PCI"}}class="active"{{end}}><a href="/pci">PCI</a></li>
+            <li {{if eq .Title "Sysctl"}}class="active"{{end}}><a href="/sysctl">Sysctl</a></li>
+            <li {{if eq .Title "Dock2Box"}}class="active"{{end}}><a href="/dock2box">Dock2Box</a></li>
+{{end}}
+          </ul>
+	</div>
+      </div>
+    </nav>
+
+    <!-- Page -->
+    <div class="container">

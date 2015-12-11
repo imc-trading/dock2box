@@ -1,0 +1,12 @@
+[Unit]
+Description=Peekaboo
+After=network.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+ExecStart=/usr/bin/peekaboo -s /var/lib/peekaboo/static -t /var/lib/peekaboo/templates
+
+[Install]
+WantedBy=multi-user.target
