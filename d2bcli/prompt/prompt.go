@@ -1,5 +1,8 @@
 package prompt
 
+// TODO
+// - Validate by using a ref to JSON Schema
+
 import (
 	"fmt"
 	"regexp"
@@ -85,5 +88,17 @@ func Regex(inp string, regex string) bool {
 	}
 
 	fmt.Printf("Input: %s doesn't match regex: %s\n", inp, regex)
+	return false
+}
+
+func Enum(inp string, list string) bool {
+	for _, v := range strings.Split(list, ",") {
+		fmt.Println(inp, v)
+		if inp == v {
+			return true
+		}
+	}
+
+	fmt.Printf("Input: %s doesn't match enum: %s\n", inp, list)
 	return false
 }
