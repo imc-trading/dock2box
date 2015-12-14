@@ -9,7 +9,7 @@ type Image struct {
 	BootImageID  bson.ObjectId  `json:"bootImageId" bson:"bootImageId"`
 	BootImageRef string         `json:"bootImageRef,omitempty"`
 	BootImage    *BootImage     `json:"bootImage,omitempty"`
-	Versions     []ImageVersion `json:"versions" bson:"versions"`
+	Versions     []ImageVersion `json:"versions,omitempty" bson:"versions,omitempty"`
 }
 
 type ImageVersion struct {

@@ -2,7 +2,7 @@
     "$schema": "http://json-schema.org/draft-04/schema#",
     "title": "Image Schema",
     "type": "object",
-    "required": [ "id", "image", "type", "bootImageId", "versions" ],
+    "required": [ "id", "image", "type", "bootImageId" ],
     "additionalProperties": false,
     "properties": {
         "id": {

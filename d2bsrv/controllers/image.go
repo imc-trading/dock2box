@@ -156,7 +156,7 @@ func (c ImageController) Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Set refs
-	s.BootImageRef = "/boot-images-by-id/" + s.BootImageID.Hex()
+	s.BootImageRef = "/boot-images/id/" + s.BootImageID.Hex()
 
 	// Insert entry
 	if err := c.session.DB(c.database).C("images").Insert(s); err != nil {

@@ -13,6 +13,7 @@ func NewCreateCommand() cli.Command {
 			NewCreateHostCommand(),
 			NewCreateSiteCommand(),
 			NewCreateSubnetCommand(),
+			NewCreateImageCommand(),
 		},
 	}
 }
