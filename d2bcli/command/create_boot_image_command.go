@@ -11,8 +11,8 @@ import (
 
 func NewCreateBootImageCommand() cli.Command {
 	return cli.Command{
-		Name:  "bootImage",
-		Usage: "Create boot bootImage",
+		Name:  "boot-image",
+		Usage: "Create boot boot image",
 		Flags: []cli.Flag{
 			cli.BoolFlag{Name: "prompt, p", Usage: "Prompt for resource input"},
 			cli.StringFlag{Name: "kopts, k", Usage: "Boot bootImage"},
