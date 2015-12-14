@@ -95,6 +95,7 @@ func (c SubnetController) GetByID(w http.ResponseWriter, r *http.Request) {
 
 	// Validate ObjectId
 	if !bson.IsObjectIdHex(id) {
+		//		jsonError(w, r, fmt.Errorf("Incorrectly formated ID: %s", id), http.StatusInternalServerError)
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}

@@ -72,7 +72,7 @@ func main() {
 
 	// Add handlers for endpoints
 	r.HandleFunc("/"+version.APIVersion+"/subnets", suc.All).Methods("GET")
-	r.HandleFunc("/"+version.APIVersion+"/subnets/{name}/{prefix}", suc.Get).Methods("GET")
+	r.HandleFunc("/"+version.APIVersion+"/subnets/{name}-{prefix}", suc.Get).Methods("GET")
 	r.HandleFunc("/"+version.APIVersion+"/subnets/id/{id}", suc.GetByID).Methods("GET")
 	r.HandleFunc("/"+version.APIVersion+"/subnets", suc.Create).Methods("POST")
 	r.HandleFunc("/"+version.APIVersion+"/subnets/{name}/{prefix}", suc.Remove).Methods("DELETE")

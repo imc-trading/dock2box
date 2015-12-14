@@ -45,8 +45,8 @@ data = clnt.Subnet().all()
 for obj in data:
     print obj.mask, obj.gw, obj.site_id
 
-obj = clnt.Subnet().get("192.168.0.0/24")
+obj = clnt.Subnet().get("192.168.0.0-24")
 print obj.mask, obj.gw, obj.site_id
 
-#obj = clnt.Subnet().get_by_id(obj.id)
-#print obj.mask, obj.gw, obj.site_id
+obj = clnt.Subnet().get_by_id(obj.id)
+print obj.mask, obj.gw, obj.site_id
