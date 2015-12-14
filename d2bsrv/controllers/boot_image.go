@@ -32,7 +32,7 @@ func (c BootImageController) SetDatabase(database string) {
 
 func (c BootImageController) CreateIndex() {
 	index := mgo.Index{
-		Key:    []string{"boot-image"},
+		Key:    []string{"image"},
 		Unique: true,
 	}
 

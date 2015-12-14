@@ -9,10 +9,10 @@ type BootImageResource struct {
 
 // BootImage structure.
 type BootImage struct {
-	ID       string             `json:"id"`
+	ID       string             `json:"id,omitempty"`
 	Image    string             `json:"image"`
 	KOpts    string             `json:"kOpts"`
-	Versions []BootImageVersion `json:"versions"`
+	Versions []BootImageVersion `json:"versions,omitempty"`
 }
 
 // BootImageVersion structure.
@@ -30,7 +30,7 @@ func (i *BootImage) JSON() []byte {
 // Create boot image.
 func (r *BootImageResource) Create(s *BootImage) (*BootImage, error) {
 	c := *r.Client
-	j, err := c.Create("boot-images", s)
+	j, err := c.Create("/boot-images", s)
 	if err != nil {
 		return nil, err
 	}

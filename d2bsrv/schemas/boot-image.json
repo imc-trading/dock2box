@@ -2,7 +2,7 @@
 	"$schema": "http://json-schema.org/draft-04/schema#",
 	"title": "Boot Image Schema",
 	"type": "object",
-	"required": [ "id", "image", "versions" ],
+	"required": [ "id", "image" ],
 	"additionalProperties": false,
 	"properties": {
 		"id": {
