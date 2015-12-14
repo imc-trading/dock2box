@@ -4,6 +4,8 @@ package main
 // - Add filters for /subnets
 
 import (
+	"flag"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -17,6 +19,17 @@ import (
 )
 
 func main() {
+	// Options.
+	appVersion := flag.Bool("version", false, "Version")
+	bind := flag.String("bind", "127.0.0.1:8080", "Bind to address and port")
+	flag.Parse()
+
+	// Print version.
+	if *appVersion {
+		fmt.Printf("d2bsrv %s\n", version.Version)
+		os.Exit(0)
+	}
+
 	// Create new router
 	r := mux.NewRouter()
 
@@ -126,7 +139,7 @@ func main() {
 
 	// Fire up the server
 	logr := handlers.LoggingHandler(os.Stdout, r)
-	log.Fatal(http.ListenAndServe("127.0.0.1:8080", logr))
+	log.Fatal(http.ListenAndServe(*bind, logr))
 
 }
 
