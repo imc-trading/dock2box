@@ -244,9 +244,9 @@ func (c HostController) Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Set refs
-	s.ImageRef = "/images-by-id/" + s.ImageID.Hex()
-	s.TenantRef = "/tenants-by-id/" + s.TenantID.Hex()
-	s.SiteRef = "/sites-by-id/" + s.SiteID.Hex()
+	s.ImageRef = "/images/id/" + s.ImageID.Hex()
+	s.TenantRef = "/tenants/id/" + s.TenantID.Hex()
+	s.SiteRef = "/sites/id/" + s.SiteID.Hex()
 
 	// Insert entry
 	if err := c.session.DB(c.database).C("hosts").Insert(s); err != nil {

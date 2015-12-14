@@ -157,7 +157,7 @@ func (c SubnetController) Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Set refs
-	s.SiteRef = "/subnets-by-id/" + s.SiteID.Hex()
+	s.SiteRef = "/subnets/id/" + s.SiteID.Hex()
 
 	// Insert entry
 	if err := c.session.DB(c.database).C("subnets").Insert(s); err != nil {
