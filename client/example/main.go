@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/mickep76/dock2box/client"
+	"github.com/imc-trading/dock2box/client"
 )
 
 func main() {
