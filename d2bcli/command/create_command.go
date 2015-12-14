@@ -12,6 +12,7 @@ func NewCreateCommand() cli.Command {
 		Subcommands: []cli.Command{
 			NewCreateHostCommand(),
 			NewCreateSiteCommand(),
+			NewCreateSubnetCommand(),
 		},
 	}
 }
