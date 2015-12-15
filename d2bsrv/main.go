@@ -61,6 +61,7 @@ func main() {
 	r.HandleFunc("/"+version.APIVersion+"/sites/{name}", sc.Get).Methods("GET")
 	r.HandleFunc("/"+version.APIVersion+"/sites/id/{id}", sc.GetByID).Methods("GET")
 	r.HandleFunc("/"+version.APIVersion+"/sites", sc.Create).Methods("POST")
+	r.HandleFunc("/"+version.APIVersion+"/sites/{name}", sc.Update).Methods("PUT")
 	r.HandleFunc("/"+version.APIVersion+"/sites/{name}", sc.Remove).Methods("DELETE")
 	r.HandleFunc("/"+version.APIVersion+"/sites/id/{id}", sc.RemoveByID).Methods("DELETE")
 
