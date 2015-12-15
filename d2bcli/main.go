@@ -20,6 +20,7 @@ func main() {
 	}
 	app.Commands = []cli.Command{
 		command.NewCreateCommand(),
+		command.NewUpdateCommand(),
 		command.NewDeleteCommand(),
 		command.NewGetCommand(),
 	}
