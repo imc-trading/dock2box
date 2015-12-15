@@ -77,7 +77,8 @@ func main() {
 	r.HandleFunc("/"+version.APIVersion+"/subnets/{name}-{prefix}", suc.Get).Methods("GET")
 	r.HandleFunc("/"+version.APIVersion+"/subnets/id/{id}", suc.GetByID).Methods("GET")
 	r.HandleFunc("/"+version.APIVersion+"/subnets", suc.Create).Methods("POST")
-	r.HandleFunc("/"+version.APIVersion+"/subnets/{name}/{prefix}", suc.Remove).Methods("DELETE")
+	r.HandleFunc("/"+version.APIVersion+"/subnets/{name}-{prefix}", suc.Update).Methods("PUT")
+	r.HandleFunc("/"+version.APIVersion+"/subnets/{name}-{prefix}", suc.Remove).Methods("DELETE")
 	r.HandleFunc("/"+version.APIVersion+"/subnets/id/{id}", suc.RemoveByID).Methods("DELETE")
 
 	// Image
