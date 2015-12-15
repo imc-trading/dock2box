@@ -134,6 +134,7 @@ func main() {
 	r.HandleFunc("/"+version.APIVersion+"/tenants/{name}", tc.Get).Methods("GET")
 	r.HandleFunc("/"+version.APIVersion+"/tenants/id/{id}", tc.GetByID).Methods("GET")
 	r.HandleFunc("/"+version.APIVersion+"/tenants", tc.Create).Methods("POST")
+	r.HandleFunc("/"+version.APIVersion+"/tenants/{name}", tc.Update).Methods("PUT")
 	r.HandleFunc("/"+version.APIVersion+"/tenants/{name}", tc.Remove).Methods("DELETE")
 	r.HandleFunc("/"+version.APIVersion+"/tenants/id/{id}", tc.RemoveByID).Methods("DELETE")
 
