@@ -91,6 +91,7 @@ func main() {
 	r.HandleFunc("/"+version.APIVersion+"/images/{name}", ic.Get).Methods("GET")
 	r.HandleFunc("/"+version.APIVersion+"/images/id/{id}", ic.GetByID).Methods("GET")
 	r.HandleFunc("/"+version.APIVersion+"/images", ic.Create).Methods("POST")
+	r.HandleFunc("/"+version.APIVersion+"/images/{name}", ic.Update).Methods("PUT")
 	r.HandleFunc("/"+version.APIVersion+"/images/{name}", ic.Remove).Methods("DELETE")
 	r.HandleFunc("/"+version.APIVersion+"/images/id/{id}", ic.RemoveByID).Methods("DELETE")
 
