@@ -119,6 +119,7 @@ func main() {
 	r.HandleFunc("/"+version.APIVersion+"/boot-images/{name}", bc.Get).Methods("GET")
 	r.HandleFunc("/"+version.APIVersion+"/boot-images/id/{id}", bc.GetByID).Methods("GET")
 	r.HandleFunc("/"+version.APIVersion+"/boot-images", bc.Create).Methods("POST")
+	r.HandleFunc("/"+version.APIVersion+"/boot-images/{name}", bc.Update).Methods("PUT")
 	r.HandleFunc("/"+version.APIVersion+"/boot-images/{name}", bc.Remove).Methods("DELETE")
 	r.HandleFunc("/"+version.APIVersion+"/boot-images/id/{id}", bc.RemoveByID).Methods("DELETE")
 
