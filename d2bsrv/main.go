@@ -100,6 +100,8 @@ func main() {
 	// Add handlers for endpoints
 	r.HandleFunc("/"+version.APIVersion+"/images/{name}/versions", vc.All).Methods("GET")
 	r.HandleFunc("/"+version.APIVersion+"/images/id/{id}/versions", vc.AllByID).Methods("GET")
+	r.HandleFunc("/"+version.APIVersion+"/images/{name}/versions/{version}", vc.Get).Methods("GET")
+	r.HandleFunc("/"+version.APIVersion+"/images/{name}/versions", vc.Create).Methods("POST")
 
 	// Boot Image
 	// Get Controller instance

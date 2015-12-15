@@ -30,6 +30,12 @@ class Client:
             e = resp.json()
             return Subnet(e["id"], e["subnet"], e["mask"], e["gw"], e["siteId"], e["siteRef"])
 
+        def delete(self, name):
+
+        def delete_by_id(self, name):
+
+        def create(self, obj):
+
 class Subnet:
     def __init__(self, id, subnet, mask, gw, site_id, site_ref):
         self.id = id
