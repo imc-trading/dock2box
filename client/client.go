@@ -94,6 +94,31 @@ func (c Client) Create(endp string, s interface{}) ([]byte, error) {
 	return body, nil
 }
 
+// Update resource.
+func (c Client) Update(endp string, s interface{}) ([]byte, error) {
+	url := c.URL + endp
+	c.Infof("header: application/json, method: PUT, url: %s", url)
+
+	b, _ := json.MarshalIndent(&s, "", "  ")
+	fmt.Printf("Payload:\n%s\n", string(b))
+	req, err := http.NewRequest("PUT", url, bytes.NewBuffer(b))
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return []byte{}, err
+	}
+	defer resp.Body.Close()
+
+	fmt.Println("Status:", resp.Status)
+	fmt.Println("Headers:", resp.Header)
+	body, _ := ioutil.ReadAll(resp.Body)
+	fmt.Printf("Body:\n%s\n", string(body))
+
+	return body, nil
+}
+
 // Delete resource.
 func (c Client) Delete(endp string, name string) ([]byte, error) {
 	url := c.URL + endp + "/" + name

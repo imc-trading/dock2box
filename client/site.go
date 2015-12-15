@@ -40,6 +40,22 @@ func (r *SiteResource) Create(s *Site) (*Site, error) {
 	return site, nil
 }
 
+// Update site.
+func (r *SiteResource) Update(name string, s *Site) (*Site, error) {
+	c := *r.Client
+	j, err := c.Create("/sites/"+name, s)
+	if err != nil {
+		return nil, err
+	}
+
+	site := &Site{}
+	if err := json.Unmarshal(j, site); err != nil {
+		return nil, err
+	}
+
+	return site, nil
+}
+
 // Delete site.
 func (r *SiteResource) Delete(name string) (*Site, error) {
 	c := *r.Client

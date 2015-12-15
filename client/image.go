@@ -40,6 +40,22 @@ func (r *ImageResource) Create(i *Image) (*Image, error) {
 	return image, nil
 }
 
+// Update image.
+func (r *ImageResource) Update(name string, i *Image) (*Image, error) {
+	c := *r.Client
+	j, err := c.Create("/images/"+name, i)
+	if err != nil {
+		return nil, err
+	}
+
+	image := &Image{}
+	if err := json.Unmarshal(j, image); err != nil {
+		return nil, err
+	}
+
+	return image, nil
+}
+
 // Delete image.
 func (r *ImageResource) Delete(name string) (*Image, error) {
 	c := *r.Client

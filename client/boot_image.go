@@ -43,6 +43,22 @@ func (r *BootImageResource) Create(s *BootImage) (*BootImage, error) {
 	return bootImage, nil
 }
 
+// Update boot image.
+func (r *BootImageResource) Update(name string, s *BootImage) (*BootImage, error) {
+	c := *r.Client
+	j, err := c.Create("/boot-images/"+name, s)
+	if err != nil {
+		return nil, err
+	}
+
+	bootImage := &BootImage{}
+	if err := json.Unmarshal(j, bootImage); err != nil {
+		return nil, err
+	}
+
+	return bootImage, nil
+}
+
 // Delete boot image.
 func (r *BootImageResource) Delete(name string) (*BootImage, error) {
 	c := *r.Client

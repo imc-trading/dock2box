@@ -19,10 +19,10 @@ Go client for Dock2Box.
 ## type BootImage
 ``` go
 type BootImage struct {
-    ID       string             `json:"id"`
+    ID       string             `json:"id,omitempty"`
     Image    string             `json:"image"`
     KOpts    string             `json:"kOpts"`
-    Versions []BootImageVersion `json:"versions"`
+    Versions []BootImageVersion `json:"versions,omitempty"`
 }
 ```
 BootImage structure.
@@ -92,6 +92,14 @@ Delete boot image.
 func (r *BootImageResource) Get(name string) (*BootImage, error)
 ```
 Get boot image.
+
+
+
+### func (\*BootImageResource) Update
+``` go
+func (r *BootImageResource) Update(name string, s *BootImage) (*BootImage, error)
+```
+Update boot image.
 
 
 
@@ -227,6 +235,14 @@ SetDebug enable debug.
 
 
 
+### func (Client) Update
+``` go
+func (c Client) Update(endp string, s interface{}) ([]byte, error)
+```
+Update resource.
+
+
+
 ## type Host
 ``` go
 type Host struct {
@@ -359,6 +375,14 @@ GetByID host.
 
 
 
+### func (\*HostResource) Update
+``` go
+func (r *HostResource) Update(name string, h *Host) (*Host, error)
+```
+Update host.
+
+
+
 ## type Image
 ``` go
 type Image struct {
@@ -438,6 +462,14 @@ Delete image.
 func (r *ImageResource) Get(name string) (*Image, error)
 ```
 Get image.
+
+
+
+### func (\*ImageResource) Update
+``` go
+func (r *ImageResource) Update(name string, i *Image) (*Image, error)
+```
+Update image.
 
 
 
@@ -576,6 +608,14 @@ Get site.
 
 
 
+### func (\*SiteResource) Update
+``` go
+func (r *SiteResource) Update(name string, s *Site) (*Site, error)
+```
+Update site.
+
+
+
 ## type Subnet
 ``` go
 type Subnet struct {
@@ -656,6 +696,14 @@ Get subnet.
 
 
 
+### func (\*SubnetResource) Update
+``` go
+func (r *SubnetResource) Update(name string, s *Subnet) (*Subnet, error)
+```
+Update subnet.
+
+
+
 ## type Tenant
 ``` go
 type Tenant struct {
@@ -730,6 +778,14 @@ Delete tenant.
 func (r *TenantResource) Get(name string) (*Tenant, error)
 ```
 Get tenant.
+
+
+
+### func (\*TenantResource) Update
+``` go
+func (r *TenantResource) Update(name string, s *Tenant) (*Tenant, error)
+```
+Update tenant.
 
 
 

@@ -38,6 +38,22 @@ func (r *SubnetResource) Create(s *Subnet) (*Subnet, error) {
 	return subnet, nil
 }
 
+// Update subnet.
+func (r *SubnetResource) Update(name string, s *Subnet) (*Subnet, error) {
+	c := *r.Client
+	j, err := c.Update("/subnets/"+name, s)
+	if err != nil {
+		return nil, err
+	}
+
+	subnet := &Subnet{}
+	if err := json.Unmarshal(j, subnet); err != nil {
+		return nil, err
+	}
+
+	return subnet, nil
+}
+
 // Delete subnet.
 func (r *SubnetResource) Delete(name string) (*Subnet, error) {
 	c := *r.Client

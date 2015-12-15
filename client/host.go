@@ -59,6 +59,22 @@ func (r *HostResource) Create(h *Host) (*Host, error) {
 	return host, nil
 }
 
+// Update host.
+func (r *HostResource) Update(name string, h *Host) (*Host, error) {
+	c := *r.Client
+	j, err := c.Update("/hosts/"+name, h)
+	if err != nil {
+		return nil, err
+	}
+
+	host := &Host{}
+	if err := json.Unmarshal(j, host); err != nil {
+		return nil, err
+	}
+
+	return host, nil
+}
+
 // Delete host.
 func (r *HostResource) Delete(name string) (*Host, error) {
 	c := *r.Client
