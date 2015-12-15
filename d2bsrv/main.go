@@ -45,6 +45,7 @@ func main() {
 	r.HandleFunc("/"+version.APIVersion+"/hosts/{name}", hc.Get).Methods("GET")
 	r.HandleFunc("/"+version.APIVersion+"/hosts/id/{id}", hc.GetByID).Methods("GET")
 	r.HandleFunc("/"+version.APIVersion+"/hosts", hc.Create).Methods("POST")
+	r.HandleFunc("/"+version.APIVersion+"/hosts/{name}", hc.Update).Methods("PUT")
 	r.HandleFunc("/"+version.APIVersion+"/hosts/{name}", hc.Remove).Methods("DELETE")
 	r.HandleFunc("/"+version.APIVersion+"/hosts/id/{id}", hc.RemoveByID).Methods("DELETE")
 
