@@ -139,6 +139,13 @@ func main() {
 	r.HandleFunc("/"+version.APIVersion+"/tenants/{name}", tc.Remove).Methods("DELETE")
 	r.HandleFunc("/"+version.APIVersion+"/tenants/id/{id}", tc.RemoveByID).Methods("DELETE")
 
+	// PXE Menu
+	// Get Controller instance
+	pc := controllers.NewPXEMenuController(getSession())
+
+	// Add handlers for endpoints
+	r.HandleFunc("/"+version.APIVersion+"/ipxe/{hwaddr}", pc.PXEMenu).Methods("GET")
+
 	// Generic
 	// Static files
 	schemas := http.StripPrefix("/"+version.APIVersion+"/schemas/", http.FileServer(http.Dir("schemas")))

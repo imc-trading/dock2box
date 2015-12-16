@@ -138,6 +138,7 @@ cat << EOF > $TMPFILE
     "image": "test1",
     "type": "docker",
     "bootImageId": "${boot_image_id}",
+    "bootImageVersion": "latest",
     "versions": [
         {
             "version": "latest",
