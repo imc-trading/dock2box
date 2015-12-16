@@ -25,14 +25,14 @@ launchctl load ~/Library/LaunchAgents/homebrew.mxcl.mongodb.plist
 **Start server:**
 
 ```bash
-cd $GOPATH/github.com/imc-trading/dock2box/d2bsrv
+cd $GOPATH/src/github.com/imc-trading/dock2box/d2bsrv
 ./d2bsrv -bind 0.0.0.0:8080
 ```
 
 **Test server:**
 
 ```bash
-cd $GOPATH/github.com/imc-trading/dock2box/d2bsrv
+cd $GOPATH/src/github.com/imc-trading/dock2box/d2bsrv
 ./test.sh
 ```
 
@@ -53,7 +53,7 @@ d2bcli create host test2.example.com -p
 # Generate Bash auto completion
 
 ```
-cd $GOPATH/github.com/imc-trading/dock2box/d2bcli
+cd $GOPATH/src/github.com/imc-trading/dock2box/d2bcli
 sudo cp autocomplete/bash /etc/bash_completion.d/d2bcli
 source /etc/bash_completion.d/d2bcli
 ```
