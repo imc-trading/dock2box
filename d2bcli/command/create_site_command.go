@@ -1,9 +1,7 @@
 package command
 
 import (
-	"fmt"
 	"log"
-	"net"
 	"strings"
 
 	"github.com/codegangsta/cli"
@@ -28,16 +26,6 @@ func NewCreateSiteCommand() cli.Command {
 			createSiteCommandFunc(c)
 		},
 	}
-}
-
-func validateIPv4List(inp string, list string) bool {
-	for _, v := range strings.Split(inp, ",") {
-		if net.ParseIP(v) == nil {
-			fmt.Println("Invalid IPv4 address: %s", v)
-			return false
-		}
-	}
-	return true
 }
 
 func createSiteCommandFunc(c *cli.Context) {

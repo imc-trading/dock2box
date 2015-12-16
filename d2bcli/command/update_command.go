@@ -12,6 +12,7 @@ func NewUpdateCommand() cli.Command {
 		Subcommands: []cli.Command{
 			NewUpdateSubnetCommand(),
 			NewUpdateSiteCommand(),
+			NewUpdateImageCommand(),
 		},
 	}
 }

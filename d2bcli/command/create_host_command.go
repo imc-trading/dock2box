@@ -3,7 +3,6 @@ package command
 import (
 	"fmt"
 	"log"
-	"net"
 	"os"
 	"strings"
 
@@ -38,99 +37,6 @@ func NewCreateHostCommand() cli.Command {
 			createHostCommandFunc(c)
 		},
 	}
-}
-
-func chooseImage(clnt *client.Client) *string {
-	r, err := clnt.Image.All()
-	if err != nil {
-		log.Fatalf(err.Error())
-	}
-
-	images := *r
-	var list []string
-	for _, v := range images {
-		list = append(list, v.Image+" type: "+v.Type)
-	}
-	return &images[prompt.Choice("Choose image", -1, list)].ID
-}
-
-func chooseImageVersion(clnt *client.Client, id string) string {
-	r, err := clnt.ImageVersion.AllByID(id)
-	if err != nil {
-		log.Fatalf(err.Error())
-	}
-
-	versions := *r
-	var list []string
-	for _, v := range versions {
-		list = append(list, v.Version+", created: "+v.Created)
-	}
-	return versions[prompt.Choice("Choose image version", -1, list)].Version
-}
-
-func chooseTenants(clnt *client.Client) *string {
-	r, err := clnt.Tenant.All()
-	if err != nil {
-		log.Fatalf(err.Error())
-	}
-
-	tenants := *r
-	var list []string
-	for _, v := range tenants {
-		list = append(list, v.Tenant)
-	}
-	return &tenants[prompt.Choice("Choose tenant", -1, list)].ID
-}
-
-func chooseSite(clnt *client.Client, siteID string) *string {
-	r, err := clnt.Site.All()
-	if err != nil {
-		log.Fatalf(err.Error())
-	}
-
-	sites := *r
-	var list []string
-	def := -1
-	for i, v := range sites {
-		if v.ID == siteID {
-			def = i
-		}
-		list = append(list, v.Site+", domain: "+v.Domain)
-	}
-	return &sites[prompt.Choice("Choose site", def, list)].ID
-}
-
-func chooseSubnet(clnt *client.Client, siteID string) *string {
-	r, err := clnt.Subnet.All()
-	if err != nil {
-		log.Fatalf(err.Error())
-	}
-
-	subnets := *r
-	var list []string
-	for _, v := range subnets {
-		// UGLY: keep until backend supports filters
-		if v.SiteID == siteID {
-			list = append(list, v.Subnet)
-		}
-	}
-	return &subnets[prompt.Choice("Choose subnet", -1, list)].ID
-}
-
-func validateHwAddr(inp string, dmy string) bool {
-	if _, err := net.ParseMAC(inp); err != nil {
-		fmt.Println(err.Error())
-		return false
-	}
-	return true
-}
-
-func validateIPv4(inp string, dmy string) bool {
-	if net.ParseIP(inp) == nil {
-		fmt.Println("Invalid IPv4 address")
-		return false
-	}
-	return true
 }
 
 func addHostInterface(clnt *client.Client, siteID string) client.HostInterface {

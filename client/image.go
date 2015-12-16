@@ -43,7 +43,7 @@ func (r *ImageResource) Create(i *Image) (*Image, error) {
 // Update image.
 func (r *ImageResource) Update(name string, i *Image) (*Image, error) {
 	c := *r.Client
-	j, err := c.Create("/images/"+name, i)
+	j, err := c.Update("/images/"+name, i)
 	if err != nil {
 		return nil, err
 	}
