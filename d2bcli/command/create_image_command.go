@@ -35,7 +35,7 @@ func chooseBootImage(clnt *client.Client) *string {
 	for _, v := range images {
 		list = append(list, v.Image)
 	}
-	return &images[prompt.Choice("Choose image", list)].ID
+	return &images[prompt.Choice("Choose image", -1, list)].ID
 }
 
 func createImageCommandFunc(c *cli.Context) {

@@ -45,7 +45,7 @@ func createSubnetCommandFunc(c *cli.Context) {
 			Mask: prompt.String("Mask", prompt.Prompt{NoDefault: true, FuncPtr: validateIPv4, FuncInp: ""}),
 			// Default to .254 for subnet
 			Gw:     prompt.String("Gateway", prompt.Prompt{NoDefault: true, FuncPtr: validateIPv4, FuncInp: ""}),
-			SiteID: *chooseSite(clnt),
+			SiteID: *chooseSite(clnt, ""),
 		}
 
 		// Create subnet

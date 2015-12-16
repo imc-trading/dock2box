@@ -2,6 +2,7 @@ package prompt
 
 // TODO
 // - Validate by using a ref to JSON Schema
+// - Input interface{} for input args
 
 import (
 	"fmt"
@@ -17,7 +18,7 @@ type Prompt struct {
 	FuncInp   string
 }
 
-func Choice(msg string, list []string) int {
+func Choice(msg string, def int, list []string) int {
 	fmt.Printf("\n")
 	for i, v := range list {
 		fmt.Printf("%d) %s\n", i, v)
@@ -25,10 +26,18 @@ func Choice(msg string, list []string) int {
 	fmt.Printf("\n")
 
 	for {
-		fmt.Printf(msg + ": ")
+		if def >= 0 && def < len(list) {
+			fmt.Printf(msg+": [0-%d] (%d)", len(list), def)
+		} else {
+			fmt.Printf(msg+": [0-%d]", len(list))
+		}
 
 		var inp string
 		fmt.Scanln(&inp)
+
+		if inp == "" && def >= 0 && def < len(list) {
+			return def
+		}
 
 		i, err := strconv.Atoi(inp)
 		if err != nil {

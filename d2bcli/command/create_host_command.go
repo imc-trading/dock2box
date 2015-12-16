@@ -51,7 +51,7 @@ func chooseImage(clnt *client.Client) *string {
 	for _, v := range images {
 		list = append(list, v.Image+" type: "+v.Type)
 	}
-	return &images[prompt.Choice("Choose image", list)].ID
+	return &images[prompt.Choice("Choose image", -1, list)].ID
 }
 
 func chooseImageVersion(clnt *client.Client, id string) string {
@@ -65,7 +65,7 @@ func chooseImageVersion(clnt *client.Client, id string) string {
 	for _, v := range versions {
 		list = append(list, v.Version+", created: "+v.Created)
 	}
-	return versions[prompt.Choice("Choose image version", list)].Version
+	return versions[prompt.Choice("Choose image version", -1, list)].Version
 }
 
 func chooseTenants(clnt *client.Client) *string {
@@ -79,10 +79,10 @@ func chooseTenants(clnt *client.Client) *string {
 	for _, v := range tenants {
 		list = append(list, v.Tenant)
 	}
-	return &tenants[prompt.Choice("Choose tenant", list)].ID
+	return &tenants[prompt.Choice("Choose tenant", -1, list)].ID
 }
 
-func chooseSite(clnt *client.Client) *string {
+func chooseSite(clnt *client.Client, siteID string) *string {
 	r, err := clnt.Site.All()
 	if err != nil {
 		log.Fatalf(err.Error())
@@ -90,10 +90,14 @@ func chooseSite(clnt *client.Client) *string {
 
 	sites := *r
 	var list []string
-	for _, v := range sites {
+	def := -1
+	for i, v := range sites {
+		if v.ID == siteID {
+			def = i
+		}
 		list = append(list, v.Site+", domain: "+v.Domain)
 	}
-	return &sites[prompt.Choice("Choose site", list)].ID
+	return &sites[prompt.Choice("Choose site", def, list)].ID
 }
 
 func chooseSubnet(clnt *client.Client, siteID string) *string {
@@ -110,7 +114,7 @@ func chooseSubnet(clnt *client.Client, siteID string) *string {
 			list = append(list, v.Subnet)
 		}
 	}
-	return &subnets[prompt.Choice("Choose subnet", list)].ID
+	return &subnets[prompt.Choice("Choose subnet", -1, list)].ID
 }
 
 func validateHwAddr(inp string, dmy string) bool {
@@ -180,7 +184,7 @@ func createHostCommandFunc(c *cli.Context) {
 
 		h.KOpts = prompt.String("KOpts", prompt.Prompt{Default: "", FuncPtr: prompt.Regex, FuncInp: "^(|[a-zA-Z0-9- ])+$"})
 		h.TenantID = *chooseTenants(clnt)
-		h.SiteID = *chooseSite(clnt)
+		h.SiteID = *chooseSite(clnt, "")
 
 		h.Interfaces = []client.HostInterface{addHostInterface(clnt, h.SiteID)}
 		if prompt.Bool("Do you want to add another network interface", false) {
