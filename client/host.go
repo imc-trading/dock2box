@@ -9,6 +9,7 @@ type HostResource struct {
 
 // Host structure.
 type Host struct {
+	ID         string          `json:"id"`
 	Host       string          `json:"host"`
 	Build      bool            `json:"build"`
 	Debug      bool            `json:"debug"`

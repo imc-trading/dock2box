@@ -72,6 +72,7 @@ func updateHostCommandFunc(c *cli.Context) {
 
 	if c.Bool("prompt") {
 		h := client.Host{
+			ID:      v.ID,
 			Host:    prompt.String("Host", prompt.Prompt{Default: v.Host, FuncPtr: prompt.Regex, FuncInp: ""}),
 			Build:   prompt.Bool("Build", v.Build),
 			Debug:   prompt.Bool("Debug", v.Debug),
@@ -97,11 +98,6 @@ func updateHostCommandFunc(c *cli.Context) {
 		for _, v := range v.Interfaces {
 			h.Interfaces = append(h.Interfaces, updateHostInterface(clnt, h.SiteID, v))
 		}
-
-		//		h.Interfaces = []client.HostInterface{addHostInterface(clnt, h.SiteID)}
-		//		if prompt.Bool("Do you want to add another network interface", false) {
-		//			h.Interfaces = append(h.Interfaces, addHostInterface(clnt, h.SiteID))
-		//		}
 
 		// Is this correct?
 		fmt.Println(string(h.JSON()))
