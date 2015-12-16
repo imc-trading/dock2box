@@ -39,20 +39,20 @@ func updateSiteCommandFunc(c *cli.Context) {
 		clnt.SetDebug()
 	}
 
-	s, err := clnt.Site.Get(site)
+	v, err := clnt.Site.Get(site)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
 	if c.Bool("prompt") {
 		s := client.Site{
-			ID:                 s.ID,
-			Site:               site,
-			Domain:             prompt.String("Domain", prompt.Prompt{Default: s.Domain, FuncPtr: prompt.Regex, FuncInp: ""}),
-			DNS:                strings.Split(prompt.String("DNS", prompt.Prompt{Default: strings.Join(s.DNS, ","), FuncPtr: validateIPv4List, FuncInp: ""}), ","),
-			DockerRegistry:     prompt.String("Docker Registry", prompt.Prompt{Default: s.DockerRegistry, FuncPtr: prompt.Regex, FuncInp: ""}),
-			ArtifactRepository: prompt.String("Artifact Repository", prompt.Prompt{Default: s.ArtifactRepository, FuncPtr: prompt.Regex, FuncInp: ""}),
-			NamingScheme:       prompt.String("Naming Scheme", prompt.Prompt{Default: s.NamingScheme, FuncPtr: prompt.Enum, FuncInp: "serial-number,hardware-address,external"}),
+			ID:                 v.ID,
+			Site:               prompt.String("Site", prompt.Prompt{Default: v.Site, FuncPtr: prompt.Regex, FuncInp: ""}),
+			Domain:             prompt.String("Domain", prompt.Prompt{Default: v.Domain, FuncPtr: prompt.Regex, FuncInp: ""}),
+			DNS:                strings.Split(prompt.String("DNS", prompt.Prompt{Default: strings.Join(v.DNS, ","), FuncPtr: validateIPv4List, FuncInp: ""}), ","),
+			DockerRegistry:     prompt.String("Docker Registry", prompt.Prompt{Default: v.DockerRegistry, FuncPtr: prompt.Regex, FuncInp: ""}),
+			ArtifactRepository: prompt.String("Artifact Repository", prompt.Prompt{Default: v.ArtifactRepository, FuncPtr: prompt.Regex, FuncInp: ""}),
+			NamingScheme:       prompt.String("Naming Scheme", prompt.Prompt{Default: v.NamingScheme, FuncPtr: prompt.Enum, FuncInp: "serial-number,hardware-address,external"}),
 		}
 
 		// Create site

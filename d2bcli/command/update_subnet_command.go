@@ -40,18 +40,18 @@ func updateSubnetCommandFunc(c *cli.Context) {
 		clnt.SetDebug()
 	}
 
-	s, err := clnt.Subnet.Get(subnet)
+	v, err := clnt.Subnet.Get(subnet)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
 	if c.Bool("prompt") {
 		s := client.Subnet{
-			ID:     s.ID,
-			Subnet: strings.Replace(subnet, "-", "/", 1),
-			Mask:   prompt.String("Mask", prompt.Prompt{Default: s.Mask, FuncPtr: validateIPv4, FuncInp: ""}),
-			Gw:     prompt.String("Gateway", prompt.Prompt{Default: s.Gw, FuncPtr: validateIPv4, FuncInp: ""}),
-			SiteID: *chooseSite(clnt, s.SiteID),
+			ID:     v.ID,
+			Subnet: prompt.String("Subnet", prompt.Prompt{Default: v.Subnet, FuncPtr: prompt.Regex, FuncInp: ""}),
+			Mask:   prompt.String("Mask", prompt.Prompt{Default: v.Mask, FuncPtr: validateIPv4, FuncInp: ""}),
+			Gw:     prompt.String("Gateway", prompt.Prompt{Default: v.Gw, FuncPtr: validateIPv4, FuncInp: ""}),
+			SiteID: *chooseSite(clnt, v.SiteID),
 		}
 
 		// Create subnet

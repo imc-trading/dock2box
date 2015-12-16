@@ -38,7 +38,7 @@ func (r *TenantResource) Create(s *Tenant) (*Tenant, error) {
 // Update tenant.
 func (r *TenantResource) Update(name string, s *Tenant) (*Tenant, error) {
 	c := *r.Client
-	j, err := c.Create("/tenants/"+name, s)
+	j, err := c.Update("/tenants/"+name, s)
 	if err != nil {
 		return nil, err
 	}

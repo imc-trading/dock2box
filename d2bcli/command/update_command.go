@@ -13,6 +13,7 @@ func NewUpdateCommand() cli.Command {
 			NewUpdateSubnetCommand(),
 			NewUpdateSiteCommand(),
 			NewUpdateImageCommand(),
+			NewUpdateTenantCommand(),
 		},
 	}
 }
