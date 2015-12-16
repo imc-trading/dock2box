@@ -2,6 +2,8 @@
 
 ```bash
 brew install go
+brew install jq
+
 export GOPATH=~/go
 export PATH=$PATH:$HOME/go/bin
 
