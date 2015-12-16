@@ -43,7 +43,7 @@ func (r *SiteResource) Create(s *Site) (*Site, error) {
 // Update site.
 func (r *SiteResource) Update(name string, s *Site) (*Site, error) {
 	c := *r.Client
-	j, err := c.Create("/sites/"+name, s)
+	j, err := c.Update("/sites/"+name, s)
 	if err != nil {
 		return nil, err
 	}

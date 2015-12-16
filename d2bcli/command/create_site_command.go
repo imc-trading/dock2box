@@ -60,8 +60,7 @@ func createSiteCommandFunc(c *cli.Context) {
 			DNS:                strings.Split(prompt.String("DNS", prompt.Prompt{NoDefault: true, FuncPtr: validateIPv4List, FuncInp: ""}), ","),
 			DockerRegistry:     prompt.String("Docker Registry", prompt.Prompt{NoDefault: true, FuncPtr: prompt.Regex, FuncInp: ""}),
 			ArtifactRepository: prompt.String("Artifact Repository", prompt.Prompt{NoDefault: true, FuncPtr: prompt.Regex, FuncInp: ""}),
-			// Def hwaddr
-			NamingScheme: prompt.String("Naming Scheme", prompt.Prompt{NoDefault: true, FuncPtr: prompt.Enum, FuncInp: "serial-number,hardware-address,external"}),
+			NamingScheme:       prompt.String("Naming Scheme", prompt.Prompt{Default: "hardware-address", FuncPtr: prompt.Enum, FuncInp: "serial-number,hardware-address,external"}),
 		}
 
 		// Create site

@@ -3,6 +3,7 @@ package prompt
 // TODO
 // - Validate by using a ref to JSON Schema
 // - Input interface{} for input args
+// - Enum print choices as [1,2,3]
 
 import (
 	"fmt"

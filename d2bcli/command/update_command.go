@@ -11,6 +11,7 @@ func NewUpdateCommand() cli.Command {
 		Usage: "Update resource",
 		Subcommands: []cli.Command{
 			NewUpdateSubnetCommand(),
+			NewUpdateSiteCommand(),
 		},
 	}
 }
