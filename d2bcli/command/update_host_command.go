@@ -39,23 +39,20 @@ func NewUpdateHostCommand() cli.Command {
 	}
 }
 
-/*
-func updateHostInterface(clnt *client.Client, siteID string) client.HostInterface {
+func updateHostInterface(clnt *client.Client, siteID string, v client.HostInterface) client.HostInterface {
 	ifs := client.HostInterface{
-		Interface: prompt.String("Interface", prompt.Prompt{Default: "eth0", FuncPtr: prompt.Regex, FuncInp: "^[a-z][a-z0-9]+$"}),
-		DHCP:      prompt.Bool("DHCP", false),
-		HwAddr:    prompt.String("Hardware Address", prompt.Prompt{NoDefault: true, FuncPtr: validateHwAddr}),
+		Interface: prompt.String("Interface", prompt.Prompt{Default: v.Interface, FuncPtr: prompt.Regex, FuncInp: "^[a-z][a-z0-9]+$"}),
+		DHCP:      prompt.Bool("DHCP", v.DHCP),
+		HwAddr:    prompt.String("Hardware Address", prompt.Prompt{Default: v.HwAddr, FuncPtr: validateHwAddr}),
 	}
 
 	if !ifs.DHCP {
-		ifs.IPv4 = prompt.String("IP Address", prompt.Prompt{NoDefault: true, FuncPtr: validateIPv4})
-		ifs.SubnetID = *chooseSubnet(clnt, siteID)
-		// Check subnet match IPv4
+		ifs.IPv4 = prompt.String("IP Address", prompt.Prompt{Default: v.IPv4, FuncPtr: validateIPv4})
+		ifs.SubnetID = *chooseSubnet(clnt, siteID, v.SubnetID)
 	}
 
 	return ifs
 }
-*/
 
 func updateHostCommandFunc(c *cli.Context) {
 	if len(c.Args()) == 0 {
@@ -96,6 +93,10 @@ func updateHostCommandFunc(c *cli.Context) {
 		h.KOpts = prompt.String("KOpts", prompt.Prompt{Default: v.KOpts, FuncPtr: prompt.Regex, FuncInp: "^(|[a-zA-Z0-9- ])+$"})
 		h.TenantID = *chooseTenants(clnt, v.TenantID)
 		h.SiteID = *chooseSite(clnt, v.SiteID)
+
+		for _, v := range v.Interfaces {
+			h.Interfaces = append(h.Interfaces, updateHostInterface(clnt, h.SiteID, v))
+		}
 
 		//		h.Interfaces = []client.HostInterface{addHostInterface(clnt, h.SiteID)}
 		//		if prompt.Bool("Do you want to add another network interface", false) {
