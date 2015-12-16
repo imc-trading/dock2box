@@ -25,7 +25,7 @@ func chooseBootImage(clnt *client.Client, bootImageID string) *string {
 	return &images[prompt.Choice("Choose image", def, list)].ID
 }
 
-func chooseImage(clnt *client.Client) *string {
+func chooseImage(clnt *client.Client, imageID string) *string {
 	r, err := clnt.Image.All()
 	if err != nil {
 		log.Fatalf(err.Error())
@@ -33,13 +33,17 @@ func chooseImage(clnt *client.Client) *string {
 
 	images := *r
 	var list []string
-	for _, v := range images {
+	def := -1
+	for i, v := range images {
+		if v.ID == imageID {
+			def = i
+		}
 		list = append(list, v.Image+" type: "+v.Type)
 	}
-	return &images[prompt.Choice("Choose image", -1, list)].ID
+	return &images[prompt.Choice("Choose image", def, list)].ID
 }
 
-func chooseImageVersion(clnt *client.Client, id string) string {
+func chooseImageVersion(clnt *client.Client, id string, version string) string {
 	r, err := clnt.ImageVersion.AllByID(id)
 	if err != nil {
 		log.Fatalf(err.Error())
@@ -47,13 +51,17 @@ func chooseImageVersion(clnt *client.Client, id string) string {
 
 	versions := *r
 	var list []string
-	for _, v := range versions {
+	def := -1
+	for i, v := range versions {
+		if v.Version == version {
+			def = i
+		}
 		list = append(list, v.Version+", created: "+v.Created)
 	}
-	return versions[prompt.Choice("Choose image version", -1, list)].Version
+	return versions[prompt.Choice("Choose image version", def, list)].Version
 }
 
-func chooseTenants(clnt *client.Client) *string {
+func chooseTenants(clnt *client.Client, tenantID string) *string {
 	r, err := clnt.Tenant.All()
 	if err != nil {
 		log.Fatalf(err.Error())
@@ -61,10 +69,14 @@ func chooseTenants(clnt *client.Client) *string {
 
 	tenants := *r
 	var list []string
-	for _, v := range tenants {
+	def := -1
+	for i, v := range tenants {
+		if v.ID == tenantID {
+			def = i
+		}
 		list = append(list, v.Tenant)
 	}
-	return &tenants[prompt.Choice("Choose tenant", -1, list)].ID
+	return &tenants[prompt.Choice("Choose tenant", def, list)].ID
 }
 
 func chooseSite(clnt *client.Client, siteID string) *string {
@@ -85,7 +97,7 @@ func chooseSite(clnt *client.Client, siteID string) *string {
 	return &sites[prompt.Choice("Choose site", def, list)].ID
 }
 
-func chooseSubnet(clnt *client.Client, siteID string) *string {
+func chooseSubnet(clnt *client.Client, siteID string, subnetID string) *string {
 	r, err := clnt.Subnet.All()
 	if err != nil {
 		log.Fatalf(err.Error())
@@ -93,11 +105,15 @@ func chooseSubnet(clnt *client.Client, siteID string) *string {
 
 	subnets := *r
 	var list []string
-	for _, v := range subnets {
+	def := -1
+	for i, v := range subnets {
 		// UGLY: keep until backend supports filters
 		if v.SiteID == siteID {
+			if v.ID == subnetID {
+				def = i
+			}
 			list = append(list, v.Subnet)
 		}
 	}
-	return &subnets[prompt.Choice("Choose subnet", -1, list)].ID
+	return &subnets[prompt.Choice("Choose subnet", def, list)].ID
 }

@@ -14,6 +14,7 @@ func NewUpdateCommand() cli.Command {
 			NewUpdateSiteCommand(),
 			NewUpdateImageCommand(),
 			NewUpdateTenantCommand(),
+			NewUpdateHostCommand(),
 		},
 	}
 }

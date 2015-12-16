@@ -48,7 +48,7 @@ func addHostInterface(clnt *client.Client, siteID string) client.HostInterface {
 
 	if !ifs.DHCP {
 		ifs.IPv4 = prompt.String("IP Address", prompt.Prompt{NoDefault: true, FuncPtr: validateIPv4})
-		ifs.SubnetID = *chooseSubnet(clnt, siteID)
+		ifs.SubnetID = *chooseSubnet(clnt, siteID, "")
 		// Check subnet match IPv4
 	}
 
@@ -74,11 +74,11 @@ func createHostCommandFunc(c *cli.Context) {
 			Build:   prompt.Bool("Build", true),
 			Debug:   prompt.Bool("Debug", false),
 			GPT:     prompt.Bool("GPT", false),
-			ImageID: *chooseImage(clnt),
+			ImageID: *chooseImage(clnt, ""),
 		}
 
 		// Get image version
-		h.Version = chooseImageVersion(clnt, h.ImageID)
+		h.Version = chooseImageVersion(clnt, h.ImageID, "")
 
 		// Get labels
 		labels := prompt.String("Comma-separated list of labels", prompt.Prompt{Default: "", FuncPtr: prompt.Regex, FuncInp: "^([a-zA-Z][a-zA-Z0-9-]+,)*([a-zA-Z][a-zA-Z0-9-]+)$"})
@@ -89,7 +89,7 @@ func createHostCommandFunc(c *cli.Context) {
 		}
 
 		h.KOpts = prompt.String("KOpts", prompt.Prompt{Default: "", FuncPtr: prompt.Regex, FuncInp: "^(|[a-zA-Z0-9- ])+$"})
-		h.TenantID = *chooseTenants(clnt)
+		h.TenantID = *chooseTenants(clnt, "")
 		h.SiteID = *chooseSite(clnt, "")
 
 		h.Interfaces = []client.HostInterface{addHostInterface(clnt, h.SiteID)}
