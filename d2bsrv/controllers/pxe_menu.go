@@ -14,7 +14,7 @@ import (
 	"github.com/imc-trading/dock2box/d2bsrv/models"
 )
 
-var templates = template.Must(template.ParseFiles("templates/menu.html"))
+var templates = template.Must(template.ParseFiles("templates/registered.html"))
 
 type Input struct {
 	HWAddr      string
@@ -28,6 +28,7 @@ type Input struct {
 	Debug       string
 	Images      []models.Image
 	Host        models.Host
+	Subnet      models.Subnet
 }
 
 type PXEMenuController struct {
@@ -103,7 +104,14 @@ func (c PXEMenuController) PXEMenu(w http.ResponseWriter, r *http.Request) {
 
 	// Get host.
 	if err := c.session.DB(c.database).C("hosts").Find(bson.M{"interfaces": bson.M{"$elemMatch": bson.M{"hwAddr": input.HWAddr}}}).One(&input.Host); err != nil {
-		w.WriteHeader(http.StatusNotFound)
+
+		// Unregistered host, get subnet.
+		if err := c.session.DB(c.database).C("subnets").Find(bson.M{"subnet": fmt.Sprintf("%s/%d", input.Network, input.Prefix)}).One(&input.Subnet); err != nil {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+
+		jsonWriter(w, r, input, http.StatusOK)
 		return
 	}
 
