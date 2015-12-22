@@ -1,0 +1,17 @@
+{{define "moon"}}#!ipxe
+console --picture http://dock2box:8080/img/moon.png
+
+colour --rgb 0xaaaaaa 0
+colour --rgb 0xeeeeee 1
+colour --rgb 0xbb9468 2
+colour --rgb 0xdbae7b 3
+
+# Normal user interface
+cpair --foreground 0 1
+
+# Highlighted text
+cpair --foreground 1 --background 2 2
+
+# Separator
+cpair --foreground 3 3
+{{end}}

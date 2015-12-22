@@ -37,7 +37,7 @@
         },
         "pxeTheme": {
             "type": "string",
-            "enum": [ "matrix", "night", "grey", "camouflage", "clouds" ]
+            "enum": [ "matrix", "night", "grey", "camouflage", "clouds", "moon", "saturn", "docker" ]
         },
         "subnets": {
             "type": "array",
