@@ -1,0 +1,26 @@
+{{define "no_subnet"}}#!ipxe
+{{template "night"}}
+set menu-timeout 10000
+set menu-default retry
+
+:start
+imgfree
+
+menu Dock2Box
+item --gap -- ------------------------- Info -------------------------
+item --gap -- Unknown subnet: {{.Network}}/{{.Prefix}}
+item --gap -- Mask: {{.Netmask}}, gateway: {{.Gateway}}
+item --gap -- Please register subnet in Dock2Box before proceeding.
+item --gap --
+item --gap -- ------------------------- Menu -------------------------
+item localdisk Boot from local disk
+item retry Retry PXE boot
+choose --default ${menu-default} --timeout ${menu-timeout} selected
+goto ${selected}
+
+:localdisk
+goto start
+
+:retry
+autoboot
+{{end}}

@@ -2,10 +2,11 @@ package controllers
 
 import (
 	"fmt"
-	"html/template"
 	"net"
 	"net/http"
 	"strconv"
+	"strings"
+	"text/template"
 
 	"github.com/gorilla/mux"
 	"gopkg.in/mgo.v2"
@@ -14,7 +15,23 @@ import (
 	"github.com/imc-trading/dock2box/d2bsrv/models"
 )
 
-var templates = template.Must(template.ParseFiles("templates/registered.html"))
+func Center(size int, deco string, str string) string {
+	if size < len(str) {
+		return str
+	}
+
+	pad := (size - len(str)) / 2
+	lpad := pad
+	rpad := size - len(str) - lpad
+
+	return fmt.Sprintf("%s%s%s", strings.Repeat(deco, lpad), str, strings.Repeat(deco, rpad))
+}
+
+var funcs = template.FuncMap{
+	"center": Center,
+}
+
+var templates = template.Must(template.New("main").Funcs(funcs).ParseGlob("templates/*.tmpl"))
 
 type Input struct {
 	HWAddr      string
@@ -107,11 +124,19 @@ func (c PXEMenuController) PXEMenu(w http.ResponseWriter, r *http.Request) {
 
 		// Unregistered host, get subnet.
 		if err := c.session.DB(c.database).C("subnets").Find(bson.M{"subnet": fmt.Sprintf("%s/%d", input.Network, input.Prefix)}).One(&input.Subnet); err != nil {
+			// Template menu.
+			templates.ExecuteTemplate(w, "no_subnet", input)
+			return
+		}
+
+		// Unregistered host, get site.
+		if err := c.session.DB(c.database).C("sites").Find(bson.M{"_id": input.Subnet.SiteID}).One(&input.Subnet.Site); err != nil {
 			w.WriteHeader(http.StatusNotFound)
 			return
 		}
 
-		jsonWriter(w, r, input, http.StatusOK)
+		// Template menu.
+		templates.ExecuteTemplate(w, "unregistered", input)
 		return
 	}
 
@@ -146,5 +171,5 @@ func (c PXEMenuController) PXEMenu(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Template menu.
-	templates.ExecuteTemplate(w, "menu", input)
+	templates.ExecuteTemplate(w, "registered", input)
 }

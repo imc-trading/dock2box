@@ -1,0 +1,16 @@
+{{define "matrix"}}
+console --picture http://dock2box:8080/img/matrix.png
+
+colour --rgb 0x17a503 0
+colour --rgb 0x20e705 1
+colour --rgb 0xf6fef3 2
+
+# Normal user interface
+cpair --foreground 0 1
+
+# Highlighted text
+cpair --foreground 2 2
+
+# Separator
+cpair --foreground 1 3
+{{end}}

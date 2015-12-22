@@ -1,4 +1,5 @@
-{{define "menu"}}#!ipxe
+{{define "registered"}}#!ipxe
+{{template "night"}}
 set menu-timeout 10000
 set submenu-timeout 10000
 {{if eq .Host.Build true}}set menu-default {{.Host.Image.Image}}
@@ -13,18 +14,22 @@ set boot-kopts {{.Host.Image.BootImage.KOpts}}
 :start
 imgfree
 
-menu Dock2Box, hostname: {{.Host.Host}}, build: {{.Host.Build}}
-item --gap -- debug: {{.Host.Debug}}, hwaddr: {{.HWAddr}}, ipv4: {{.IPv4}}, netmask: {{.Netmask}}, gateway: {{.Gateway}}
-item --gap -- network: {{.Network}}/{{.Prefix}}, site: {{.Host.Site.Site}}, registry: {{.Host.Site.DockerRegistry}}
-item --gap -- --------------- Images ---------------
+menu Dock2Box, hostname: {{.Host.Host}}
+item --gap -- ------------------------- Info -------------------------
+item --gap -- build: {{.Host.Build}}, debug: {{.Host.Debug}}, site: {{.Host.Site.Site}}
+item --gap -- subnet: {{.Network}}/{{.Prefix}}, registry: {{.Host.Site.DockerRegistry}}
+item --gap -- hwaddr: {{.HWAddr}}, ipv4: {{.IPv4}}
+item --gap -- ----------------------- Dock2Box -----------------------
 item localdisk Boot from local disk
+item register Register host
+item --gap -- ------------------------ Images ------------------------
 {{range .Images}}item {{.Image}} {{.Image}}
 {{end}}choose --default ${menu-default} --timeout ${menu-timeout} selected
 goto ${selected}
 
 {{range $k, $e := .Images}}:{{$e.Image}}
 menu Dock2Box, image: {{$e.Image}}
-item --gap -- --------------- Versions ---------------
+item --gap -- ----------------------- Versions -----------------------
 item --key 0x08 back .. (top menu)
 {{range .Versions}}item {{$e.Image}}-{{.Version}} version: {{.Version}} created: {{.Created}}
 {{end}}choose --default ${menu-default}-${submenu-default} --timeout ${menu-timeout} selected
