@@ -9,5 +9,6 @@ type Site struct {
 	DNS                []string      `json:"dns" bson:"dns"`
 	DockerRegistry     string        `json:"dockerRegistry" bson:"dockerRegistry"`
 	ArtifactRepository string        `json:"artifactRepository" bson:"artifactRepository"`
+	PXETheme           string        `json:"pxeTheme" bson:"pxeTheme"`
 	NamingScheme       string        `json:"namingScheme" bson:"namingScheme"`
 }

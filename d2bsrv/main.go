@@ -150,6 +150,11 @@ func main() {
 	// Static files
 	schemas := http.StripPrefix("/"+version.APIVersion+"/schemas/", http.FileServer(http.Dir("schemas")))
 	r.PathPrefix("/" + version.APIVersion + "/schemas/").Handler(schemas)
+
+	// Images
+	img := http.StripPrefix("/img/", http.FileServer(http.Dir("img")))
+	r.PathPrefix("/img/").Handler(img)
+
 	http.Handle("/", r)
 
 	// Fire up the server

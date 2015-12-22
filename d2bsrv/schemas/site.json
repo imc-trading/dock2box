@@ -2,7 +2,7 @@
     "$schema": "http://json-schema.org/draft-04/schema#",
     "title": "Site Schema",
     "type": "object",
-    "required": [ "id", "site", "domain", "dns", "dockerRegistry", "artifactRepository", "namingScheme" ],
+    "required": [ "id", "site", "domain", "dns", "dockerRegistry", "artifactRepository", "namingScheme", "pxeTheme" ],
     "additionalProperties": false,
     "properties": {
         "id": {
@@ -34,6 +34,10 @@
         "namingScheme": {
             "type": "string",
             "enum": [ "serial-number", "hardware-address", "external" ]
+        },
+        "pxeTheme": {
+            "type": "string",
+            "enum": [ "matrix", "night" ]
         },
         "subnets": {
             "type": "array",

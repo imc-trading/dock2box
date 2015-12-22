@@ -77,6 +77,7 @@ cat << EOF > $TMPFILE
     "dockerRegistry": "registry.example.com",
     "artifactRepository": "repository.example.com",
     "namingScheme": "serial-number",
+    "pxeTheme": "night",
     "subnets": [
         {
             "subnet": "192.168.0.0/24",
