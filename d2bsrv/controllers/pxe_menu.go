@@ -131,6 +131,7 @@ func (c PXEMenuController) PXEMenu(w http.ResponseWriter, r *http.Request) {
 			}
 
 			// Template menu.
+			templates.ExecuteTemplate(w, "night", input)
 			templates.ExecuteTemplate(w, "no_subnet", input)
 			return
 		}
@@ -148,6 +149,7 @@ func (c PXEMenuController) PXEMenu(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Template menu.
+		templates.ExecuteTemplate(w, input.Subnet.Site.PXETheme, input)
 		templates.ExecuteTemplate(w, "unregistered", input)
 		return
 	}
@@ -183,5 +185,6 @@ func (c PXEMenuController) PXEMenu(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Template menu.
+	templates.ExecuteTemplate(w, input.Host.Site.PXETheme, input)
 	templates.ExecuteTemplate(w, "registered", input)
 }

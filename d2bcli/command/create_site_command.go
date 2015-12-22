@@ -21,7 +21,7 @@ func NewCreateSiteCommand() cli.Command {
 			cli.StringFlag{Name: "docker-registry, r", Value: "registry", Usage: "Docker Registry for site"},
 			cli.StringFlag{Name: "artifact-repository, a", Value: "repository", Usage: "Artifact repository for site"},
 			cli.StringFlag{Name: "naming-scheme, n", Value: "repository", Usage: "Naming scheme (serial-number, hardware-address, external)"},
-			cli.StringFlag{Name: "pxe-theme, t", Value: "repository", Usage: "PXE Theme (night, matrix)"},
+			cli.StringFlag{Name: "pxe-theme, t", Value: "repository", Usage: "PXE Theme"},
 		},
 		Action: func(c *cli.Context) {
 			createSiteCommandFunc(c)
@@ -50,7 +50,7 @@ func createSiteCommandFunc(c *cli.Context) {
 			DockerRegistry:     prompt.String("Docker Registry", prompt.Prompt{NoDefault: true, FuncPtr: prompt.Regex, FuncInp: ""}),
 			ArtifactRepository: prompt.String("Artifact Repository", prompt.Prompt{NoDefault: true, FuncPtr: prompt.Regex, FuncInp: ""}),
 			NamingScheme:       prompt.String("Naming Scheme", prompt.Prompt{Default: "hardware-address", FuncPtr: prompt.Enum, FuncInp: "serial-number,hardware-address,external"}),
-			PXETheme:           prompt.String("PXE Theme", prompt.Prompt{Default: "night", FuncPtr: prompt.Enum, FuncInp: "night,matrix"}),
+			PXETheme:           prompt.String("PXE Theme", prompt.Prompt{Default: "night", FuncPtr: prompt.Regex, FuncInp: ""}),
 		}
 
 		// Create site

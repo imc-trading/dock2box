@@ -54,7 +54,7 @@ func updateSiteCommandFunc(c *cli.Context) {
 			DockerRegistry:     prompt.String("Docker Registry", prompt.Prompt{Default: v.DockerRegistry, FuncPtr: prompt.Regex, FuncInp: ""}),
 			ArtifactRepository: prompt.String("Artifact Repository", prompt.Prompt{Default: v.ArtifactRepository, FuncPtr: prompt.Regex, FuncInp: ""}),
 			NamingScheme:       prompt.String("Naming Scheme", prompt.Prompt{Default: v.NamingScheme, FuncPtr: prompt.Enum, FuncInp: "serial-number,hardware-address,external"}),
-			PXETheme:           prompt.String("PXE Theme", prompt.Prompt{Default: v.PXETheme, FuncPtr: prompt.Enum, FuncInp: "night,matrix"}),
+			PXETheme:           prompt.String("PXE Theme", prompt.Prompt{Default: v.PXETheme, FuncPtr: prompt.Regex, FuncInp: ""}),
 		}
 
 		// Create site

@@ -1,8 +1,5 @@
 package main
 
-// TODO
-// - Add filters for /subnets
-
 import (
 	"flag"
 	"fmt"

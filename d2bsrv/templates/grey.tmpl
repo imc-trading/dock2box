@@ -1,21 +1,20 @@
-{{define "night"}}#!ipxe
+{{define "grey"}}#!ipxe
 console --x 640 --y 480
 
 colour --rgb 0x222222 0
 colour --rgb 0x444444 1
 colour --rgb 0x9d9d9d 2
 colour --rgb 0xfdfdfd 3
-colour --rgb 0xd6b580 4
-colour --rgb 0x889ab4 5
+colour --rgb 0xcdcdcd 4
 
 # Default
 cpair --foreground 2 --background 0 0
 
 # Normal user interface
-cpair --foreground 4 --background 0 1
+cpair --foreground 2 --background 0 1
 
 # Separator
-cpair --foreground 5 --background 0 3
+cpair --foreground 4 --background 0 3
 
 # Highlighted text
 cpair --foreground 3 --background 1 2
