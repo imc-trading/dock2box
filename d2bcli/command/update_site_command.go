@@ -20,7 +20,8 @@ func NewUpdateSiteCommand() cli.Command {
 			cli.StringFlag{Name: "dns, D", Usage: "Comma-separated list of dns servers"},
 			cli.StringFlag{Name: "docker-registry, r", Value: "registry", Usage: "Docker Registry for site"},
 			cli.StringFlag{Name: "artifact-repository, a", Value: "repository", Usage: "Artifact repository for site"},
-			cli.StringFlag{Name: "naming-scheme, n", Value: "repository", Usage: "Naming scheme (serial-number, hardware-address, external)"},
+			cli.StringFlag{Name: "naming-scheme, n", Value: "hardware-address", Usage: "Naming scheme (serial-number, hardware-address, external)"},
+			cli.StringFlag{Name: "pxe-theme, t", Value: "night", Usage: "PXE Theme (night, matrix)"},
 		},
 		Action: func(c *cli.Context) {
 			updateSiteCommandFunc(c)
@@ -53,6 +54,7 @@ func updateSiteCommandFunc(c *cli.Context) {
 			DockerRegistry:     prompt.String("Docker Registry", prompt.Prompt{Default: v.DockerRegistry, FuncPtr: prompt.Regex, FuncInp: ""}),
 			ArtifactRepository: prompt.String("Artifact Repository", prompt.Prompt{Default: v.ArtifactRepository, FuncPtr: prompt.Regex, FuncInp: ""}),
 			NamingScheme:       prompt.String("Naming Scheme", prompt.Prompt{Default: v.NamingScheme, FuncPtr: prompt.Enum, FuncInp: "serial-number,hardware-address,external"}),
+			PXETheme:           prompt.String("PXE Theme", prompt.Prompt{Default: v.PXETheme, FuncPtr: prompt.Enum, FuncInp: "night,matrix"}),
 		}
 
 		// Create site

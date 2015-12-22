@@ -16,6 +16,7 @@ type Site struct {
 	DockerRegistry     string   `json:"dockerRegistry"`
 	ArtifactRepository string   `json:"artifactRepository"`
 	NamingScheme       string   `json:"namingScheme"`
+	PXETheme           string   `json:"pxeTheme"`
 }
 
 // JSON output for a site.

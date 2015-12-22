@@ -29,7 +29,7 @@ goto ${selected}
 
 {{range $k, $e := .Images}}:{{$e.Image}}
 menu Dock2Box
-item --gap -- --------------------------- Versions ---------------------------
+item --gap -- {{center 65 "-" " Versions "}}
 item --key 0x08 back .. (top menu)
 {{range .Versions}}item {{$e.Image}}-{{.Version}} version: {{.Version}} created: {{.Created}}
 {{end}}choose --default ${menu-default}-${submenu-default} --timeout ${menu-timeout} selected
