@@ -124,6 +124,12 @@ func (c PXEMenuController) PXEMenu(w http.ResponseWriter, r *http.Request) {
 
 		// Unregistered host, get subnet.
 		if err := c.session.DB(c.database).C("subnets").Find(bson.M{"subnet": fmt.Sprintf("%s/%d", input.Network, input.Prefix)}).One(&input.Subnet); err != nil {
+			// Print debug.
+			if input.Debug == "true" {
+				jsonWriter(w, r, input, http.StatusOK)
+				return
+			}
+
 			// Template menu.
 			templates.ExecuteTemplate(w, "no_subnet", input)
 			return
@@ -132,6 +138,12 @@ func (c PXEMenuController) PXEMenu(w http.ResponseWriter, r *http.Request) {
 		// Unregistered host, get site.
 		if err := c.session.DB(c.database).C("sites").Find(bson.M{"_id": input.Subnet.SiteID}).One(&input.Subnet.Site); err != nil {
 			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+
+		// Print debug.
+		if input.Debug == "true" {
+			jsonWriter(w, r, input, http.StatusOK)
 			return
 		}
 
