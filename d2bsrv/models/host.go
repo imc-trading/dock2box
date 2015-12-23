@@ -11,7 +11,9 @@ type Host struct {
 	ImageID    bson.ObjectId   `json:"imageId" bson:"imageId"`
 	ImageRef   string          `json:"imageRef" bson:"imageRef"`
 	Image      *Image          `json:"image,omitempty"`
-	Version    string          `json:"version" bson:"version"`
+	VersionID  bson.ObjectId   `json:"imageId" bson:"imageId"`
+	VersionRef string          `json:"imageRef" bson:"imageRef"`
+	Version    *ImageVersion   `json:"version,omitempty"`
 	KOpts      string          `json:"kOpts" bson:"kOpts"`
 	TenantID   bson.ObjectId   `json:"tenantId" bson:"tenantId"`
 	TenantRef  string          `json:"tenantRef" bson:"tenantRef"`

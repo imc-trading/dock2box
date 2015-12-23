@@ -22,7 +22,7 @@ type ImageVersionController struct {
 func NewImageVersionController(s *mgo.Session) *ImageVersionController {
 	return &ImageVersionController{
 		database:  "d2b",
-		schemaURI: "file://schemas/image.json",
+		schemaURI: "file://schemas/image-version.json",
 		session:   s,
 	}
 }
@@ -32,26 +32,73 @@ func (c *ImageVersionController) SetDatabase(database string) {
 }
 
 func (c *ImageVersionController) SetSchemaURI(uri string) {
-	c.schemaURI = uri + "image.json"
+	c.schemaURI = uri + "/image-version.json"
+}
+
+func (c *ImageVersionController) CreateIndex() {
+	index := mgo.Index{
+		Key:    []string{"version"},
+		Unique: true,
+	}
+
+	if err := c.session.DB(c.database).C("image_versions").EnsureIndex(index); err != nil {
+		panic(err)
+	}
 }
 
 func (c *ImageVersionController) All(w http.ResponseWriter, r *http.Request) {
-	name := mux.Vars(r)["name"]
+	// Initialize empty struct list
+	s := []models.ImageVersion{}
 
-	// Initialize empty struct
-	s := models.Image{}
-
-	// Get entry
-	if err := c.session.DB(c.database).C("images").Find(bson.M{"image": name}).One(&s); err != nil {
+	// Get all entries
+	if err := c.session.DB(c.database).C("image_versions").Find(nil).All(&s); err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 
+	/*
+		if r.URL.Query().Get("embed") == "true" {
+			for i, v := range s {
+				// Get boot image
+				if err := c.session.DB(c.database).C("boot_images").FindId(v.BootImageVersionID).One(&s[i].BootImageVersion); err != nil {
+					w.WriteHeader(http.StatusNotFound)
+					return
+				}
+			}
+		}
+	*/
+
 	// Write content-type, header and payload
-	jsonWriter(w, r, s.Versions, http.StatusOK)
+	jsonWriter(w, r, s, http.StatusOK)
 }
 
-func (c *ImageVersionController) AllByID(w http.ResponseWriter, r *http.Request) {
+func (c *ImageVersionController) Get(w http.ResponseWriter, r *http.Request) {
+	name := mux.Vars(r)["name"]
+
+	// Initialize empty struct
+	s := models.ImageVersion{}
+
+	// Get entry
+	if err := c.session.DB(c.database).C("image_versions").Find(bson.M{"version": name}).One(&s); err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	/*
+		if r.URL.Query().Get("embed") == "true" {
+			// Get boot image
+			if err := c.session.DB(c.database).C("boot_images").FindId(s.BootImageVersionID).One(&s.BootImageVersion); err != nil {
+				w.WriteHeader(http.StatusNotFound)
+				return
+			}
+		}
+	*/
+
+	// Write content-type, header and payload
+	jsonWriter(w, r, s, http.StatusOK)
+}
+
+func (c *ImageVersionController) GetByID(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
 	// Validate ObjectId
@@ -64,45 +111,29 @@ func (c *ImageVersionController) AllByID(w http.ResponseWriter, r *http.Request)
 	oid := bson.ObjectIdHex(id)
 
 	// Initialize empty struct
-	s := models.Image{}
+	s := models.ImageVersion{}
 
 	// Get entry
-	if err := c.session.DB(c.database).C("images").FindId(oid).One(&s); err != nil {
+	if err := c.session.DB(c.database).C("image_versions").FindId(oid).One(&s); err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
+
+	/*
+		if r.URL.Query().Get("embed") == "true" {
+			// Get boot image
+			if err := c.session.DB(c.database).C("boot_images").FindId(s.BootImageVersionID).One(&s.BootImageVersion); err != nil {
+				w.WriteHeader(http.StatusNotFound)
+				return
+			}
+		}
+	*/
 
 	// Write content-type, header and payload
-	jsonWriter(w, r, s.Versions, http.StatusOK)
-}
-
-func (c *ImageVersionController) Get(w http.ResponseWriter, r *http.Request) {
-	name := mux.Vars(r)["name"]
-	version := mux.Vars(r)["version"]
-
-	// Initialize empty struct
-	s := models.Image{}
-
-	// Get entry
-	if err := c.session.DB(c.database).C("images").Find(bson.M{"image": name}).One(&s); err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		return
-	}
-
-	for _, e := range s.Versions {
-		if e.Version == version {
-			// Write content-type, header and payload
-			jsonWriter(w, r, e, http.StatusOK)
-			return
-		}
-	}
-
-	w.WriteHeader(http.StatusNotFound)
+	jsonWriter(w, r, s, http.StatusOK)
 }
 
 func (c *ImageVersionController) Create(w http.ResponseWriter, r *http.Request) {
-	name := mux.Vars(r)["name"]
-
 	// Initialize empty struct
 	s := models.ImageVersion{}
 
@@ -113,12 +144,88 @@ func (c *ImageVersionController) Create(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	// Initialize empty struct
-	s2 := models.Image{}
+	// Set ID
+	s.ID = bson.NewObjectId()
 
-	// Get entry
-	if err := c.session.DB(c.database).C("images").Find(bson.M{"image": name}).One(&s2); err != nil {
+	// Validate input using JSON Schema
+	docLoader := gojsonschema.NewGoLoader(s)
+	schemaLoader := gojsonschema.NewReferenceLoader(c.schemaURI)
+
+	res, err := gojsonschema.Validate(schemaLoader, docLoader)
+	if err != nil {
+		jsonError(w, r, "Failed to load schema: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if !res.Valid() {
+		var errors []string
+		for _, e := range res.Errors() {
+			errors = append(errors, fmt.Sprintf("%s: %s", e.Context().String(), e.Description()))
+		}
+		jsonError(w, r, errors, http.StatusInternalServerError)
+		return
+	}
+
+	// Set refs
+	//	s.BootImageVersionRef = "/boot-images/id/" + s.BootImageVersionID.Hex()
+
+	// Insert entry
+	if err := c.session.DB(c.database).C("image_versions").Insert(s); err != nil {
+		jsonError(w, r, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Write content-type, header and payload
+	jsonWriter(w, r, s, http.StatusCreated)
+}
+
+func (c *ImageVersionController) Remove(w http.ResponseWriter, r *http.Request) {
+	// Get name
+	name := mux.Vars(r)["name"]
+
+	// Remove entry
+	if err := c.session.DB(c.database).C("image_versions").Remove(bson.M{"image_versions": name}); err != nil {
 		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	// Write status
+	jsonWriter(w, r, nil, http.StatusOK)
+}
+
+func (c *ImageVersionController) RemoveByID(w http.ResponseWriter, r *http.Request) {
+	// Get ID
+	id := mux.Vars(r)["id"]
+
+	// Validate ObjectId
+	if !bson.IsObjectIdHex(id) {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	// Get new ID
+	oid := bson.ObjectIdHex(id)
+
+	// Remove entry
+	if err := c.session.DB(c.database).C("image_versions").RemoveId(oid); err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	// Write status
+	jsonWriter(w, r, nil, http.StatusOK)
+}
+
+func (c *ImageVersionController) Update(w http.ResponseWriter, r *http.Request) {
+	name := mux.Vars(r)["name"]
+
+	// Initialize empty struct
+	s := models.ImageVersion{}
+
+	// Decode JSON into struct
+	err := json.NewDecoder(r.Body).Decode(&s)
+	if err != nil {
+		jsonError(w, r, "Failed to deconde JSON: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 
@@ -141,20 +248,15 @@ func (c *ImageVersionController) Create(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	for _, e := range s2.Versions {
-		if e.Version == s.Version {
-			jsonError(w, r, "Duplicate version already exists", http.StatusInternalServerError)
-			return
-		}
-	}
-
-	s2.Versions = append(s2.Versions, s)
+	// Set refs
+	//	s.BootImageVersionRef = "/boot-images/id/" + s.BootImageVersionID.Hex()
 
 	// Update entry
-	if err := c.session.DB(c.database).C("images").Update(bson.M{"image": name}, s2); err != nil {
+	if err := c.session.DB(c.database).C("image_versions").Update(bson.M{"version": name}, s); err != nil {
 		jsonError(w, r, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
 	// Write content-type, header and payload
-	jsonWriter(w, r, s, http.StatusCreated)
+	jsonWriter(w, r, s, http.StatusOK)
 }
