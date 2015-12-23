@@ -1,0 +1,22 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Image Version Schema",
+    "type": "object",
+    "required": [ "id", "imageId", "version", "created" ],
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+          "$ref": "types.json#definitions/id"
+        },
+        "imageId": {
+          "$ref": "types.json#definitions/id"
+        },
+        "version": {
+          "$ref": "types.json#definitions/version"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        }
+    }
+}
