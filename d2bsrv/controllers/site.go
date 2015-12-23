@@ -11,26 +11,31 @@ import (
 	"gopkg.in/mgo.v2/bson"
 
 	"github.com/imc-trading/dock2box/d2bsrv/models"
-	"github.com/imc-trading/dock2box/d2bsrv/version"
 )
 
 type SiteController struct {
-	database string
-	session  *mgo.Session
+	database  string
+	schemaURI string
+	session   *mgo.Session
 }
 
 func NewSiteController(s *mgo.Session) *SiteController {
 	return &SiteController{
-		database: "d2b",
-		session:  s,
+		database:  "d2b",
+		schemaURI: "file://schemas/site.json",
+		session:   s,
 	}
 }
 
-func (c SiteController) SetDatabase(database string) {
+func (c *SiteController) SetDatabase(database string) {
 	c.database = database
 }
 
-func (c SiteController) CreateIndex() {
+func (c *SiteController) SetSchemaURI(uri string) {
+	c.schemaURI = uri + "/site.json"
+}
+
+func (c *SiteController) CreateIndex() {
 	index := mgo.Index{
 		Key:    []string{"site"},
 		Unique: true,
@@ -41,7 +46,7 @@ func (c SiteController) CreateIndex() {
 	}
 }
 
-func (c SiteController) All(w http.ResponseWriter, r *http.Request) {
+func (c *SiteController) All(w http.ResponseWriter, r *http.Request) {
 	// Initialize empty struct list
 	s := []models.Site{}
 
@@ -55,7 +60,7 @@ func (c SiteController) All(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusOK)
 }
 
-func (c SiteController) Get(w http.ResponseWriter, r *http.Request) {
+func (c *SiteController) Get(w http.ResponseWriter, r *http.Request) {
 	name := mux.Vars(r)["name"]
 
 	// Initialize empty struct
@@ -71,7 +76,7 @@ func (c SiteController) Get(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusOK)
 }
 
-func (c SiteController) GetByID(w http.ResponseWriter, r *http.Request) {
+func (c *SiteController) GetByID(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
 	// Validate ObjectId
@@ -96,7 +101,7 @@ func (c SiteController) GetByID(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusOK)
 }
 
-func (c SiteController) Create(w http.ResponseWriter, r *http.Request) {
+func (c *SiteController) Create(w http.ResponseWriter, r *http.Request) {
 	// Initialize empty struct
 	s := models.Site{}
 
@@ -112,7 +117,7 @@ func (c SiteController) Create(w http.ResponseWriter, r *http.Request) {
 
 	// Validate input using JSON Schema
 	docLoader := gojsonschema.NewGoLoader(s)
-	schemaLoader := gojsonschema.NewReferenceLoader("http://localhost:8080/" + version.APIVersion + "/schemas/site.json")
+	schemaLoader := gojsonschema.NewReferenceLoader(c.schemaURI)
 
 	res, err := gojsonschema.Validate(schemaLoader, docLoader)
 	if err != nil {
@@ -139,7 +144,7 @@ func (c SiteController) Create(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusCreated)
 }
 
-func (c SiteController) Remove(w http.ResponseWriter, r *http.Request) {
+func (c *SiteController) Remove(w http.ResponseWriter, r *http.Request) {
 	// Get name
 	name := mux.Vars(r)["name"]
 
@@ -153,7 +158,7 @@ func (c SiteController) Remove(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, nil, http.StatusOK)
 }
 
-func (c SiteController) RemoveByID(w http.ResponseWriter, r *http.Request) {
+func (c *SiteController) RemoveByID(w http.ResponseWriter, r *http.Request) {
 	// Get ID
 	id := mux.Vars(r)["id"]
 
@@ -176,7 +181,7 @@ func (c SiteController) RemoveByID(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, nil, http.StatusOK)
 }
 
-func (c SiteController) Update(w http.ResponseWriter, r *http.Request) {
+func (c *SiteController) Update(w http.ResponseWriter, r *http.Request) {
 	name := mux.Vars(r)["name"]
 
 	// Initialize empty struct
@@ -191,7 +196,7 @@ func (c SiteController) Update(w http.ResponseWriter, r *http.Request) {
 
 	// Validate input using JSON Schema
 	docLoader := gojsonschema.NewGoLoader(s)
-	schemaLoader := gojsonschema.NewReferenceLoader("http://localhost:8080/" + version.APIVersion + "/schemas/site.json")
+	schemaLoader := gojsonschema.NewReferenceLoader(c.schemaURI)
 
 	res, err := gojsonschema.Validate(schemaLoader, docLoader)
 	if err != nil {

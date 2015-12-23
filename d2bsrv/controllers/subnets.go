@@ -11,26 +11,31 @@ import (
 	"gopkg.in/mgo.v2/bson"
 
 	"github.com/imc-trading/dock2box/d2bsrv/models"
-	"github.com/imc-trading/dock2box/d2bsrv/version"
 )
 
 type SubnetController struct {
-	database string
-	session  *mgo.Session
+	database  string
+	schemaURI string
+	session   *mgo.Session
 }
 
 func NewSubnetController(s *mgo.Session) *SubnetController {
 	return &SubnetController{
-		database: "d2b",
-		session:  s,
+		database:  "d2b",
+		schemaURI: "file://schemas/subnet.json",
+		session:   s,
 	}
 }
 
-func (c SubnetController) SetDatabase(database string) {
+func (c *SubnetController) SetDatabase(database string) {
 	c.database = database
 }
 
-func (c SubnetController) CreateIndex() {
+func (c *SubnetController) SetSchemaURI(uri string) {
+	c.schemaURI = uri + "/subnet.json"
+}
+
+func (c *SubnetController) CreateIndex() {
 	index := mgo.Index{
 		Key:    []string{"subnet"},
 		Unique: true,
@@ -41,7 +46,7 @@ func (c SubnetController) CreateIndex() {
 	}
 }
 
-func (c SubnetController) All(w http.ResponseWriter, r *http.Request) {
+func (c *SubnetController) All(w http.ResponseWriter, r *http.Request) {
 	// Initialize empty struct list
 	s := []models.Subnet{}
 
@@ -65,7 +70,7 @@ func (c SubnetController) All(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusOK)
 }
 
-func (c SubnetController) Get(w http.ResponseWriter, r *http.Request) {
+func (c *SubnetController) Get(w http.ResponseWriter, r *http.Request) {
 	name := mux.Vars(r)["name"]
 	prefix := mux.Vars(r)["prefix"]
 
@@ -90,7 +95,7 @@ func (c SubnetController) Get(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusOK)
 }
 
-func (c SubnetController) GetByID(w http.ResponseWriter, r *http.Request) {
+func (c *SubnetController) GetByID(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
 	// Validate ObjectId
@@ -124,7 +129,7 @@ func (c SubnetController) GetByID(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusOK)
 }
 
-func (c SubnetController) Create(w http.ResponseWriter, r *http.Request) {
+func (c *SubnetController) Create(w http.ResponseWriter, r *http.Request) {
 	// Initialize empty struct
 	s := models.Subnet{}
 
@@ -140,7 +145,7 @@ func (c SubnetController) Create(w http.ResponseWriter, r *http.Request) {
 
 	// Validate input using JSON Schema
 	docLoader := gojsonschema.NewGoLoader(s)
-	schemaLoader := gojsonschema.NewReferenceLoader("http://localhost:8080/" + version.APIVersion + "/schemas/subnet.json")
+	schemaLoader := gojsonschema.NewReferenceLoader(c.schemaURI)
 
 	res, err := gojsonschema.Validate(schemaLoader, docLoader)
 	if err != nil {
@@ -170,7 +175,7 @@ func (c SubnetController) Create(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusCreated)
 }
 
-func (c SubnetController) Remove(w http.ResponseWriter, r *http.Request) {
+func (c *SubnetController) Remove(w http.ResponseWriter, r *http.Request) {
 	// Get name
 	name := mux.Vars(r)["name"]
 	prefix := mux.Vars(r)["prefix"]
@@ -185,7 +190,7 @@ func (c SubnetController) Remove(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, nil, http.StatusOK)
 }
 
-func (c SubnetController) RemoveByID(w http.ResponseWriter, r *http.Request) {
+func (c *SubnetController) RemoveByID(w http.ResponseWriter, r *http.Request) {
 	// Get ID
 	id := mux.Vars(r)["id"]
 
@@ -208,7 +213,7 @@ func (c SubnetController) RemoveByID(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, nil, http.StatusOK)
 }
 
-func (c SubnetController) Update(w http.ResponseWriter, r *http.Request) {
+func (c *SubnetController) Update(w http.ResponseWriter, r *http.Request) {
 	name := mux.Vars(r)["name"]
 	prefix := mux.Vars(r)["prefix"]
 
@@ -224,7 +229,7 @@ func (c SubnetController) Update(w http.ResponseWriter, r *http.Request) {
 
 	// Validate input using JSON Schema
 	docLoader := gojsonschema.NewGoLoader(s)
-	schemaLoader := gojsonschema.NewReferenceLoader("http://localhost:8080/" + version.APIVersion + "/schemas/subnet.json")
+	schemaLoader := gojsonschema.NewReferenceLoader(c.schemaURI)
 
 	res, err := gojsonschema.Validate(schemaLoader, docLoader)
 	if err != nil {

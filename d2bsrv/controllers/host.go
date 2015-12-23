@@ -11,26 +11,31 @@ import (
 	"gopkg.in/mgo.v2/bson"
 
 	"github.com/imc-trading/dock2box/d2bsrv/models"
-	"github.com/imc-trading/dock2box/d2bsrv/version"
 )
 
 type HostController struct {
-	database string
-	session  *mgo.Session
+	database  string
+	schemaURI string
+	session   *mgo.Session
 }
 
 func NewHostController(s *mgo.Session) *HostController {
 	return &HostController{
-		database: "d2b",
-		session:  s,
+		database:  "d2b",
+		schemaURI: "file://schemas/host.json",
+		session:   s,
 	}
 }
 
-func (c HostController) SetDatabase(database string) {
+func (c *HostController) SetDatabase(database string) {
 	c.database = database
 }
 
-func (c HostController) CreateIndex() {
+func (c *HostController) SetSchemaURI(uri string) {
+	c.schemaURI = uri + "/host.json"
+}
+
+func (c *HostController) CreateIndex() {
 	index := mgo.Index{
 		Key:    []string{"host"},
 		Unique: true,
@@ -41,7 +46,7 @@ func (c HostController) CreateIndex() {
 	}
 }
 
-func (c HostController) All(w http.ResponseWriter, r *http.Request) {
+func (c *HostController) All(w http.ResponseWriter, r *http.Request) {
 	// Initialize empty struct list
 	s := []models.Host{}
 
@@ -89,7 +94,7 @@ func (c HostController) All(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusOK)
 }
 
-func (c HostController) Get(w http.ResponseWriter, r *http.Request) {
+func (c *HostController) Get(w http.ResponseWriter, r *http.Request) {
 	name := mux.Vars(r)["name"]
 
 	// Initialize empty struct
@@ -137,7 +142,7 @@ func (c HostController) Get(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusOK)
 }
 
-func (c HostController) GetByID(w http.ResponseWriter, r *http.Request) {
+func (c *HostController) GetByID(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
 	// Validate ObjectId
@@ -194,7 +199,7 @@ func (c HostController) GetByID(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusOK)
 }
 
-func (c HostController) Create(w http.ResponseWriter, r *http.Request) {
+func (c *HostController) Create(w http.ResponseWriter, r *http.Request) {
 	// Initialize empty struct
 	s := models.Host{
 		Interfaces: []models.HostInterface{},
@@ -212,7 +217,7 @@ func (c HostController) Create(w http.ResponseWriter, r *http.Request) {
 
 	// Validate input using JSON Schema
 	docLoader := gojsonschema.NewGoLoader(s)
-	schemaLoader := gojsonschema.NewReferenceLoader("http://localhost:8080/" + version.APIVersion + "/schemas/host.json")
+	schemaLoader := gojsonschema.NewReferenceLoader(c.schemaURI)
 
 	res, err := gojsonschema.Validate(schemaLoader, docLoader)
 	if err != nil {
@@ -258,7 +263,7 @@ func (c HostController) Create(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusCreated)
 }
 
-func (c HostController) Remove(w http.ResponseWriter, r *http.Request) {
+func (c *HostController) Remove(w http.ResponseWriter, r *http.Request) {
 	// Get name
 	name := mux.Vars(r)["name"]
 
@@ -281,7 +286,7 @@ func (c HostController) Remove(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusOK)
 }
 
-func (c HostController) RemoveByID(w http.ResponseWriter, r *http.Request) {
+func (c *HostController) RemoveByID(w http.ResponseWriter, r *http.Request) {
 	// Get ID
 	id := mux.Vars(r)["id"]
 
@@ -313,7 +318,7 @@ func (c HostController) RemoveByID(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusOK)
 }
 
-func (c HostController) Update(w http.ResponseWriter, r *http.Request) {
+func (c *HostController) Update(w http.ResponseWriter, r *http.Request) {
 	name := mux.Vars(r)["name"]
 
 	// Initialize empty struct
@@ -328,7 +333,7 @@ func (c HostController) Update(w http.ResponseWriter, r *http.Request) {
 
 	// Validate input using JSON Schema
 	docLoader := gojsonschema.NewGoLoader(s)
-	schemaLoader := gojsonschema.NewReferenceLoader("http://localhost:8080/" + version.APIVersion + "/schemas/host.json")
+	schemaLoader := gojsonschema.NewReferenceLoader(c.schemaURI)
 
 	res, err := gojsonschema.Validate(schemaLoader, docLoader)
 	if err != nil {

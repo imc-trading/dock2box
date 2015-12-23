@@ -11,26 +11,31 @@ import (
 	"gopkg.in/mgo.v2/bson"
 
 	"github.com/imc-trading/dock2box/d2bsrv/models"
-	"github.com/imc-trading/dock2box/d2bsrv/version"
 )
 
 type ImageVersionController struct {
-	database string
-	session  *mgo.Session
+	database  string
+	schemaURI string
+	session   *mgo.Session
 }
 
 func NewImageVersionController(s *mgo.Session) *ImageVersionController {
 	return &ImageVersionController{
-		database: "d2b",
-		session:  s,
+		database:  "d2b",
+		schemaURI: "file://schemas/image.json",
+		session:   s,
 	}
 }
 
-func (c ImageVersionController) SetDatabase(database string) {
+func (c *ImageVersionController) SetDatabase(database string) {
 	c.database = database
 }
 
-func (c ImageVersionController) All(w http.ResponseWriter, r *http.Request) {
+func (c *ImageVersionController) SetSchemaURI(uri string) {
+	c.schemaURI = uri + "image.json"
+}
+
+func (c *ImageVersionController) All(w http.ResponseWriter, r *http.Request) {
 	name := mux.Vars(r)["name"]
 
 	// Initialize empty struct
@@ -46,7 +51,7 @@ func (c ImageVersionController) All(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s.Versions, http.StatusOK)
 }
 
-func (c ImageVersionController) AllByID(w http.ResponseWriter, r *http.Request) {
+func (c *ImageVersionController) AllByID(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
 	// Validate ObjectId
@@ -71,7 +76,7 @@ func (c ImageVersionController) AllByID(w http.ResponseWriter, r *http.Request) 
 	jsonWriter(w, r, s.Versions, http.StatusOK)
 }
 
-func (c ImageVersionController) Get(w http.ResponseWriter, r *http.Request) {
+func (c *ImageVersionController) Get(w http.ResponseWriter, r *http.Request) {
 	name := mux.Vars(r)["name"]
 	version := mux.Vars(r)["version"]
 
@@ -95,7 +100,7 @@ func (c ImageVersionController) Get(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNotFound)
 }
 
-func (c ImageVersionController) Create(w http.ResponseWriter, r *http.Request) {
+func (c *ImageVersionController) Create(w http.ResponseWriter, r *http.Request) {
 	name := mux.Vars(r)["name"]
 
 	// Initialize empty struct
@@ -119,7 +124,7 @@ func (c ImageVersionController) Create(w http.ResponseWriter, r *http.Request) {
 
 	// Validate input using JSON Schema
 	docLoader := gojsonschema.NewGoLoader(s)
-	schemaLoader := gojsonschema.NewReferenceLoader("http://localhost:8080/" + version.APIVersion + "/schemas/version.json")
+	schemaLoader := gojsonschema.NewReferenceLoader(c.schemaURI)
 
 	res, err := gojsonschema.Validate(schemaLoader, docLoader)
 	if err != nil {

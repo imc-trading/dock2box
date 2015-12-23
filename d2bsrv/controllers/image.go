@@ -11,26 +11,31 @@ import (
 	"gopkg.in/mgo.v2/bson"
 
 	"github.com/imc-trading/dock2box/d2bsrv/models"
-	"github.com/imc-trading/dock2box/d2bsrv/version"
 )
 
 type ImageController struct {
-	database string
-	session  *mgo.Session
+	database  string
+	schemaURI string
+	session   *mgo.Session
 }
 
 func NewImageController(s *mgo.Session) *ImageController {
 	return &ImageController{
-		database: "d2b",
-		session:  s,
+		database:  "d2b",
+		schemaURI: "file://schemas/image.json",
+		session:   s,
 	}
 }
 
-func (c ImageController) SetDatabase(database string) {
+func (c *ImageController) SetDatabase(database string) {
 	c.database = database
 }
 
-func (c ImageController) CreateIndex() {
+func (c *ImageController) SetSchemaURI(uri string) {
+	c.schemaURI = uri + "/image.json"
+}
+
+func (c *ImageController) CreateIndex() {
 	index := mgo.Index{
 		Key:    []string{"image"},
 		Unique: true,
@@ -41,7 +46,7 @@ func (c ImageController) CreateIndex() {
 	}
 }
 
-func (c ImageController) All(w http.ResponseWriter, r *http.Request) {
+func (c *ImageController) All(w http.ResponseWriter, r *http.Request) {
 	// Initialize empty struct list
 	s := []models.Image{}
 
@@ -65,7 +70,7 @@ func (c ImageController) All(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusOK)
 }
 
-func (c ImageController) Get(w http.ResponseWriter, r *http.Request) {
+func (c *ImageController) Get(w http.ResponseWriter, r *http.Request) {
 	name := mux.Vars(r)["name"]
 
 	// Initialize empty struct
@@ -89,7 +94,7 @@ func (c ImageController) Get(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusOK)
 }
 
-func (c ImageController) GetByID(w http.ResponseWriter, r *http.Request) {
+func (c *ImageController) GetByID(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
 	// Validate ObjectId
@@ -122,7 +127,7 @@ func (c ImageController) GetByID(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusOK)
 }
 
-func (c ImageController) Create(w http.ResponseWriter, r *http.Request) {
+func (c *ImageController) Create(w http.ResponseWriter, r *http.Request) {
 	// Initialize empty struct
 	s := models.Image{}
 
@@ -138,7 +143,7 @@ func (c ImageController) Create(w http.ResponseWriter, r *http.Request) {
 
 	// Validate input using JSON Schema
 	docLoader := gojsonschema.NewGoLoader(s)
-	schemaLoader := gojsonschema.NewReferenceLoader("http://localhost:8080/" + version.APIVersion + "/schemas/image.json")
+	schemaLoader := gojsonschema.NewReferenceLoader(c.schemaURI)
 
 	res, err := gojsonschema.Validate(schemaLoader, docLoader)
 	if err != nil {
@@ -168,7 +173,7 @@ func (c ImageController) Create(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusCreated)
 }
 
-func (c ImageController) Remove(w http.ResponseWriter, r *http.Request) {
+func (c *ImageController) Remove(w http.ResponseWriter, r *http.Request) {
 	// Get name
 	name := mux.Vars(r)["name"]
 
@@ -182,7 +187,7 @@ func (c ImageController) Remove(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, nil, http.StatusOK)
 }
 
-func (c ImageController) RemoveByID(w http.ResponseWriter, r *http.Request) {
+func (c *ImageController) RemoveByID(w http.ResponseWriter, r *http.Request) {
 	// Get ID
 	id := mux.Vars(r)["id"]
 
@@ -205,7 +210,7 @@ func (c ImageController) RemoveByID(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, nil, http.StatusOK)
 }
 
-func (c ImageController) Update(w http.ResponseWriter, r *http.Request) {
+func (c *ImageController) Update(w http.ResponseWriter, r *http.Request) {
 	name := mux.Vars(r)["name"]
 
 	// Initialize empty struct
@@ -220,7 +225,7 @@ func (c ImageController) Update(w http.ResponseWriter, r *http.Request) {
 
 	// Validate input using JSON Schema
 	docLoader := gojsonschema.NewGoLoader(s)
-	schemaLoader := gojsonschema.NewReferenceLoader("http://localhost:8080/" + version.APIVersion + "/schemas/image.json")
+	schemaLoader := gojsonschema.NewReferenceLoader(c.schemaURI)
 
 	res, err := gojsonschema.Validate(schemaLoader, docLoader)
 	if err != nil {

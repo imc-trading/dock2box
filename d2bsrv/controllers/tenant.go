@@ -3,6 +3,7 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -11,26 +12,31 @@ import (
 	"gopkg.in/mgo.v2/bson"
 
 	"github.com/imc-trading/dock2box/d2bsrv/models"
-	"github.com/imc-trading/dock2box/d2bsrv/version"
 )
 
 type TenantController struct {
-	database string
-	session  *mgo.Session
+	database  string
+	schemaURI string
+	session   *mgo.Session
 }
 
 func NewTenantController(s *mgo.Session) *TenantController {
 	return &TenantController{
-		database: "d2b",
-		session:  s,
+		database:  "d2b",
+		schemaURI: "file://schemas/tenant.json",
+		session:   s,
 	}
 }
 
-func (c TenantController) SetDatabase(database string) {
+func (c *TenantController) SetDatabase(database string) {
 	c.database = database
 }
 
-func (c TenantController) CreateIndex() {
+func (c *TenantController) SetSchemaURI(uri string) {
+	c.schemaURI = uri + "/tenant.json"
+}
+
+func (c *TenantController) CreateIndex() {
 	index := mgo.Index{
 		Key:    []string{"tenant"},
 		Unique: true,
@@ -41,7 +47,7 @@ func (c TenantController) CreateIndex() {
 	}
 }
 
-func (c TenantController) All(w http.ResponseWriter, r *http.Request) {
+func (c *TenantController) All(w http.ResponseWriter, r *http.Request) {
 	// Initialize empty struct list
 	s := []models.Tenant{}
 
@@ -55,7 +61,7 @@ func (c TenantController) All(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusOK)
 }
 
-func (c TenantController) Get(w http.ResponseWriter, r *http.Request) {
+func (c *TenantController) Get(w http.ResponseWriter, r *http.Request) {
 	name := mux.Vars(r)["name"]
 
 	// Initialize empty struct
@@ -71,7 +77,7 @@ func (c TenantController) Get(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusOK)
 }
 
-func (c TenantController) GetByID(w http.ResponseWriter, r *http.Request) {
+func (c *TenantController) GetByID(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
 	// Validate ObjectId
@@ -96,7 +102,7 @@ func (c TenantController) GetByID(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusOK)
 }
 
-func (c TenantController) Create(w http.ResponseWriter, r *http.Request) {
+func (c *TenantController) Create(w http.ResponseWriter, r *http.Request) {
 	// Initialize empty struct
 	s := models.Tenant{}
 
@@ -111,8 +117,9 @@ func (c TenantController) Create(w http.ResponseWriter, r *http.Request) {
 	s.ID = bson.NewObjectId()
 
 	// Validate input using JSON Schema
+	log.Printf("Using schema: %s", c.schemaURI)
 	docLoader := gojsonschema.NewGoLoader(s)
-	schemaLoader := gojsonschema.NewReferenceLoader("http://localhost:8080/" + version.APIVersion + "/schemas/tenant.json")
+	schemaLoader := gojsonschema.NewReferenceLoader(c.schemaURI)
 
 	res, err := gojsonschema.Validate(schemaLoader, docLoader)
 	if err != nil {
@@ -139,7 +146,7 @@ func (c TenantController) Create(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusCreated)
 }
 
-func (c TenantController) Remove(w http.ResponseWriter, r *http.Request) {
+func (c *TenantController) Remove(w http.ResponseWriter, r *http.Request) {
 	// Get name
 	name := mux.Vars(r)["name"]
 
@@ -153,7 +160,7 @@ func (c TenantController) Remove(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, nil, http.StatusOK)
 }
 
-func (c TenantController) RemoveByID(w http.ResponseWriter, r *http.Request) {
+func (c *TenantController) RemoveByID(w http.ResponseWriter, r *http.Request) {
 	// Get ID
 	id := mux.Vars(r)["id"]
 
@@ -176,7 +183,7 @@ func (c TenantController) RemoveByID(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, nil, http.StatusOK)
 }
 
-func (c TenantController) Update(w http.ResponseWriter, r *http.Request) {
+func (c *TenantController) Update(w http.ResponseWriter, r *http.Request) {
 	name := mux.Vars(r)["name"]
 
 	// Initialize empty struct
@@ -191,7 +198,7 @@ func (c TenantController) Update(w http.ResponseWriter, r *http.Request) {
 
 	// Validate input using JSON Schema
 	docLoader := gojsonschema.NewGoLoader(s)
-	schemaLoader := gojsonschema.NewReferenceLoader("http://localhost:8080/" + version.APIVersion + "/schemas/tenant.json")
+	schemaLoader := gojsonschema.NewReferenceLoader(c.schemaURI)
 
 	res, err := gojsonschema.Validate(schemaLoader, docLoader)
 	if err != nil {

@@ -19,6 +19,8 @@ func main() {
 	// Options.
 	appVersion := flag.Bool("version", false, "Version")
 	bind := flag.String("bind", "127.0.0.1:8080", "Bind to address and port")
+	database := flag.String("database", "d2b", "Database name")
+	schemaURI := flag.String("schema-uri", "file://schemas", "URI to JSON schemas")
 	flag.Parse()
 
 	// Print version.
@@ -27,12 +29,20 @@ func main() {
 		os.Exit(0)
 	}
 
+	log.Printf("Using JSON schema URI: %s", *schemaURI)
+
 	// Create new router
 	r := mux.NewRouter()
 
 	// Host
 	// Get Controller instance
 	hc := controllers.NewHostController(getSession())
+
+	// Set Database
+	hc.SetDatabase(*database)
+
+	// Set Schema URI
+	hc.SetSchemaURI(*schemaURI)
 
 	// Create Index
 	hc.CreateIndex()
@@ -50,6 +60,12 @@ func main() {
 	// Get Controller instance
 	sc := controllers.NewSiteController(getSession())
 
+	// Set Database
+	sc.SetDatabase(*database)
+
+	// Set Schema URI
+	sc.SetSchemaURI(*schemaURI)
+
 	// Create Index
 	sc.CreateIndex()
 
@@ -65,6 +81,12 @@ func main() {
 	// Subnet
 	// Get Controller instance
 	suc := controllers.NewSubnetController(getSession())
+
+	// Set Schema URI
+	suc.SetSchemaURI(*schemaURI)
+
+	// Set Database
+	suc.SetDatabase(*database)
 
 	// Create Index
 	suc.CreateIndex()
@@ -82,6 +104,12 @@ func main() {
 	// Get Controller instance
 	ic := controllers.NewImageController(getSession())
 
+	// Set Database
+	ic.SetDatabase(*database)
+
+	// Set Schema URI
+	ic.SetSchemaURI(*schemaURI)
+
 	// Create Index
 	ic.CreateIndex()
 
@@ -98,6 +126,9 @@ func main() {
 	// Get Controller instance
 	vc := controllers.NewImageVersionController(getSession())
 
+	// Set Database
+	vc.SetDatabase(*database)
+
 	// Add handlers for endpoints
 	r.HandleFunc("/"+version.APIVersion+"/images/{name}/versions", vc.All).Methods("GET")
 	r.HandleFunc("/"+version.APIVersion+"/images/id/{id}/versions", vc.AllByID).Methods("GET")
@@ -107,6 +138,12 @@ func main() {
 	// Boot Image
 	// Get Controller instance
 	bc := controllers.NewBootImageController(getSession())
+
+	// Set Database
+	bc.SetDatabase(*database)
+
+	// Set Schema URI
+	bc.SetSchemaURI(*schemaURI)
 
 	// Create Index
 	bc.CreateIndex()
@@ -123,6 +160,12 @@ func main() {
 	// Tenant
 	// Get Controller instance
 	tc := controllers.NewTenantController(getSession())
+
+	// Set Database
+	tc.SetDatabase(*database)
+
+	// Set Schema URI
+	tc.SetSchemaURI(*schemaURI)
 
 	// Create Index
 	tc.CreateIndex()
