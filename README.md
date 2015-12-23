@@ -34,8 +34,11 @@ d2bsrv -bind 0.0.0.0:8080
 **Test server:**
 
 ```bash
-cd $GOPATH/src/github.com/imc-trading/dock2box/d2bsrv
-./test.sh
+cd $GOPATH/src/github.com/imc-trading/dock2box/d2bsrv/tests
+./populate_database.sh
+./menu_no_subnet.sh
+./menu_registered.sh
+./menu_unregistered.sh
 ```
 
 # Test CLI
