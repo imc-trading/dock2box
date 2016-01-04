@@ -3,14 +3,16 @@
   "title": "Types Schema",
   "definitions": {
     "id": {
-      "$ref": "types.json#definitions/id"
+      "type": "string",
+      "pattern": "^[0-9a-f]{24}$"
     },
     "hostname": {
       "type": "string",
       "format": "hostname"
     },
     "version": {
-      "$ref": "types.json#definitions/version"
+      "type": "string",
+      "pattern": "^([0-9a-f]{7}|latest)$"
     }
   }
 }
