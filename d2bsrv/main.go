@@ -122,7 +122,7 @@ func main() {
 	r.HandleFunc("/"+version.APIVersion+"/images/{name}", ic.Remove).Methods("DELETE")
 	r.HandleFunc("/"+version.APIVersion+"/images/id/{id}", ic.RemoveByID).Methods("DELETE")
 
-	// Image Versions
+	// Image Version
 	// Get Controller instance
 	vc := controllers.NewImageVersionController(getSession())
 
@@ -130,10 +130,13 @@ func main() {
 	vc.SetDatabase(*database)
 
 	// Add handlers for endpoints
-	r.HandleFunc("/"+version.APIVersion+"/images/{name}/versions", vc.All).Methods("GET")
-	r.HandleFunc("/"+version.APIVersion+"/images/id/{id}/versions", vc.AllByID).Methods("GET")
-	r.HandleFunc("/"+version.APIVersion+"/images/{name}/versions/{version}", vc.Get).Methods("GET")
-	r.HandleFunc("/"+version.APIVersion+"/images/{name}/versions", vc.Create).Methods("POST")
+	r.HandleFunc("/"+version.APIVersion+"/image-versions", vc.All).Methods("GET")
+	r.HandleFunc("/"+version.APIVersion+"/image-versions/{name}", vc.Get).Methods("GET")
+	r.HandleFunc("/"+version.APIVersion+"/image-versions/id/{id}", vc.GetByID).Methods("GET")
+	r.HandleFunc("/"+version.APIVersion+"/image-versions", vc.Create).Methods("POST")
+	r.HandleFunc("/"+version.APIVersion+"/image-versions/{name}", vc.Update).Methods("PUT")
+	r.HandleFunc("/"+version.APIVersion+"/image-versions/{name}", vc.Remove).Methods("DELETE")
+	r.HandleFunc("/"+version.APIVersion+"/image-versions/id/{id}", vc.RemoveByID).Methods("DELETE")
 
 	// Boot Image
 	// Get Controller instance
@@ -156,6 +159,22 @@ func main() {
 	r.HandleFunc("/"+version.APIVersion+"/boot-images/{name}", bc.Update).Methods("PUT")
 	r.HandleFunc("/"+version.APIVersion+"/boot-images/{name}", bc.Remove).Methods("DELETE")
 	r.HandleFunc("/"+version.APIVersion+"/boot-images/id/{id}", bc.RemoveByID).Methods("DELETE")
+
+	// Boot Image Versions
+	// Get Controller instance
+	bcv := controllers.NewBootImageVersionController(getSession())
+
+	// Set Database
+	bcv.SetDatabase(*database)
+
+	// Add handlers for endpoints
+	r.HandleFunc("/"+version.APIVersion+"/boot-image-versions", bcv.All).Methods("GET")
+	r.HandleFunc("/"+version.APIVersion+"/boot-image-versions/{name}", bcv.Get).Methods("GET")
+	r.HandleFunc("/"+version.APIVersion+"/boot-image-versions/id/{id}", bcv.GetByID).Methods("GET")
+	r.HandleFunc("/"+version.APIVersion+"/boot-image-versions", bcv.Create).Methods("POST")
+	r.HandleFunc("/"+version.APIVersion+"/boot-image-versions/{name}", bcv.Update).Methods("PUT")
+	r.HandleFunc("/"+version.APIVersion+"/boot-image-versions/{name}", bcv.Remove).Methods("DELETE")
+	r.HandleFunc("/"+version.APIVersion+"/boot-image-versions/id/{id}", bcv.RemoveByID).Methods("DELETE")
 
 	// Tenant
 	// Get Controller instance

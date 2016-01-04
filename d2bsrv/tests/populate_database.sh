@@ -116,13 +116,7 @@ get "subnets" $subnet_id
 cat << EOF > $TMPFILE
 {
     "image": "test1",
-    "kOpts": "",
-    "versions": [
-        {
-            "version": "latest",
-            "created": "2006-01-02T15:04:05Z"
-        }
-    ]
+    "kOpts": ""
 }
 EOF
 
@@ -130,6 +124,22 @@ cpt "Create Boot Image"
 boot_image_id=$(create "boot-images")
 cpt "Get Boot Image"
 get "boot-images" $boot_image_id
+
+#
+# Boot Image Version
+#
+cat << EOF > $TMPFILE
+{
+  "version": "latest",
+  "created": "2006-01-02T15:04:05Z",
+  "bootImageId": "${boot_image_id}"
+}
+EOF
+
+cpt "Create Boot Image Version"
+boot_image_version_id=$(create "boot-image-versions")
+cpt "Get Boot Image Version"
+get "boot-image-versions" $boot_image_version_id
 
 #
 # Image 
@@ -153,6 +163,22 @@ cpt "Create Image"
 image_id=$(create "images")
 cpt "Get Image"
 get "images" $image_id
+
+#
+# Image Version
+#
+cat << EOF > $TMPFILE
+{
+  "version": "latest",
+  "created": "2006-01-02T15:04:05Z",
+  "imageId": "${image_id}"
+}
+EOF
+
+cpt "Create Image Version"
+image_version_id=$(create "image-versions")
+cpt "Get Image Version"
+get "image-versions" $image_version_id
 
 #
 # Host

@@ -3,11 +3,11 @@ package models
 import "gopkg.in/mgo.v2/bson"
 
 type Image struct {
-	ID               bson.ObjectId `json:"id" bson:"_id"`
-	Image            string        `json:"image" bson:"image"`
-	Type             string        `json:"type" bson:"type"`
-	BootImageID      bson.ObjectId `json:"bootImageId" bson:"bootImageId"`
-	BootImageRef     string        `json:"bootImageRef,omitempty"`
-	BootImage        *BootImage    `json:"bootImage,omitempty"`
-	BootImageVersion string        `json:"bootImageVersion" bson:"bootImageVersion"`
+	ID                  bson.ObjectId `json:"id" bson:"_id"`
+	Image               string        `json:"image" bson:"image"`
+	Type                string        `json:"type" bson:"type"`
+	KOpts               string        `json:"kOpts,omitempty" bson:"kOpts,omitempty"`
+	BootImageVersionID  bson.ObjectId `json:"bootImageVersionId,omitempty" bson:"bootImageVersionId,omitempty"`
+	BootImageVersionRef string        `json:"bootImageVersionRef,omitempty" bson:"bootImageVersionRef,omitempty"`
+	BootImageVersion    *ImageVersion `json:"bootImageVersion,omitempty"`
 }

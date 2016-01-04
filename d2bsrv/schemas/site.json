@@ -1,50 +1,72 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema#",
-    "title": "Site Schema",
-    "type": "object",
-    "required": [ "id", "site", "domain", "dns", "dockerRegistry", "artifactRepository", "namingScheme", "pxeTheme" ],
-    "additionalProperties": false,
-    "properties": {
-        "id": {
-            "$ref": "types.json#definitions/id"
-        },
-        "site": {
-            "type": "string",
-            "pattern": "^[a-zA-Z][a-zA-Z0-9-]+$"
-        },
-        "domain": {
-            "type": "string"
-        },
-        "dns": {
-            "type": "array",
-            "items": {
-                "type": "string",
-                "format": "ipv4"
-            },
-            "uniqueItems": true
-        },
-        "dockerRegistry": {
-            "type": "string",
-            "format": "hostname"
-        },
-        "artifactRepository": {
-            "type": "string",
-            "format": "hostname"
-        },
-        "namingScheme": {
-            "type": "string",
-            "enum": [ "serial-number", "hardware-address", "external" ]
-        },
-        "pxeTheme": {
-            "type": "string",
-            "enum": [ "matrix", "night", "grey", "camouflage", "clouds", "moon", "saturn", "docker" ]
-        },
-        "subnets": {
-            "type": "array",
-            "items": {
-                "$ref": "subnet.json#"
-            },
-            "uniqueItems": true
-        }
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Site Schema",
+  "type": "object",
+  "required": [
+    "id",
+    "site",
+    "domain",
+    "dns",
+    "dockerRegistry",
+    "artifactRepository",
+    "namingScheme",
+    "pxeTheme"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "$ref": "types.json#definitions/id"
+    },
+    "site": {
+      "type": "string",
+      "pattern": "^[a-zA-Z][a-zA-Z0-9-]+$"
+    },
+    "domain": {
+      "type": "string"
+    },
+    "dns": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "ipv4"
+      },
+      "uniqueItems": true
+    },
+    "dockerRegistry": {
+      "type": "string",
+      "format": "hostname"
+    },
+    "artifactRepository": {
+      "type": "string",
+      "format": "hostname"
+    },
+    "namingScheme": {
+      "type": "string",
+      "enum": [
+        "serial-number",
+        "hardware-address",
+        "external"
+      ]
+    },
+    "pxeTheme": {
+      "type": "string",
+      "enum": [
+        "matrix",
+        "night",
+        "grey",
+        "camouflage",
+        "clouds",
+        "moon",
+        "saturn",
+        "docker"
+      ]
+    },
+    "subnets": {
+      "type": "array",
+      "items": {
+        "$ref": "subnet.json#"
+      },
+      "uniqueItems": true
     }
+  }
 }
