@@ -35,6 +35,7 @@ get() {
     echo "GET: http://localhost:8080/${APIVERS}/${endp}/id/${id}"
     echo "DATA:"
     curl -s -H "Content-Type: application/json" "http://localhost:8080/${APIVERS}/${endp}/id/${id}"
+    echo
 }
 
 cpt() {
@@ -57,7 +58,7 @@ which curl &>/dev/null || fatal "Missing pre. requisite: curl"
 #
 cat << EOF > $TMPFILE
 {
-    "tenant": "test1"
+  "tenant": "test1"
 }
 EOF
 
@@ -71,20 +72,13 @@ get "tenants" $tenant_id
 #
 cat << EOF > $TMPFILE
 {
-    "site": "test1",
-    "domain": "example.com",
-    "dns": [ "192.168.0.252", "192.168.0.253" ],
-    "dockerRegistry": "registry.example.com",
-    "artifactRepository": "repository.example.com",
-    "namingScheme": "serial-number",
-    "pxeTheme": "night",
-    "subnets": [
-        {
-            "subnet": "192.168.0.0/24",
-            "mask": "255.255.255.0",
-            "gw": "192.168.0.254"
-        }
-    ]
+  "site": "test1",
+  "domain": "example.com",
+  "dns": [ "192.168.0.252", "192.168.0.253" ],
+  "dockerRegistry": "registry.example.com",
+  "artifactRepository": "repository.example.com",
+  "namingScheme": "serial-number",
+  "pxeTheme": "night"
 }
 EOF
 
@@ -98,10 +92,10 @@ get "sites" $site_id
 #
 cat << EOF > $TMPFILE
 {
-    "subnet": "192.168.0.0/24",
-    "mask": "255.255.255.0",
-    "gw": "192.168.0.254",
-    "siteId": "${site_id}"
+  "subnet": "192.168.0.0/24",
+  "mask": "255.255.255.0",
+  "gw": "192.168.0.254",
+  "siteId": "${site_id}"
 }
 EOF
 
@@ -115,47 +109,43 @@ get "subnets" $subnet_id
 #
 cat << EOF > $TMPFILE
 {
-    "image": "test1",
-    "kOpts": ""
+  "image": "test1",
+  "sha256": "67f28e21e04a1570781a63a247fce789352beae2889f1d720b2efbec50ef8e0d",
+  "type": "boot",
+  "kOpts": "none"
 }
 EOF
 
 cpt "Create Boot Image"
-boot_image_id=$(create "boot-images")
+boot_image_id=$(create "images")
 cpt "Get Boot Image"
-get "boot-images" $boot_image_id
+get "images" $boot_image_id
 
 #
-# Boot Image Version
+# Boot Image Tag
 #
 cat << EOF > $TMPFILE
 {
-  "version": "latest",
+  "tag": "latest",
   "created": "2006-01-02T15:04:05Z",
-  "bootImageId": "${boot_image_id}"
+  "imageId": "${boot_image_id}"
 }
 EOF
 
-cpt "Create Boot Image Version"
-boot_image_version_id=$(create "boot-image-versions")
-cpt "Get Boot Image Version"
-get "boot-image-versions" $boot_image_version_id
+cpt "Create Boot Image Tag"
+boot_image_tag_id=$(create "image-tags")
+cpt "Get Boot Image Tag"
+get "image-tags" $boot_image_tag_id
 
 #
 # Image 
 #
 cat << EOF > $TMPFILE
 {
-    "image": "test1",
-    "type": "docker",
-    "bootImageId": "${boot_image_id}",
-    "bootImageVersion": "latest",
-    "versions": [
-        {
-            "version": "latest",
-            "created": "2006-01-02T15:04:05Z"
-        }
-    ]
+  "image": "test2",
+  "sha256": "67f28e21e04a1570781a63a247fce789352beae2889f1d720b2efbec50ef8e0d",
+  "type": "docker",
+  "bootImageTagId": "${boot_image_tag_id}"
 }
 EOF
 
@@ -165,52 +155,51 @@ cpt "Get Image"
 get "images" $image_id
 
 #
-# Image Version
+# Image Tag
 #
 cat << EOF > $TMPFILE
 {
-  "version": "latest",
+  "tag": "latest",
   "created": "2006-01-02T15:04:05Z",
   "imageId": "${image_id}"
 }
 EOF
 
-cpt "Create Image Version"
-image_version_id=$(create "image-versions")
-cpt "Get Image Version"
-get "image-versions" $image_version_id
+cpt "Create Image Tag"
+image_tag_id=$(create "image-tags")
+cpt "Get Image Tag"
+get "image-tags" $image_tag_id
 
 #
 # Host
 #
 cat << EOF > $TMPFILE
 {
-    "host": "test1.example.com",
-    "build": true,
-    "debug": true,
-    "gpt": false,
-    "imageId": "${image_id}",
-    "version": "latest",
-    "kOpts": "None",
-    "tenantId": "${tenant_id}",
-    "labels": [
-        "web-server"
-    ],
-    "siteId": "${site_id}",
-    "interfaces": [
-        {
-            "interface": "eth0",
-            "dhcp": false,
-            "ipv4": "192.168.0.1",
-            "hwAddr": "a1:4c:6f:31:6c:d2",
-            "subnetId": "${subnet_id}"
-        },
-        {
-            "interface": "eth1",
-            "dhcp": true,
-            "hwAddr": "a1:4c:6f:31:6c:d2"
-        }
-    ]
+  "host": "test1.example.com",
+  "build": true,
+  "debug": true,
+  "gpt": false,
+  "imageTagId": "${image_tag_id}",
+  "kOpts": "None",
+  "tenantId": "${tenant_id}",
+  "labels": [
+    "web-server"
+  ],
+  "siteId": "${site_id}",
+  "interfaces": [
+    {
+      "interface": "eth0",
+      "dhcp": false,
+      "ipv4": "192.168.0.1",
+      "hwAddr": "a1:4c:6f:31:6c:d2",
+      "subnetId": "${subnet_id}"
+    },
+    {
+      "interface": "eth1",
+      "dhcp": true,
+      "hwAddr": "a1:4c:6f:31:6c:d2"
+    }
+  ]
 }
 EOF
 

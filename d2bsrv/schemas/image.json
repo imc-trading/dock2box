@@ -15,9 +15,9 @@
       "required": [
         "id",
         "image",
-        "shasum256",
+        "sha256",
         "type",
-        "bootImageVersionId"
+        "bootImageTagId"
       ],
       "additionalProperties": false,
       "properties": {
@@ -28,9 +28,9 @@
           "type": "string",
           "pattern": "^[a-zA-Z][a-zA-Z0-9-]+$"
         },
-        "shasum256": {
+        "sha256": {
           "type": "string",
-          "pattern": "^[0-9a-f]{65}$"
+          "pattern": "^[0-9a-f]+$"
         },
         "type": {
           "type": "string",
@@ -39,7 +39,7 @@
             "docker"
           ]
         },
-        "bootImageVersionId": {
+        "bootImageTagId": {
           "$ref": "types.json#definitions/id"
         }
       }
@@ -49,7 +49,7 @@
       "required": [
         "id",
         "image",
-        "shasum256",
+        "sha256",
         "type",
         "kOpts"
       ],
@@ -62,9 +62,9 @@
           "type": "string",
           "pattern": "^[a-zA-Z][a-zA-Z0-9-]+$"
         },
-        "shasum256": {
+        "sha256": {
           "type": "string",
-          "pattern": "^[0-9a-f]{65}$"
+          "pattern": "^[0-9a-f]+$"
         },
         "type": {
           "type": "string",

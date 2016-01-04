@@ -56,15 +56,17 @@ func (c *ImageController) All(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if r.URL.Query().Get("embed") == "true" {
-		for i, v := range s {
-			// Get boot image
-			if err := c.session.DB(c.database).C("boot_images").FindId(v.BootImageID).One(&s[i].BootImage); err != nil {
-				w.WriteHeader(http.StatusNotFound)
-				return
+	/*
+		if r.URL.Query().Get("embed") == "true" {
+			for i, v := range s {
+				// Get boot image
+				if err := c.session.DB(c.database).C("boot_images").FindId(v.BootImageID).One(&s[i].BootImage); err != nil {
+					w.WriteHeader(http.StatusNotFound)
+					return
+				}
 			}
 		}
-	}
+	*/
 
 	// Write content-type, header and payload
 	jsonWriter(w, r, s, http.StatusOK)
@@ -82,13 +84,15 @@ func (c *ImageController) Get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if r.URL.Query().Get("embed") == "true" {
-		// Get boot image
-		if err := c.session.DB(c.database).C("boot_images").FindId(s.BootImageID).One(&s.BootImage); err != nil {
-			w.WriteHeader(http.StatusNotFound)
-			return
+	/*
+		if r.URL.Query().Get("embed") == "true" {
+			// Get boot image
+			if err := c.session.DB(c.database).C("boot_images").FindId(s.BootImageID).One(&s.BootImage); err != nil {
+				w.WriteHeader(http.StatusNotFound)
+				return
+			}
 		}
-	}
+	*/
 
 	// Write content-type, header and payload
 	jsonWriter(w, r, s, http.StatusOK)
@@ -115,13 +119,15 @@ func (c *ImageController) GetByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if r.URL.Query().Get("embed") == "true" {
-		// Get boot image
-		if err := c.session.DB(c.database).C("boot_images").FindId(s.BootImageID).One(&s.BootImage); err != nil {
-			w.WriteHeader(http.StatusNotFound)
-			return
+	/*
+		if r.URL.Query().Get("embed") == "true" {
+			// Get boot image
+			if err := c.session.DB(c.database).C("boot_images").FindId(s.BootImageID).One(&s.BootImage); err != nil {
+				w.WriteHeader(http.StatusNotFound)
+				return
+			}
 		}
-	}
+	*/
 
 	// Write content-type, header and payload
 	jsonWriter(w, r, s, http.StatusOK)
@@ -161,7 +167,7 @@ func (c *ImageController) Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Set refs
-	s.BootImageRef = "/boot-images/id/" + s.BootImageID.Hex()
+	//	s.BootImageRef = "/boot-images/id/" + s.BootImageID.Hex()
 
 	// Insert entry
 	if err := c.session.DB(c.database).C("images").Insert(s); err != nil {
@@ -243,7 +249,7 @@ func (c *ImageController) Update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Set refs
-	s.BootImageRef = "/boot-images/id/" + s.BootImageID.Hex()
+	//	s.BootImageRef = "/boot-images/id/" + s.BootImageID.Hex()
 
 	// Update entry
 	if err := c.session.DB(c.database).C("images").Update(bson.M{"image": name}, s); err != nil {

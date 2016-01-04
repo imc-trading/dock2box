@@ -154,14 +154,26 @@ func (c PXEMenuController) PXEMenu(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Get image tag.
+	if err := c.session.DB(c.database).C("image-tags").FindId(input.Host.ImageTagID).One(&input.Host.ImageTag); err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
 	// Get image.
-	if err := c.session.DB(c.database).C("images").FindId(input.Host.ImageID).One(&input.Host.Image); err != nil {
+	if err := c.session.DB(c.database).C("images").FindId(input.Host.ImageTag.ImageID).One(&input.Host.Image); err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	// Get boot image tag.
+	if err := c.session.DB(c.database).C("images-tags").FindId(input.Host.Image.BootImageTagID).One(&input.Host.Image.BootImageTag); err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 
 	// Get boot image.
-	if err := c.session.DB(c.database).C("boot_images").FindId(input.Host.Image.BootImageID).One(&input.Host.Image.BootImage); err != nil {
+	if err := c.session.DB(c.database).C("images").FindId(input.Host.BootImageTag.ImageID).One(&input.Host.Image.BootImage); err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}

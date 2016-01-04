@@ -36,167 +36,129 @@ func main() {
 
 	// Host
 	// Get Controller instance
-	hc := controllers.NewHostController(getSession())
+	host := controllers.NewHostController(getSession())
 
 	// Set Database
-	hc.SetDatabase(*database)
+	host.SetDatabase(*database)
 
 	// Set Schema URI
-	hc.SetSchemaURI(*schemaURI)
+	host.SetSchemaURI(*schemaURI)
 
 	// Create Index
-	hc.CreateIndex()
+	host.CreateIndex()
 
 	// Add handlers for endpoints
-	r.HandleFunc("/"+version.APIVersion+"/hosts", hc.All).Methods("GET")
-	r.HandleFunc("/"+version.APIVersion+"/hosts/{name}", hc.Get).Methods("GET")
-	r.HandleFunc("/"+version.APIVersion+"/hosts/id/{id}", hc.GetByID).Methods("GET")
-	r.HandleFunc("/"+version.APIVersion+"/hosts", hc.Create).Methods("POST")
-	r.HandleFunc("/"+version.APIVersion+"/hosts/{name}", hc.Update).Methods("PUT")
-	r.HandleFunc("/"+version.APIVersion+"/hosts/{name}", hc.Remove).Methods("DELETE")
-	r.HandleFunc("/"+version.APIVersion+"/hosts/id/{id}", hc.RemoveByID).Methods("DELETE")
+	r.HandleFunc("/"+version.APIVersion+"/hosts", host.All).Methods("GET")
+	r.HandleFunc("/"+version.APIVersion+"/hosts/{name}", host.Get).Methods("GET")
+	r.HandleFunc("/"+version.APIVersion+"/hosts/id/{id}", host.GetByID).Methods("GET")
+	r.HandleFunc("/"+version.APIVersion+"/hosts", host.Create).Methods("POST")
+	r.HandleFunc("/"+version.APIVersion+"/hosts/{name}", host.Update).Methods("PUT")
+	r.HandleFunc("/"+version.APIVersion+"/hosts/{name}", host.Remove).Methods("DELETE")
+	r.HandleFunc("/"+version.APIVersion+"/hosts/id/{id}", host.RemoveByID).Methods("DELETE")
 
 	// Site
 	// Get Controller instance
-	sc := controllers.NewSiteController(getSession())
+	site := controllers.NewSiteController(getSession())
 
 	// Set Database
-	sc.SetDatabase(*database)
+	site.SetDatabase(*database)
 
 	// Set Schema URI
-	sc.SetSchemaURI(*schemaURI)
+	site.SetSchemaURI(*schemaURI)
 
 	// Create Index
-	sc.CreateIndex()
+	site.CreateIndex()
 
 	// Add handlers for endpoints
-	r.HandleFunc("/"+version.APIVersion+"/sites", sc.All).Methods("GET")
-	r.HandleFunc("/"+version.APIVersion+"/sites/{name}", sc.Get).Methods("GET")
-	r.HandleFunc("/"+version.APIVersion+"/sites/id/{id}", sc.GetByID).Methods("GET")
-	r.HandleFunc("/"+version.APIVersion+"/sites", sc.Create).Methods("POST")
-	r.HandleFunc("/"+version.APIVersion+"/sites/{name}", sc.Update).Methods("PUT")
-	r.HandleFunc("/"+version.APIVersion+"/sites/{name}", sc.Remove).Methods("DELETE")
-	r.HandleFunc("/"+version.APIVersion+"/sites/id/{id}", sc.RemoveByID).Methods("DELETE")
+	r.HandleFunc("/"+version.APIVersion+"/sites", site.All).Methods("GET")
+	r.HandleFunc("/"+version.APIVersion+"/sites/{name}", site.Get).Methods("GET")
+	r.HandleFunc("/"+version.APIVersion+"/sites/id/{id}", site.GetByID).Methods("GET")
+	r.HandleFunc("/"+version.APIVersion+"/sites", site.Create).Methods("POST")
+	r.HandleFunc("/"+version.APIVersion+"/sites/{name}", site.Update).Methods("PUT")
+	r.HandleFunc("/"+version.APIVersion+"/sites/{name}", site.Remove).Methods("DELETE")
+	r.HandleFunc("/"+version.APIVersion+"/sites/id/{id}", site.RemoveByID).Methods("DELETE")
 
 	// Subnet
 	// Get Controller instance
-	suc := controllers.NewSubnetController(getSession())
+	subnet := controllers.NewSubnetController(getSession())
 
 	// Set Schema URI
-	suc.SetSchemaURI(*schemaURI)
+	subnet.SetSchemaURI(*schemaURI)
 
 	// Set Database
-	suc.SetDatabase(*database)
+	subnet.SetDatabase(*database)
 
 	// Create Index
-	suc.CreateIndex()
+	subnet.CreateIndex()
 
 	// Add handlers for endpoints
-	r.HandleFunc("/"+version.APIVersion+"/subnets", suc.All).Methods("GET")
-	r.HandleFunc("/"+version.APIVersion+"/subnets/{name}-{prefix}", suc.Get).Methods("GET")
-	r.HandleFunc("/"+version.APIVersion+"/subnets/id/{id}", suc.GetByID).Methods("GET")
-	r.HandleFunc("/"+version.APIVersion+"/subnets", suc.Create).Methods("POST")
-	r.HandleFunc("/"+version.APIVersion+"/subnets/{name}-{prefix}", suc.Update).Methods("PUT")
-	r.HandleFunc("/"+version.APIVersion+"/subnets/{name}-{prefix}", suc.Remove).Methods("DELETE")
-	r.HandleFunc("/"+version.APIVersion+"/subnets/id/{id}", suc.RemoveByID).Methods("DELETE")
+	r.HandleFunc("/"+version.APIVersion+"/subnets", subnet.All).Methods("GET")
+	r.HandleFunc("/"+version.APIVersion+"/subnets/{name}-{prefix}", subnet.Get).Methods("GET")
+	r.HandleFunc("/"+version.APIVersion+"/subnets/id/{id}", subnet.GetByID).Methods("GET")
+	r.HandleFunc("/"+version.APIVersion+"/subnets", subnet.Create).Methods("POST")
+	r.HandleFunc("/"+version.APIVersion+"/subnets/{name}-{prefix}", subnet.Update).Methods("PUT")
+	r.HandleFunc("/"+version.APIVersion+"/subnets/{name}-{prefix}", subnet.Remove).Methods("DELETE")
+	r.HandleFunc("/"+version.APIVersion+"/subnets/id/{id}", subnet.RemoveByID).Methods("DELETE")
 
 	// Image
 	// Get Controller instance
-	ic := controllers.NewImageController(getSession())
+	image := controllers.NewImageController(getSession())
 
 	// Set Database
-	ic.SetDatabase(*database)
+	image.SetDatabase(*database)
 
 	// Set Schema URI
-	ic.SetSchemaURI(*schemaURI)
+	image.SetSchemaURI(*schemaURI)
 
 	// Create Index
-	ic.CreateIndex()
+	image.CreateIndex()
 
 	// Add handlers for endpoints
-	r.HandleFunc("/"+version.APIVersion+"/images", ic.All).Methods("GET")
-	r.HandleFunc("/"+version.APIVersion+"/images/{name}", ic.Get).Methods("GET")
-	r.HandleFunc("/"+version.APIVersion+"/images/id/{id}", ic.GetByID).Methods("GET")
-	r.HandleFunc("/"+version.APIVersion+"/images", ic.Create).Methods("POST")
-	r.HandleFunc("/"+version.APIVersion+"/images/{name}", ic.Update).Methods("PUT")
-	r.HandleFunc("/"+version.APIVersion+"/images/{name}", ic.Remove).Methods("DELETE")
-	r.HandleFunc("/"+version.APIVersion+"/images/id/{id}", ic.RemoveByID).Methods("DELETE")
+	r.HandleFunc("/"+version.APIVersion+"/images", image.All).Methods("GET")
+	r.HandleFunc("/"+version.APIVersion+"/images/{name}", image.Get).Methods("GET")
+	r.HandleFunc("/"+version.APIVersion+"/images/id/{id}", image.GetByID).Methods("GET")
+	r.HandleFunc("/"+version.APIVersion+"/images", image.Create).Methods("POST")
+	r.HandleFunc("/"+version.APIVersion+"/images/{name}", image.Update).Methods("PUT")
+	r.HandleFunc("/"+version.APIVersion+"/images/{name}", image.Remove).Methods("DELETE")
+	r.HandleFunc("/"+version.APIVersion+"/images/id/{id}", image.RemoveByID).Methods("DELETE")
 
-	// Image Version
+	// Image Tag
 	// Get Controller instance
-	vc := controllers.NewImageVersionController(getSession())
+	tag := controllers.NewImageTagController(getSession())
 
 	// Set Database
-	vc.SetDatabase(*database)
+	tag.SetDatabase(*database)
 
 	// Add handlers for endpoints
-	r.HandleFunc("/"+version.APIVersion+"/image-versions", vc.All).Methods("GET")
-	r.HandleFunc("/"+version.APIVersion+"/image-versions/{name}", vc.Get).Methods("GET")
-	r.HandleFunc("/"+version.APIVersion+"/image-versions/id/{id}", vc.GetByID).Methods("GET")
-	r.HandleFunc("/"+version.APIVersion+"/image-versions", vc.Create).Methods("POST")
-	r.HandleFunc("/"+version.APIVersion+"/image-versions/{name}", vc.Update).Methods("PUT")
-	r.HandleFunc("/"+version.APIVersion+"/image-versions/{name}", vc.Remove).Methods("DELETE")
-	r.HandleFunc("/"+version.APIVersion+"/image-versions/id/{id}", vc.RemoveByID).Methods("DELETE")
-
-	// Boot Image
-	// Get Controller instance
-	bc := controllers.NewBootImageController(getSession())
-
-	// Set Database
-	bc.SetDatabase(*database)
-
-	// Set Schema URI
-	bc.SetSchemaURI(*schemaURI)
-
-	// Create Index
-	bc.CreateIndex()
-
-	// Add handlers for endpoints
-	r.HandleFunc("/"+version.APIVersion+"/boot-images", bc.All).Methods("GET")
-	r.HandleFunc("/"+version.APIVersion+"/boot-images/{name}", bc.Get).Methods("GET")
-	r.HandleFunc("/"+version.APIVersion+"/boot-images/id/{id}", bc.GetByID).Methods("GET")
-	r.HandleFunc("/"+version.APIVersion+"/boot-images", bc.Create).Methods("POST")
-	r.HandleFunc("/"+version.APIVersion+"/boot-images/{name}", bc.Update).Methods("PUT")
-	r.HandleFunc("/"+version.APIVersion+"/boot-images/{name}", bc.Remove).Methods("DELETE")
-	r.HandleFunc("/"+version.APIVersion+"/boot-images/id/{id}", bc.RemoveByID).Methods("DELETE")
-
-	// Boot Image Versions
-	// Get Controller instance
-	bcv := controllers.NewBootImageVersionController(getSession())
-
-	// Set Database
-	bcv.SetDatabase(*database)
-
-	// Add handlers for endpoints
-	r.HandleFunc("/"+version.APIVersion+"/boot-image-versions", bcv.All).Methods("GET")
-	r.HandleFunc("/"+version.APIVersion+"/boot-image-versions/{name}", bcv.Get).Methods("GET")
-	r.HandleFunc("/"+version.APIVersion+"/boot-image-versions/id/{id}", bcv.GetByID).Methods("GET")
-	r.HandleFunc("/"+version.APIVersion+"/boot-image-versions", bcv.Create).Methods("POST")
-	r.HandleFunc("/"+version.APIVersion+"/boot-image-versions/{name}", bcv.Update).Methods("PUT")
-	r.HandleFunc("/"+version.APIVersion+"/boot-image-versions/{name}", bcv.Remove).Methods("DELETE")
-	r.HandleFunc("/"+version.APIVersion+"/boot-image-versions/id/{id}", bcv.RemoveByID).Methods("DELETE")
+	r.HandleFunc("/"+version.APIVersion+"/image-tags", tag.All).Methods("GET")
+	r.HandleFunc("/"+version.APIVersion+"/image-tags/{name}", tag.Get).Methods("GET")
+	r.HandleFunc("/"+version.APIVersion+"/image-tags/id/{id}", tag.GetByID).Methods("GET")
+	r.HandleFunc("/"+version.APIVersion+"/image-tags", tag.Create).Methods("POST")
+	r.HandleFunc("/"+version.APIVersion+"/image-tags/{name}", tag.Update).Methods("PUT")
+	r.HandleFunc("/"+version.APIVersion+"/image-tags/{name}", tag.Remove).Methods("DELETE")
+	r.HandleFunc("/"+version.APIVersion+"/image-tags/id/{id}", tag.RemoveByID).Methods("DELETE")
 
 	// Tenant
 	// Get Controller instance
-	tc := controllers.NewTenantController(getSession())
+	tenant := controllers.NewTenantController(getSession())
 
 	// Set Database
-	tc.SetDatabase(*database)
+	tenant.SetDatabase(*database)
 
 	// Set Schema URI
-	tc.SetSchemaURI(*schemaURI)
+	tenant.SetSchemaURI(*schemaURI)
 
 	// Create Index
-	tc.CreateIndex()
+	tenant.CreateIndex()
 
 	// Add handlers for endpoints
-	r.HandleFunc("/"+version.APIVersion+"/tenants", tc.All).Methods("GET")
-	r.HandleFunc("/"+version.APIVersion+"/tenants/{name}", tc.Get).Methods("GET")
-	r.HandleFunc("/"+version.APIVersion+"/tenants/id/{id}", tc.GetByID).Methods("GET")
-	r.HandleFunc("/"+version.APIVersion+"/tenants", tc.Create).Methods("POST")
-	r.HandleFunc("/"+version.APIVersion+"/tenants/{name}", tc.Update).Methods("PUT")
-	r.HandleFunc("/"+version.APIVersion+"/tenants/{name}", tc.Remove).Methods("DELETE")
-	r.HandleFunc("/"+version.APIVersion+"/tenants/id/{id}", tc.RemoveByID).Methods("DELETE")
+	r.HandleFunc("/"+version.APIVersion+"/tenants", tenant.All).Methods("GET")
+	r.HandleFunc("/"+version.APIVersion+"/tenants/{name}", tenant.Get).Methods("GET")
+	r.HandleFunc("/"+version.APIVersion+"/tenants/id/{id}", tenant.GetByID).Methods("GET")
+	r.HandleFunc("/"+version.APIVersion+"/tenants", tenant.Create).Methods("POST")
+	r.HandleFunc("/"+version.APIVersion+"/tenants/{name}", tenant.Update).Methods("PUT")
+	r.HandleFunc("/"+version.APIVersion+"/tenants/{name}", tenant.Remove).Methods("DELETE")
+	r.HandleFunc("/"+version.APIVersion+"/tenants/id/{id}", tenant.RemoveByID).Methods("DELETE")
 
 	// PXE Menu
 	// Get Controller instance
@@ -205,8 +167,8 @@ func main() {
 	// Add handlers for endpoints
 	r.HandleFunc("/"+version.APIVersion+"/ipxe/{hwaddr}", pc.PXEMenu).Methods("GET")
 
-	// Generic
-	// Static files
+	// Static Files
+	// Schemas
 	schemas := http.StripPrefix("/"+version.APIVersion+"/schemas/", http.FileServer(http.Dir("schemas")))
 	r.PathPrefix("/" + version.APIVersion + "/schemas/").Handler(schemas)
 
@@ -219,7 +181,6 @@ func main() {
 	// Fire up the server
 	logr := handlers.LoggingHandler(os.Stdout, r)
 	log.Fatal(http.ListenAndServe(*bind, logr))
-
 }
 
 // getSession creates a new mongo session and panics if connection error occurs
