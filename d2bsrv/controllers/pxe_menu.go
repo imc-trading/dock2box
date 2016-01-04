@@ -44,6 +44,7 @@ type Input struct {
 	BoardSerial string
 	Debug       string
 	Images      []models.Image
+	ImageTags   []models.ImageTag
 	Host        models.Host
 	Subnet      models.Subnet
 }
@@ -116,6 +117,12 @@ func (c PXEMenuController) PXEMenu(w http.ResponseWriter, r *http.Request) {
 	// Get all images.
 	if err := c.session.DB(c.database).C("images").Find(nil).All(&input.Images); err != nil {
 		http.Error(w, "Can't get images", http.StatusInternalServerError)
+		return
+	}
+
+	// Get all image tags.
+	if err := c.session.DB(c.database).C("image_tags").Find(nil).All(&input.ImageTags); err != nil {
+		http.Error(w, "Can't get image tags", http.StatusInternalServerError)
 		return
 	}
 
