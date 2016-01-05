@@ -159,9 +159,26 @@ get "images" $image_id
 cat << EOF > $TMPFILE
 {
   "tag": "latest",
-  "created": "2006-01-02T15:04:05Z",
+  "created": "2016-01-02T15:04:05Z",
   "imageId": "${image_id}",
   "sha256": "67f28e21e04a1570781a63a247fce789352beae2889f1d720b2efbec50ef8e0d"
+}
+EOF
+
+cpt "Create Tag"
+tag_id=$(create "tags")
+cpt "Get Tag"
+get "tags" $tag_id
+
+#
+# Tag 2
+#
+cat << EOF > $TMPFILE
+{
+  "tag": "untested",
+  "created": "2015-12-01T13:01:05Z",
+  "imageId": "${image_id}",
+  "sha256": "37ff8e2ae04a1570781a63a247fce789352beae2889f1d720b2efbec50ef8e0d"
 }
 EOF
 

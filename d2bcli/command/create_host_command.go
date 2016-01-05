@@ -21,7 +21,7 @@ func NewCreateHostCommand() cli.Command {
 			cli.BoolFlag{Name: "disable-build", Usage: "Disable PXE build, this prevents a host from being provisioned (enabled by default)"},
 			cli.BoolFlag{Name: "debug", Usage: "Enable debug during host provisioning (disabled by default)"},
 			cli.BoolFlag{Name: "gpt", Usage: "Enable use of GUID Partition Table (disabled by default)"},
-			cli.StringFlag{Name: "image, i", Value: "", Usage: "Image to use for provisioning"},
+			cli.StringFlag{Name: "tag, t", Value: "", Usage: "Tag to use for provisioning"},
 			cli.StringFlag{Name: "version, v", Value: "latest", Usage: "Image version to use for provisioning"},
 			cli.StringFlag{Name: "kopts, k", Usage: "Kernel options"},
 			cli.StringFlag{Name: "tenant, t", Usage: "Tenant"},
@@ -70,15 +70,12 @@ func createHostCommandFunc(c *cli.Context) {
 
 	if c.Bool("prompt") {
 		h := client.Host{
-			Host:    hostname,
-			Build:   prompt.Bool("Build", true),
-			Debug:   prompt.Bool("Debug", false),
-			GPT:     prompt.Bool("GPT", false),
-			ImageID: *chooseImage(clnt, ""),
+			Host:  hostname,
+			Build: prompt.Bool("Build", true),
+			Debug: prompt.Bool("Debug", false),
+			GPT:   prompt.Bool("GPT", false),
+			TagID: *chooseTag(clnt, ""),
 		}
-
-		// Get image version
-		h.Version = chooseImageVersion(clnt, h.ImageID, "")
 
 		// Get labels
 		labels := prompt.String("Comma-separated list of labels", prompt.Prompt{Default: "", FuncPtr: prompt.Regex, FuncInp: "^([a-zA-Z][a-zA-Z0-9-]+,)*([a-zA-Z][a-zA-Z0-9-]+)$"})
@@ -135,15 +132,12 @@ func createHostCommandFunc(c *cli.Context) {
 		log.Fatalf("You need to specify site")
 	}
 
-	// Get image ID
-	image, err := clnt.Image.Get(c.String("image"))
+	// Get tag ID
+	tag, err := clnt.Tag.Get(c.String("tag"))
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
-	h.ImageID = image.ID
-
-	// Get version
-	h.Version = c.String("version")
+	h.TagID = tag.ID
 
 	// Get tenant
 	tenant, err := clnt.Tenant.Get(c.String("tenant"))

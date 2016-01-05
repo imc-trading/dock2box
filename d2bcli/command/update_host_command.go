@@ -72,16 +72,13 @@ func updateHostCommandFunc(c *cli.Context) {
 
 	if c.Bool("prompt") {
 		h := client.Host{
-			ID:      v.ID,
-			Host:    prompt.String("Host", prompt.Prompt{Default: v.Host, FuncPtr: prompt.Regex, FuncInp: ""}),
-			Build:   prompt.Bool("Build", v.Build),
-			Debug:   prompt.Bool("Debug", v.Debug),
-			GPT:     prompt.Bool("GPT", v.GPT),
-			ImageID: *chooseImage(clnt, v.ImageID),
+			ID:    v.ID,
+			Host:  prompt.String("Host", prompt.Prompt{Default: v.Host, FuncPtr: prompt.Regex, FuncInp: ""}),
+			Build: prompt.Bool("Build", v.Build),
+			Debug: prompt.Bool("Debug", v.Debug),
+			GPT:   prompt.Bool("GPT", v.GPT),
+			TagID: *chooseTag(clnt, v.TagID),
 		}
-
-		// Get image version
-		h.Version = chooseImageVersion(clnt, h.ImageID, v.Version)
 
 		// Get labels
 		labels := prompt.String("Comma-separated list of labels", prompt.Prompt{Default: strings.Join(v.Labels, ","), FuncPtr: prompt.Regex, FuncInp: "^([a-zA-Z][a-zA-Z0-9-]+,)*([a-zA-Z][a-zA-Z0-9-]+)$"})
