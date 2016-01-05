@@ -9,13 +9,15 @@ type ImageResource struct {
 
 // Image structure.
 type Image struct {
-	ID           string         `json:"id,omitempty"`
-	Image        string         `json:"image,omitempty"`
-	Type         string         `json:"type,omitempty"`
-	BootImageID  string         `json:"bootImageId,omitempty"`
-	BootImageRef string         `json:"bootImageRef,omitempty"`
-	BootImage    string         `json:"bootImage,omitempty"`
-	Versions     []ImageVersion `json:"versions,omitempty"`
+	ID              string     `json:"id"`
+	Image           string     `json:"image"`
+	Type            string     `json:"type"`
+	KOpts           string     `json:"kOpts,omitempty"`
+	BootImageTagID  string     `json:"bootImageId,omitempty"`
+	BootImageTagRef string     `json:"bootImageRef,omitempty"`
+	BootImageTag    *ImageTag  `json:"bootImageTag,omitempty"`
+	BootImage       *Image     `json:"bootImage,omitempty"`
+	Tags            []ImageTag `json:"tags,omitempty"`
 }
 
 // JSON output for a image.

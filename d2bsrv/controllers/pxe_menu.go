@@ -127,8 +127,10 @@ func (c PXEMenuController) PXEMenu(w http.ResponseWriter, r *http.Request) {
 
 	// Get images tags and embed them inside images.
 	for i, e := range input.Images {
-		tags := make([]models.ImageTag, 0)
-		input.Images[i].Tags = &tags
+		//		tags := make([]models.ImageTag, 0)
+		//		input.Images[i].Tags = &tags
+
+		input.Images[i].Tags = &[]models.ImageTag{}
 		if err := c.session.DB(c.database).C("image_tags").Find(bson.M{"imageId": e.ID}).All(input.Images[i].Tags); err != nil {
 			http.Error(w, fmt.Sprintf("Can't get image tags for image id: %s", e.ID), http.StatusInternalServerError)
 			return

@@ -14,8 +14,7 @@ type Host struct {
 	Build      bool            `json:"build"`
 	Debug      bool            `json:"debug"`
 	GPT        bool            `json:"gpt"`
-	ImageID    string          `json:"imageId"`
-	Version    string          `json:"version"`
+	ImageTagID string          `json:"imageTagId"`
 	KOpts      string          `json:"kOpts"`
 	TenantID   string          `json:"tenantId"`
 	Labels     []string        `json:"labels"`
