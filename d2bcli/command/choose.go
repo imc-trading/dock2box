@@ -25,25 +25,26 @@ func chooseImage(clnt *client.Client, imageID string) *string {
 	return &images[prompt.Choice("Choose image", def, list)].ID
 }
 
-/*
-func chooseImageTag(clnt *client.Client, id string, tag string) string {
-	r, err := clnt.ImageTag.AllByID(id)
+func chooseTag(clnt *client.Client, tagID string) *string {
+	chooseImage(clnt, "")
+	// imageID := chooseImage(clnt, "")
+	// r, err := clnt.Tag.Match("imageId", imageID)
+	r, err := clnt.Tag.All()
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
 
-	versions := *r
+	tags := *r
 	var list []string
 	def := -1
-	for i, v := range versions {
-		if v.Version == version {
+	for i, v := range tags {
+		if v.ID == tagID {
 			def = i
 		}
-		list = append(list, v.Version+", created: "+v.Created)
+		list = append(list, v.Tag) // Same as in template
 	}
-	return versions[prompt.Choice("Choose image version", def, list)].Version
+	return &tags[prompt.Choice("Choose tag", def, list)].ID
 }
-*/
 
 func chooseTenants(clnt *client.Client, tenantID string) *string {
 	r, err := clnt.Tenant.All()
