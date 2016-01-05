@@ -30,7 +30,7 @@ goto ${selected}
 menu Dock2Box, image: {{$e.Image}}
 item --gap -- ----------------------- Tags -----------------------
 item --key 0x08 back .. (top menu)
-{{range .Tags}}item {{$e.Image}}-{{.Tag}} version: {{.Tag}} created: {{.Created}}
+{{range .Tags}}item {{$e.Image}}-{{.Tag}} {{substr .SHA256 0 7}} {{.Tag}} ({{.Created}})
 {{end}}choose --default ${menu-default}-${submenu-default} --timeout ${menu-timeout} selected
 goto ${selected}
 :back

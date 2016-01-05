@@ -27,8 +27,13 @@ func Center(size int, deco string, str string) string {
 	return fmt.Sprintf("%s%s%s", strings.Repeat(deco, lpad), str, strings.Repeat(deco, rpad))
 }
 
+func Substr(s string, b int, l int) string {
+	return s[b:l]
+}
+
 var funcs = template.FuncMap{
 	"center": Center,
+	"substr": Substr,
 }
 
 var templates = template.Must(template.New("main").Funcs(funcs).ParseGlob("templates/*.tmpl"))
