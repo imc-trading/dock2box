@@ -12,8 +12,8 @@ func NewGetCommand() cli.Command {
 		Subcommands: []cli.Command{
 			NewGetHostCommand(),
 			NewGetImageCommand(),
+			NewGetImageTagCommand(),
 			NewGetSubnetCommand(),
-			NewGetBootImageCommand(),
 			NewGetSiteCommand(),
 			NewGetTenantCommand(),
 		},

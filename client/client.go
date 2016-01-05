@@ -14,14 +14,14 @@ import (
 
 // Client structure.
 type Client struct {
-	URL      string
-	Host     HostResource
-	Image    ImageResource
-	ImageTag ImageTagResource
-	Site     SiteResource
-	Tenant   TenantResource
-	Subnet   SubnetResource
-	Debug    bool
+	URL    string
+	Host   HostResource
+	Image  ImageResource
+	Tag    TagResource
+	Site   SiteResource
+	Tenant TenantResource
+	Subnet SubnetResource
+	Debug  bool
 }
 
 // New client.
@@ -31,7 +31,7 @@ func New(url string) *Client {
 	}
 	c.Host.Client = &c
 	c.Image.Client = &c
-	c.ImageTag.Client = &c
+	c.Tag.Client = &c
 	c.Site.Client = &c
 	c.Tenant.Client = &c
 	c.Subnet.Client = &c

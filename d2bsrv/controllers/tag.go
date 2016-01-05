@@ -13,45 +13,45 @@ import (
 	"github.com/imc-trading/dock2box/d2bsrv/models"
 )
 
-type ImageTagController struct {
+type TagController struct {
 	database  string
 	schemaURI string
 	session   *mgo.Session
 }
 
-func NewImageTagController(s *mgo.Session) *ImageTagController {
-	return &ImageTagController{
+func NewTagController(s *mgo.Session) *TagController {
+	return &TagController{
 		database:  "d2b",
-		schemaURI: "file://schemas/image-tag.json",
+		schemaURI: "file://schemas/tag.json",
 		session:   s,
 	}
 }
 
-func (c *ImageTagController) SetDatabase(database string) {
+func (c *TagController) SetDatabase(database string) {
 	c.database = database
 }
 
-func (c *ImageTagController) SetSchemaURI(uri string) {
-	c.schemaURI = uri + "/image-tag.json"
+func (c *TagController) SetSchemaURI(uri string) {
+	c.schemaURI = uri + "/tag.json"
 }
 
-func (c *ImageTagController) CreateIndex() {
+func (c *TagController) CreateIndex() {
 	index := mgo.Index{
 		Key:    []string{"tag"},
 		Unique: true,
 	}
 
-	if err := c.session.DB(c.database).C("image_tags").EnsureIndex(index); err != nil {
+	if err := c.session.DB(c.database).C("tags").EnsureIndex(index); err != nil {
 		panic(err)
 	}
 }
 
-func (c *ImageTagController) All(w http.ResponseWriter, r *http.Request) {
+func (c *TagController) All(w http.ResponseWriter, r *http.Request) {
 	// Initialize empty struct list
-	s := []models.ImageTag{}
+	s := []models.Tag{}
 
 	// Get all entries
-	if err := c.session.DB(c.database).C("image_tags").Find(nil).All(&s); err != nil {
+	if err := c.session.DB(c.database).C("tags").Find(nil).All(&s); err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
@@ -60,7 +60,7 @@ func (c *ImageTagController) All(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Query().Get("embed") == "true" {
 			for i, v := range s {
 				// Get boot image
-				if err := c.session.DB(c.database).C("boot_images").FindId(v.BootImageTagID).One(&s[i].BootImageTag); err != nil {
+				if err := c.session.DB(c.database).C("boot_images").FindId(v.BootTagID).One(&s[i].BootTag); err != nil {
 					w.WriteHeader(http.StatusNotFound)
 					return
 				}
@@ -72,14 +72,14 @@ func (c *ImageTagController) All(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusOK)
 }
 
-func (c *ImageTagController) Get(w http.ResponseWriter, r *http.Request) {
+func (c *TagController) Get(w http.ResponseWriter, r *http.Request) {
 	name := mux.Vars(r)["name"]
 
 	// Initialize empty struct
-	s := models.ImageTag{}
+	s := models.Tag{}
 
 	// Get entry
-	if err := c.session.DB(c.database).C("image_tags").Find(bson.M{"tag": name}).One(&s); err != nil {
+	if err := c.session.DB(c.database).C("tags").Find(bson.M{"tag": name}).One(&s); err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
@@ -87,7 +87,7 @@ func (c *ImageTagController) Get(w http.ResponseWriter, r *http.Request) {
 	/*
 		if r.URL.Query().Get("embed") == "true" {
 			// Get boot image
-			if err := c.session.DB(c.database).C("boot_images").FindId(s.BootImageTagID).One(&s.BootImageTag); err != nil {
+			if err := c.session.DB(c.database).C("boot_images").FindId(s.BootTagID).One(&s.BootTag); err != nil {
 				w.WriteHeader(http.StatusNotFound)
 				return
 			}
@@ -98,7 +98,7 @@ func (c *ImageTagController) Get(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusOK)
 }
 
-func (c *ImageTagController) GetByID(w http.ResponseWriter, r *http.Request) {
+func (c *TagController) GetByID(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
 	// Validate ObjectId
@@ -111,10 +111,10 @@ func (c *ImageTagController) GetByID(w http.ResponseWriter, r *http.Request) {
 	oid := bson.ObjectIdHex(id)
 
 	// Initialize empty struct
-	s := models.ImageTag{}
+	s := models.Tag{}
 
 	// Get entry
-	if err := c.session.DB(c.database).C("image_tags").FindId(oid).One(&s); err != nil {
+	if err := c.session.DB(c.database).C("tags").FindId(oid).One(&s); err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
@@ -122,7 +122,7 @@ func (c *ImageTagController) GetByID(w http.ResponseWriter, r *http.Request) {
 	/*
 		if r.URL.Query().Get("embed") == "true" {
 			// Get boot image
-			if err := c.session.DB(c.database).C("boot_images").FindId(s.BootImageTagID).One(&s.BootImageTag); err != nil {
+			if err := c.session.DB(c.database).C("boot_images").FindId(s.BootTagID).One(&s.BootTag); err != nil {
 				w.WriteHeader(http.StatusNotFound)
 				return
 			}
@@ -133,9 +133,9 @@ func (c *ImageTagController) GetByID(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusOK)
 }
 
-func (c *ImageTagController) Create(w http.ResponseWriter, r *http.Request) {
+func (c *TagController) Create(w http.ResponseWriter, r *http.Request) {
 	// Initialize empty struct
-	s := models.ImageTag{}
+	s := models.Tag{}
 
 	// Decode JSON into struct
 	err := json.NewDecoder(r.Body).Decode(&s)
@@ -167,10 +167,10 @@ func (c *ImageTagController) Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Set refs
-	//	s.BootImageTagRef = "/boot-images/id/" + s.BootImageTagID.Hex()
+	//	s.BootTagRef = "/boot-images/id/" + s.BootTagID.Hex()
 
 	// Insert entry
-	if err := c.session.DB(c.database).C("image_tags").Insert(s); err != nil {
+	if err := c.session.DB(c.database).C("tags").Insert(s); err != nil {
 		jsonError(w, r, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -179,12 +179,12 @@ func (c *ImageTagController) Create(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusCreated)
 }
 
-func (c *ImageTagController) Remove(w http.ResponseWriter, r *http.Request) {
+func (c *TagController) Remove(w http.ResponseWriter, r *http.Request) {
 	// Get name
 	name := mux.Vars(r)["name"]
 
 	// Remove entry
-	if err := c.session.DB(c.database).C("image_tags").Remove(bson.M{"image_tags": name}); err != nil {
+	if err := c.session.DB(c.database).C("tags").Remove(bson.M{"tags": name}); err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
@@ -193,7 +193,7 @@ func (c *ImageTagController) Remove(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, nil, http.StatusOK)
 }
 
-func (c *ImageTagController) RemoveByID(w http.ResponseWriter, r *http.Request) {
+func (c *TagController) RemoveByID(w http.ResponseWriter, r *http.Request) {
 	// Get ID
 	id := mux.Vars(r)["id"]
 
@@ -207,7 +207,7 @@ func (c *ImageTagController) RemoveByID(w http.ResponseWriter, r *http.Request) 
 	oid := bson.ObjectIdHex(id)
 
 	// Remove entry
-	if err := c.session.DB(c.database).C("image_tags").RemoveId(oid); err != nil {
+	if err := c.session.DB(c.database).C("tags").RemoveId(oid); err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
@@ -216,11 +216,11 @@ func (c *ImageTagController) RemoveByID(w http.ResponseWriter, r *http.Request) 
 	jsonWriter(w, r, nil, http.StatusOK)
 }
 
-func (c *ImageTagController) Update(w http.ResponseWriter, r *http.Request) {
+func (c *TagController) Update(w http.ResponseWriter, r *http.Request) {
 	name := mux.Vars(r)["name"]
 
 	// Initialize empty struct
-	s := models.ImageTag{}
+	s := models.Tag{}
 
 	// Decode JSON into struct
 	err := json.NewDecoder(r.Body).Decode(&s)
@@ -249,10 +249,10 @@ func (c *ImageTagController) Update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Set refs
-	//	s.BootImageTagRef = "/boot-images/id/" + s.BootImageTagID.Hex()
+	//	s.BootTagRef = "/boot-images/id/" + s.BootTagID.Hex()
 
 	// Update entry
-	if err := c.session.DB(c.database).C("image_tags").Update(bson.M{"tag": name}, s); err != nil {
+	if err := c.session.DB(c.database).C("tags").Update(bson.M{"tag": name}, s); err != nil {
 		jsonError(w, r, err.Error(), http.StatusInternalServerError)
 		return
 	}

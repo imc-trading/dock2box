@@ -122,21 +122,21 @@ func main() {
 	r.HandleFunc("/"+version.APIVersion+"/images/{name}", image.Remove).Methods("DELETE")
 	r.HandleFunc("/"+version.APIVersion+"/images/id/{id}", image.RemoveByID).Methods("DELETE")
 
-	// Image Tag
+	// Tag
 	// Get Controller instance
-	tag := controllers.NewImageTagController(getSession())
+	tag := controllers.NewTagController(getSession())
 
 	// Set Database
 	tag.SetDatabase(*database)
 
 	// Add handlers for endpoints
-	r.HandleFunc("/"+version.APIVersion+"/image-tags", tag.All).Methods("GET")
-	r.HandleFunc("/"+version.APIVersion+"/image-tags/{name}", tag.Get).Methods("GET")
-	r.HandleFunc("/"+version.APIVersion+"/image-tags/id/{id}", tag.GetByID).Methods("GET")
-	r.HandleFunc("/"+version.APIVersion+"/image-tags", tag.Create).Methods("POST")
-	r.HandleFunc("/"+version.APIVersion+"/image-tags/{name}", tag.Update).Methods("PUT")
-	r.HandleFunc("/"+version.APIVersion+"/image-tags/{name}", tag.Remove).Methods("DELETE")
-	r.HandleFunc("/"+version.APIVersion+"/image-tags/id/{id}", tag.RemoveByID).Methods("DELETE")
+	r.HandleFunc("/"+version.APIVersion+"/tags", tag.All).Methods("GET")
+	r.HandleFunc("/"+version.APIVersion+"/tags/{name}", tag.Get).Methods("GET")
+	r.HandleFunc("/"+version.APIVersion+"/tags/id/{id}", tag.GetByID).Methods("GET")
+	r.HandleFunc("/"+version.APIVersion+"/tags", tag.Create).Methods("POST")
+	r.HandleFunc("/"+version.APIVersion+"/tags/{name}", tag.Update).Methods("PUT")
+	r.HandleFunc("/"+version.APIVersion+"/tags/{name}", tag.Remove).Methods("DELETE")
+	r.HandleFunc("/"+version.APIVersion+"/tags/id/{id}", tag.RemoveByID).Methods("DELETE")
 
 	// Tenant
 	// Get Controller instance

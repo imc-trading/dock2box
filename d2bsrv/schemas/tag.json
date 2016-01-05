@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "Image Tag Schema",
+  "title": "Tag Schema",
   "type": "object",
   "required": [
     "id",

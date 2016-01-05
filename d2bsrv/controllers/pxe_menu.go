@@ -49,7 +49,7 @@ type Input struct {
 	BoardSerial string
 	Debug       string
 	Images      []models.Image
-	ImageTags   []models.ImageTag
+	Tags        []models.Tag
 	Host        models.Host
 	Subnet      models.Subnet
 }
@@ -127,11 +127,8 @@ func (c PXEMenuController) PXEMenu(w http.ResponseWriter, r *http.Request) {
 
 	// Get images tags and embed them inside images.
 	for i, e := range input.Images {
-		//		tags := make([]models.ImageTag, 0)
-		//		input.Images[i].Tags = &tags
-
-		input.Images[i].Tags = &[]models.ImageTag{}
-		if err := c.session.DB(c.database).C("image_tags").Find(bson.M{"imageId": e.ID}).All(input.Images[i].Tags); err != nil {
+		input.Images[i].Tags = &[]models.Tag{}
+		if err := c.session.DB(c.database).C("tags").Find(bson.M{"imageId": e.ID}).All(input.Images[i].Tags); err != nil {
 			http.Error(w, fmt.Sprintf("Can't get image tags for image id: %s", e.ID), http.StatusInternalServerError)
 			return
 		}
@@ -183,26 +180,26 @@ func (c PXEMenuController) PXEMenu(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Get image tag.
-	if err := c.session.DB(c.database).C("image_tags").FindId(input.Host.ImageTagID).One(&input.Host.ImageTag); err != nil {
-		http.Error(w, fmt.Sprintf("Can't get image tag id: %s", input.Host.ImageTagID.Hex()), http.StatusInternalServerError)
+	if err := c.session.DB(c.database).C("tags").FindId(input.Host.TagID).One(&input.Host.Tag); err != nil {
+		http.Error(w, fmt.Sprintf("Can't get image tag id: %s", input.Host.TagID.Hex()), http.StatusInternalServerError)
 		return
 	}
 
 	// Get image.
-	if err := c.session.DB(c.database).C("images").FindId(input.Host.ImageTag.ImageID).One(&input.Host.Image); err != nil {
-		http.Error(w, fmt.Sprintf("Can't get image id: %s", input.Host.ImageTag.ImageID.Hex()), http.StatusInternalServerError)
+	if err := c.session.DB(c.database).C("images").FindId(input.Host.Tag.ImageID).One(&input.Host.Image); err != nil {
+		http.Error(w, fmt.Sprintf("Can't get image id: %s", input.Host.Tag.ImageID.Hex()), http.StatusInternalServerError)
 		return
 	}
 
 	// Get boot image tag.
-	if err := c.session.DB(c.database).C("image_tags").FindId(input.Host.Image.BootImageTagID).One(&input.Host.BootImageTag); err != nil {
-		http.Error(w, fmt.Sprintf("Can't get boot image tag id: %s", input.Host.Image.BootImageTagID.Hex()), http.StatusInternalServerError)
+	if err := c.session.DB(c.database).C("tags").FindId(input.Host.Image.BootTagID).One(&input.Host.BootTag); err != nil {
+		http.Error(w, fmt.Sprintf("Can't get boot image tag id: %s", input.Host.Image.BootTagID.Hex()), http.StatusInternalServerError)
 		return
 	}
 
 	// Get boot image.
-	if err := c.session.DB(c.database).C("images").FindId(input.Host.BootImageTag.ImageID).One(&input.Host.BootImage); err != nil {
-		http.Error(w, fmt.Sprintf("Can't get boot image id: %s", input.Host.BootImageTag.ImageID.Hex()), http.StatusInternalServerError)
+	if err := c.session.DB(c.database).C("images").FindId(input.Host.BootTag.ImageID).One(&input.Host.BootImage); err != nil {
+		http.Error(w, fmt.Sprintf("Can't get boot image id: %s", input.Host.BootTag.ImageID.Hex()), http.StatusInternalServerError)
 		return
 	}
 

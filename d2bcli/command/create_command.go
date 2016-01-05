@@ -14,7 +14,7 @@ func NewCreateCommand() cli.Command {
 			NewCreateSiteCommand(),
 			NewCreateSubnetCommand(),
 			NewCreateImageCommand(),
-			NewCreateBootImageCommand(),
+			NewCreateImageTagCommand(),
 			NewCreateTenantCommand(),
 		},
 	}

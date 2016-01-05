@@ -2,12 +2,12 @@
 set menu-timeout 10000
 set submenu-timeout 10000
 {{if eq .Host.Build true}}set menu-default {{.Host.Image.Image}}
-set submenu-default {{.Host.ImageTag.Tag}}{{else}}
+set submenu-default {{.Host.Tag.Tag}}{{else}}
 set menu-default localdisk
 set submenu-default localdisk{{end}}
 set server localhost
 set boot-image {{.Host.BootImage.Image}}
-set boot-version {{.Host.BootImageTag.Tag}}
+set boot-version {{.Host.BootTag.Tag}}
 set boot-kopts {{.Host.BootImage.KOpts}}
 
 :start

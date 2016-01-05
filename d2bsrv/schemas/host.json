@@ -8,7 +8,7 @@
     "build",
     "debug",
     "gpt",
-    "imageTagId",
+    "tagId",
     "kOpts",
     "tenantId",
     "labels",
@@ -30,7 +30,7 @@
     "gpt": {
       "type": "boolean"
     },
-    "imageTagId": {
+    "tagId": {
       "$ref": "types.json#definitions/id"
     },
     "kOpts": {

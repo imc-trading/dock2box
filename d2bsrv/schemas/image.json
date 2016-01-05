@@ -16,7 +16,7 @@
         "id",
         "image",
         "type",
-        "bootImageTagId"
+        "bootTagId"
       ],
       "additionalProperties": false,
       "properties": {
@@ -34,7 +34,7 @@
             "docker"
           ]
         },
-        "bootImageTagId": {
+        "bootTagId": {
           "$ref": "types.json#definitions/id"
         }
       }

@@ -121,7 +121,7 @@ cpt "Get Boot Image"
 get "images" $boot_image_id
 
 #
-# Boot Image Tag
+# Boot Tag
 #
 cat << EOF > $TMPFILE
 {
@@ -132,10 +132,10 @@ cat << EOF > $TMPFILE
 }
 EOF
 
-cpt "Create Boot Image Tag"
-boot_image_tag_id=$(create "image-tags")
-cpt "Get Boot Image Tag"
-get "image-tags" $boot_image_tag_id
+cpt "Create Boot Tag"
+boot_tag_id=$(create "tags")
+cpt "Get Boot Tag"
+get "tags" $boot_tag_id
 
 #
 # Image 
@@ -144,7 +144,7 @@ cat << EOF > $TMPFILE
 {
   "image": "test2",
   "type": "docker",
-  "bootImageTagId": "${boot_image_tag_id}"
+  "bootTagId": "${boot_tag_id}"
 }
 EOF
 
@@ -154,7 +154,7 @@ cpt "Get Image"
 get "images" $image_id
 
 #
-# Image Tag
+# Tag
 #
 cat << EOF > $TMPFILE
 {
@@ -165,10 +165,10 @@ cat << EOF > $TMPFILE
 }
 EOF
 
-cpt "Create Image Tag"
-image_tag_id=$(create "image-tags")
-cpt "Get Image Tag"
-get "image-tags" $image_tag_id
+cpt "Create Tag"
+tag_id=$(create "tags")
+cpt "Get Tag"
+get "tags" $tag_id
 
 #
 # Host
@@ -179,7 +179,7 @@ cat << EOF > $TMPFILE
   "build": true,
   "debug": true,
   "gpt": false,
-  "imageTagId": "${image_tag_id}",
+  "tagId": "${tag_id}",
   "kOpts": "None",
   "tenantId": "${tenant_id}",
   "labels": [
