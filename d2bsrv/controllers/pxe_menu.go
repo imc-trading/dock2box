@@ -27,8 +27,13 @@ func Center(size int, deco string, str string) string {
 	return fmt.Sprintf("%s%s%s", strings.Repeat(deco, lpad), str, strings.Repeat(deco, rpad))
 }
 
+func Substr(s string, b int, l int) string {
+	return s[b:l]
+}
+
 var funcs = template.FuncMap{
 	"center": Center,
+	"substr": Substr,
 }
 
 var templates = template.Must(template.New("main").Funcs(funcs).ParseGlob("templates/*.tmpl"))
@@ -44,6 +49,7 @@ type Input struct {
 	BoardSerial string
 	Debug       string
 	Images      []models.Image
+	Tags        []models.Tag
 	Host        models.Host
 	Subnet      models.Subnet
 }
@@ -115,8 +121,17 @@ func (c PXEMenuController) PXEMenu(w http.ResponseWriter, r *http.Request) {
 
 	// Get all images.
 	if err := c.session.DB(c.database).C("images").Find(nil).All(&input.Images); err != nil {
-		w.WriteHeader(http.StatusNotFound)
+		http.Error(w, "Can't get images", http.StatusInternalServerError)
 		return
+	}
+
+	// Get images tags and embed them inside images.
+	for i, e := range input.Images {
+		input.Images[i].Tags = &[]models.Tag{}
+		if err := c.session.DB(c.database).C("tags").Find(bson.M{"imageId": e.ID}).All(input.Images[i].Tags); err != nil {
+			http.Error(w, fmt.Sprintf("Can't get image tags for image id: %s", e.ID), http.StatusInternalServerError)
+			return
+		}
 	}
 
 	// Get host.
@@ -131,14 +146,19 @@ func (c PXEMenuController) PXEMenu(w http.ResponseWriter, r *http.Request) {
 			}
 
 			// Template menu.
-			templates.ExecuteTemplate(w, "night", input)
-			templates.ExecuteTemplate(w, "no_subnet", input)
+			if err := templates.ExecuteTemplate(w, "night", input); err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+			}
+
+			if err := templates.ExecuteTemplate(w, "no_subnet", input); err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+			}
 			return
 		}
 
 		// Unregistered host, get site.
 		if err := c.session.DB(c.database).C("sites").Find(bson.M{"_id": input.Subnet.SiteID}).One(&input.Subnet.Site); err != nil {
-			w.WriteHeader(http.StatusNotFound)
+			http.Error(w, fmt.Sprintf("Can't get site specified for subnet: %s/%d", input.Network, input.Prefix), http.StatusInternalServerError)
 			return
 		}
 
@@ -149,32 +169,49 @@ func (c PXEMenuController) PXEMenu(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Template menu.
-		templates.ExecuteTemplate(w, input.Subnet.Site.PXETheme, input)
-		templates.ExecuteTemplate(w, "unregistered", input)
+		if err := templates.ExecuteTemplate(w, input.Subnet.Site.PXETheme, input); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+
+		if err := templates.ExecuteTemplate(w, "unregistered", input); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+		return
+	}
+
+	// Get image tag.
+	if err := c.session.DB(c.database).C("tags").FindId(input.Host.TagID).One(&input.Host.Tag); err != nil {
+		http.Error(w, fmt.Sprintf("Can't get image tag id: %s", input.Host.TagID.Hex()), http.StatusInternalServerError)
 		return
 	}
 
 	// Get image.
-	if err := c.session.DB(c.database).C("images").FindId(input.Host.ImageID).One(&input.Host.Image); err != nil {
-		w.WriteHeader(http.StatusNotFound)
+	if err := c.session.DB(c.database).C("images").FindId(input.Host.Tag.ImageID).One(&input.Host.Image); err != nil {
+		http.Error(w, fmt.Sprintf("Can't get image id: %s", input.Host.Tag.ImageID.Hex()), http.StatusInternalServerError)
+		return
+	}
+
+	// Get boot image tag.
+	if err := c.session.DB(c.database).C("tags").FindId(input.Host.Image.BootTagID).One(&input.Host.BootTag); err != nil {
+		http.Error(w, fmt.Sprintf("Can't get boot image tag id: %s", input.Host.Image.BootTagID.Hex()), http.StatusInternalServerError)
 		return
 	}
 
 	// Get boot image.
-	if err := c.session.DB(c.database).C("boot_images").FindId(input.Host.Image.BootImageID).One(&input.Host.Image.BootImage); err != nil {
-		w.WriteHeader(http.StatusNotFound)
+	if err := c.session.DB(c.database).C("images").FindId(input.Host.BootTag.ImageID).One(&input.Host.BootImage); err != nil {
+		http.Error(w, fmt.Sprintf("Can't get boot image id: %s", input.Host.BootTag.ImageID.Hex()), http.StatusInternalServerError)
 		return
 	}
 
 	// Get tenant.
 	if err := c.session.DB(c.database).C("tenants").FindId(input.Host.TenantID).One(&input.Host.Tenant); err != nil {
-		w.WriteHeader(http.StatusNotFound)
+		http.Error(w, fmt.Sprintf("Can't get tenant id: %s", input.Host.TenantID.Hex()), http.StatusInternalServerError)
 		return
 	}
 
 	// Get site.
 	if err := c.session.DB(c.database).C("sites").FindId(input.Host.SiteID).One(&input.Host.Site); err != nil {
-		w.WriteHeader(http.StatusNotFound)
+		http.Error(w, fmt.Sprintf("Can't get site id: %s", input.Host.SiteID.Hex()), http.StatusInternalServerError)
 		return
 	}
 
@@ -185,6 +222,11 @@ func (c PXEMenuController) PXEMenu(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Template menu.
-	templates.ExecuteTemplate(w, input.Host.Site.PXETheme, input)
-	templates.ExecuteTemplate(w, "registered", input)
+	if err := templates.ExecuteTemplate(w, input.Host.Site.PXETheme, input); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+
+	if err := templates.ExecuteTemplate(w, "registered", input); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }

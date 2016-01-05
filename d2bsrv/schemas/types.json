@@ -1,16 +1,18 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema#",
-    "title": "Types Schema",
-    "definitions": {
-        "id": {
-            "$ref": "types.json#definitions/id"
-        },
-        "hostname": {
-            "type": "string",
-            "format": "hostname"
-        },
-        "version": {
-            "$ref": "types.json#definitions/version"
-        }
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Types Schema",
+  "definitions": {
+    "id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{24}$"
+    },
+    "hostname": {
+      "type": "string",
+      "format": "hostname"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{7}|latest)$"
     }
+  }
 }

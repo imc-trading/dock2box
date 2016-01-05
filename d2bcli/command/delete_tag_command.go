@@ -9,28 +9,26 @@ import (
 	"github.com/imc-trading/dock2box/client"
 )
 
-func NewDeleteBootImageCommand() cli.Command {
+func NewDeleteTagCommand() cli.Command {
 	return cli.Command{
-		Name:  "boot-image",
-		Usage: "Delete boot image",
+		Name:  "tag",
+		Usage: "Delete tag",
 		Flags: []cli.Flag{},
 		Action: func(c *cli.Context) {
-			deleteBootImageCommandFunc(c)
+			deleteTagCommandFunc(c)
 		},
 	}
 }
 
-func deleteBootImageCommandFunc(c *cli.Context) {
-	var bootImage string
+func deleteTagCommandFunc(c *cli.Context) {
 	if len(c.Args()) == 0 {
-		log.Fatal("You need to specify a boot image")
-	} else {
-		bootImage = c.Args()[0]
+		log.Fatal("You need to specify a tag")
 	}
+	tag := c.Args()[0]
 
 	clnt := client.New(c.GlobalString("server"))
 
-	h, err := clnt.BootImage.Delete(bootImage)
+	h, err := clnt.Image.Delete(tag)
 	if err != nil {
 		log.Fatal(err.Error())
 	}

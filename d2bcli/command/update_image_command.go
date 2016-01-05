@@ -42,10 +42,10 @@ func updateImageCommandFunc(c *cli.Context) {
 
 	if c.Bool("prompt") {
 		s := client.Image{
-			ID:          v.ID,
-			Image:       prompt.String("Image", prompt.Prompt{Default: v.Image, FuncPtr: prompt.Regex, FuncInp: ""}),
-			Type:        prompt.String("Type", prompt.Prompt{Default: v.Type, FuncPtr: prompt.Enum, FuncInp: "file,docker"}),
-			BootImageID: *chooseBootImage(clnt, v.BootImageID),
+			ID:        v.ID,
+			Image:     prompt.String("Image", prompt.Prompt{Default: v.Image, FuncPtr: prompt.Regex, FuncInp: ""}),
+			Type:      prompt.String("Type", prompt.Prompt{Default: v.Type, FuncPtr: prompt.Enum, FuncInp: "file,docker"}),
+			BootTagID: *chooseTag(clnt, v.BootTagID),
 		}
 
 		// Update image

@@ -39,9 +39,9 @@ func createImageCommandFunc(c *cli.Context) {
 
 	if c.Bool("prompt") {
 		s := client.Image{
-			Image:       image,
-			Type:        prompt.String("Type", prompt.Prompt{Default: "docker", FuncPtr: prompt.Enum, FuncInp: "file,docker"}),
-			BootImageID: *chooseBootImage(clnt, ""),
+			Image:     image,
+			Type:      prompt.String("Type", prompt.Prompt{Default: "docker", FuncPtr: prompt.Enum, FuncInp: "file,docker"}),
+			BootTagID: *chooseTag(clnt, ""),
 		}
 
 		// Create image

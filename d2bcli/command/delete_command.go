@@ -12,9 +12,9 @@ func NewDeleteCommand() cli.Command {
 		Subcommands: []cli.Command{
 			NewDeleteHostCommand(),
 			NewDeleteImageCommand(),
+			NewDeleteTagCommand(),
 			NewDeleteSubnetCommand(),
 			NewDeleteSiteCommand(),
-			NewDeleteBootImageCommand(),
 			NewDeleteTenantCommand(),
 		},
 	}

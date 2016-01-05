@@ -8,10 +8,12 @@ type Host struct {
 	Build      bool            `json:"build" bson:"build"`
 	Debug      bool            `json:"debug" bson:"debug"`
 	GPT        bool            `json:"gpt" bson:"gpt"`
-	ImageID    bson.ObjectId   `json:"imageId" bson:"imageId"`
-	ImageRef   string          `json:"imageRef" bson:"imageRef"`
+	TagID      bson.ObjectId   `json:"tagId" bson:"tagId"`
+	TagRef     string          `json:"tagRef" bson:"tagRef"`
+	Tag        *Tag            `json:"tag,omitempty"`
 	Image      *Image          `json:"image,omitempty"`
-	Version    string          `json:"version" bson:"version"`
+	BootTag    *Tag            `json:"bootTag,omitempty"`
+	BootImage  *Image          `json:"bootImage,omitempty"`
 	KOpts      string          `json:"kOpts" bson:"kOpts"`
 	TenantID   bson.ObjectId   `json:"tenantId" bson:"tenantId"`
 	TenantRef  string          `json:"tenantRef" bson:"tenantRef"`

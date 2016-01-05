@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Tag Schema",
+  "type": "object",
+  "required": [
+    "id",
+    "tag",
+    "imageId",
+    "created",
+    "sha256"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "$ref": "types.json#definitions/id"
+    },
+    "tag": {
+      "type": "string",
+      "pattern": "^[a-z0-9-_]+$"
+    },
+    "imageId": {
+      "$ref": "types.json#definitions/id"
+    },
+    "created": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]+$"
+    }
+  }
+}
