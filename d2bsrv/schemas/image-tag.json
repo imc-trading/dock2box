@@ -6,7 +6,8 @@
     "id",
     "tag",
     "imageId",
-    "created"
+    "created",
+    "sha256"
   ],
   "additionalProperties": false,
   "properties": {
@@ -23,6 +24,10 @@
     "created": {
       "type": "string",
       "format": "date-time"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]+$"
     }
   }
 }

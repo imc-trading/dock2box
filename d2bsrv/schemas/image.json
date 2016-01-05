@@ -15,7 +15,6 @@
       "required": [
         "id",
         "image",
-        "sha256",
         "type",
         "bootImageTagId"
       ],
@@ -27,10 +26,6 @@
         "image": {
           "type": "string",
           "pattern": "^[a-zA-Z][a-zA-Z0-9-]+$"
-        },
-        "sha256": {
-          "type": "string",
-          "pattern": "^[0-9a-f]+$"
         },
         "type": {
           "type": "string",
@@ -49,7 +44,6 @@
       "required": [
         "id",
         "image",
-        "sha256",
         "type",
         "kOpts"
       ],
@@ -61,10 +55,6 @@
         "image": {
           "type": "string",
           "pattern": "^[a-zA-Z][a-zA-Z0-9-]+$"
-        },
-        "sha256": {
-          "type": "string",
-          "pattern": "^[0-9a-f]+$"
         },
         "type": {
           "type": "string",

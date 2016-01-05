@@ -110,7 +110,6 @@ get "subnets" $subnet_id
 cat << EOF > $TMPFILE
 {
   "image": "test1",
-  "sha256": "67f28e21e04a1570781a63a247fce789352beae2889f1d720b2efbec50ef8e0d",
   "type": "boot",
   "kOpts": "none"
 }
@@ -128,7 +127,8 @@ cat << EOF > $TMPFILE
 {
   "tag": "latest",
   "created": "2006-01-02T15:04:05Z",
-  "imageId": "${boot_image_id}"
+  "imageId": "${boot_image_id}",
+  "sha256": "67f28e21e04a1570781a63a247fce789352beae2889f1d720b2efbec50ef8e0d"
 }
 EOF
 
@@ -143,7 +143,6 @@ get "image-tags" $boot_image_tag_id
 cat << EOF > $TMPFILE
 {
   "image": "test2",
-  "sha256": "67f28e21e04a1570781a63a247fce789352beae2889f1d720b2efbec50ef8e0d",
   "type": "docker",
   "bootImageTagId": "${boot_image_tag_id}"
 }
@@ -161,7 +160,8 @@ cat << EOF > $TMPFILE
 {
   "tag": "latest",
   "created": "2006-01-02T15:04:05Z",
-  "imageId": "${image_id}"
+  "imageId": "${image_id}",
+  "sha256": "67f28e21e04a1570781a63a247fce789352beae2889f1d720b2efbec50ef8e0d"
 }
 EOF
 

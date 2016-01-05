@@ -28,9 +28,9 @@ goto ${selected}
 
 {{range $k, $e := .Images}}:{{$e.Image}}
 menu Dock2Box, image: {{$e.Image}}
-item --gap -- ----------------------- Versions -----------------------
+item --gap -- ----------------------- Tags -----------------------
 item --key 0x08 back .. (top menu)
-{{range .Versions}}item {{$e.Image}}-{{.Version}} version: {{.Version}} created: {{.Created}}
+{{range .Tags}}item {{$e.Image}}-{{.Tag}} version: {{.Tag}} created: {{.Created}}
 {{end}}choose --default ${menu-default}-${submenu-default} --timeout ${menu-timeout} selected
 goto ${selected}
 :back
@@ -39,8 +39,8 @@ goto start
 :localdisk
 localboot
 
-{{range .Versions}}:{{$e.Image}}-{{.Version}}
-kernel http://${server}/boot/${boot-image}/${boot-version}/kernel BOOTIF={{$.HWAddr}} IP={{$.IPv4}} NETMASK={{$.Netmask}} GATEWAY={{$.Gateway}} IMAGE={{$e.Image}} IMAGE_VERSION={{.Version}} ${boot-kopts}
+{{range .Tags}}:{{$e.Image}}-{{.Tag}}
+kernel http://${server}/boot/${boot-image}/${boot-version}/kernel BOOTIF={{$.HWAddr}} IP={{$.IPv4}} NETMASK={{$.Netmask}} GATEWAY={{$.Gateway}} IMAGE={{$e.Image}} IMAGE_VERSION={{.Tag}} ${boot-kopts}
 initrd http://${server}/boot/${boot-image}/${boot-version}/initrd
 boot
 
