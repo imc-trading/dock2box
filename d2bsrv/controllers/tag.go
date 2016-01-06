@@ -37,7 +37,7 @@ func (c *TagController) SetSchemaURI(uri string) {
 
 func (c *TagController) CreateIndex() {
 	index := mgo.Index{
-		Key:    []string{"tag"},
+		Key:    []string{"imageId", "tag"},
 		Unique: true,
 	}
 

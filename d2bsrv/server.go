@@ -65,7 +65,7 @@ func main() {
 	intfs.SetSchemaURI(*schemaURI)
 
 	// Create Index
-	//    host.CreateIndex()
+	intfs.CreateIndex()
 
 	// Add handlers for endpoints
 	r.HandleFunc("/"+version.APIVersion+"/interfaces", intfs.All).Methods("GET")

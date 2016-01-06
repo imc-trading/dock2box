@@ -35,10 +35,18 @@ func (c *InterfaceController) SetSchemaURI(uri string) {
 	c.schemaURI = uri + "/interface.json"
 }
 
-/*
 func (c *InterfaceController) CreateIndex() {
 	index := mgo.Index{
-		Key:    []string{"interface"},
+		Key:    []string{"hostId", "interface"},
+		Unique: true,
+	}
+
+	if err := c.session.DB(c.database).C("interfaces").EnsureIndex(index); err != nil {
+		panic(err)
+	}
+
+	index = mgo.Index{
+		Key:    []string{"hwAddr"},
 		Unique: true,
 	}
 
@@ -46,7 +54,6 @@ func (c *InterfaceController) CreateIndex() {
 		panic(err)
 	}
 }
-*/
 
 func (c *InterfaceController) All(w http.ResponseWriter, r *http.Request) {
 	// Initialize empty struct list
