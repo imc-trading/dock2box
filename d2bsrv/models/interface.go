@@ -11,4 +11,5 @@ type Interface struct {
 	SubnetID  bson.ObjectId `json:"subnetId,omitempty" bson:"subnetId,omitempty"`
 	Subnet    *Subnet       `json:"subnet,omitempty"`
 	HostID    bson.ObjectId `json:"hostId" bson:"hostId"`
+	Host      *Host         `json:"host,omitempty"`
 }

@@ -94,7 +94,6 @@ func (c *TagController) All(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Query().Get("embed") == "true" {
 		for i, v := range s {
 			// Get image
-			//			s[i].Image = &models.Image{}
 			if err := c.session.DB(c.database).C("images").FindId(v.ImageID).One(&s[i].Image); err != nil {
 				w.WriteHeader(http.StatusNotFound)
 				return
@@ -125,6 +124,15 @@ func (c *TagController) Get(w http.ResponseWriter, r *http.Request) {
 	if err := c.session.DB(c.database).C("tags").FindId(oid).One(&s); err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
+	}
+
+	// Embed related data
+	if r.URL.Query().Get("embed") == "true" {
+		// Get image
+		if err := c.session.DB(c.database).C("images").FindId(s.ImageID).One(&s.Image); err != nil {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
 	}
 
 	// Write content-type, header and payload

@@ -90,6 +90,27 @@ func (c *HostController) All(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Embed related data
+	if r.URL.Query().Get("embed") == "true" {
+		for i, v := range s {
+			// Get Tag
+			if err := c.session.DB(c.database).C("tags").FindId(v.TagID).One(&s[i].Tag); err != nil {
+				w.WriteHeader(http.StatusNotFound)
+				return
+			}
+			// Get Tenant
+			if err := c.session.DB(c.database).C("tenants").FindId(v.TenantID).One(&s[i].Tenant); err != nil {
+				w.WriteHeader(http.StatusNotFound)
+				return
+			}
+			// Get Site
+			if err := c.session.DB(c.database).C("sites").FindId(v.SiteID).One(&s[i].Site); err != nil {
+				w.WriteHeader(http.StatusNotFound)
+				return
+			}
+		}
+	}
+
 	// Write content-type, header and payload
 	jsonWriter(w, r, s, http.StatusOK)
 }
@@ -113,6 +134,25 @@ func (c *HostController) Get(w http.ResponseWriter, r *http.Request) {
 	if err := c.session.DB(c.database).C("hosts").FindId(oid).One(&s); err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
+	}
+
+	// Embed related data
+	if r.URL.Query().Get("embed") == "true" {
+		// Get Tag
+		if err := c.session.DB(c.database).C("tags").FindId(s.TagID).One(&s.Tag); err != nil {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+		// Get Tenant
+		if err := c.session.DB(c.database).C("tenants").FindId(s.TenantID).One(&s.Tenant); err != nil {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+		// Get Site
+		if err := c.session.DB(c.database).C("sites").FindId(s.SiteID).One(&s.Site); err != nil {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
 	}
 
 	// Write content-type, header and payload

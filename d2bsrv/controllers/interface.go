@@ -99,6 +99,24 @@ func (c *InterfaceController) All(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Embed related data
+	if r.URL.Query().Get("embed") == "true" {
+		for i, v := range s {
+			if v.SubnetID != "" {
+				// Get subnet
+				if err := c.session.DB(c.database).C("subnets").FindId(v.SubnetID).One(&s[i].Subnet); err != nil {
+					w.WriteHeader(http.StatusNotFound)
+					return
+				}
+			}
+			// Get Host
+			if err := c.session.DB(c.database).C("hosts").FindId(v.HostID).One(&s[i].Host); err != nil {
+				w.WriteHeader(http.StatusNotFound)
+				return
+			}
+		}
+	}
+
 	// Write content-type, header and payload
 	jsonWriter(w, r, s, http.StatusOK)
 }
@@ -122,6 +140,22 @@ func (c *InterfaceController) Get(w http.ResponseWriter, r *http.Request) {
 	if err := c.session.DB(c.database).C("interfaces").FindId(oid).One(&s); err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
+	}
+
+	// Embed related data
+	if r.URL.Query().Get("embed") == "true" {
+		if s.SubnetID != "" {
+			// Get subnet
+			if err := c.session.DB(c.database).C("subnets").FindId(s.SubnetID).One(&s.Subnet); err != nil {
+				w.WriteHeader(http.StatusNotFound)
+				return
+			}
+		}
+		// Get Host
+		if err := c.session.DB(c.database).C("hosts").FindId(s.HostID).One(&s.Host); err != nil {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
 	}
 
 	// Write content-type, header and payload

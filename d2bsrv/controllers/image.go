@@ -90,6 +90,19 @@ func (c *ImageController) All(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Embed related data
+	if r.URL.Query().Get("embed") == "true" {
+		for i, v := range s {
+			if v.BootTagID != "" {
+				// Get boot tag
+				if err := c.session.DB(c.database).C("tags").FindId(v.BootTagID).One(&s[i].BootTag); err != nil {
+					w.WriteHeader(http.StatusNotFound)
+					return
+				}
+			}
+		}
+	}
+
 	// Write content-type, header and payload
 	jsonWriter(w, r, s, http.StatusOK)
 }
@@ -113,6 +126,17 @@ func (c *ImageController) Get(w http.ResponseWriter, r *http.Request) {
 	if err := c.session.DB(c.database).C("images").FindId(oid).One(&s); err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
+	}
+
+	// Embed related data
+	if r.URL.Query().Get("embed") == "true" {
+		if s.BootTagID != "" {
+			// Get boot tag
+			if err := c.session.DB(c.database).C("tags").FindId(s.BootTagID).One(&s.BootTag); err != nil {
+				w.WriteHeader(http.StatusNotFound)
+				return
+			}
+		}
 	}
 
 	// Write content-type, header and payload

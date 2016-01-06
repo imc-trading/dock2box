@@ -90,6 +90,7 @@ func (c *SubnetController) All(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Embed related data
 	if r.URL.Query().Get("embed") == "true" {
 		for i, v := range s {
 			// Get site
@@ -125,6 +126,15 @@ func (c *SubnetController) Get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if r.URL.Query().Get("embed") == "true" {
+		// Get site
+		if err := c.session.DB(c.database).C("sites").FindId(s.SiteID).One(&s.Site); err != nil {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+	}
+
+	// Embed related data
 	if r.URL.Query().Get("embed") == "true" {
 		// Get site
 		if err := c.session.DB(c.database).C("sites").FindId(s.SiteID).One(&s.Site); err != nil {
