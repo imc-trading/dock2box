@@ -9,4 +9,5 @@ type Tag struct {
 	SHA256  string        `json:"sha256" bson:"sha256"`
 	ImageID bson.ObjectId `json:"imageId" bson:"imageId"`
 	Image   *Image        `json:"image,omitempty"`
+	Links   *[]Link       `json:"links,omitempty"`
 }

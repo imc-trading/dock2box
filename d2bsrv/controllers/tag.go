@@ -56,7 +56,7 @@ func (c *TagController) All(w http.ResponseWriter, r *http.Request) {
 	cond := bson.M{}
 	qry := r.URL.Query()
 	for k, v := range qry {
-		if k == "envelope" || k == "embed" || k == "sort" {
+		if k == "envelope" || k == "embed" || k == "sort" || k == "hateoas" {
 			continue
 		}
 		if _, ok := keys[k]; !ok {
@@ -97,6 +97,19 @@ func (c *TagController) All(w http.ResponseWriter, r *http.Request) {
 			if err := c.session.DB(c.database).C("images").FindId(v.ImageID).One(&s[i].Image); err != nil {
 				w.WriteHeader(http.StatusNotFound)
 				return
+			}
+		}
+	}
+
+	// HATEOAS Links
+	if r.URL.Query().Get("hateoas") == "true" {
+		for i, v := range s {
+			s[i].Links = &[]models.Link{
+				models.Link{
+					HRef:   "/images/" + v.ImageID.Hex(),
+					Rel:    "self",
+					Method: "GET",
+				},
 			}
 		}
 	}
