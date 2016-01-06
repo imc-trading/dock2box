@@ -9,37 +9,21 @@ type HostResource struct {
 
 // Host structure.
 type Host struct {
-	ID         string          `json:"id"`
-	Host       string          `json:"host"`
-	Build      bool            `json:"build"`
-	Debug      bool            `json:"debug"`
-	GPT        bool            `json:"gpt"`
-	TagID      string          `json:"tagId"`
-	KOpts      string          `json:"kOpts"`
-	TenantID   string          `json:"tenantId"`
-	Labels     []string        `json:"labels"`
-	SiteID     string          `json:"siteId"`
-	Interfaces []HostInterface `json:"interfaces,omitempty"`
-}
-
-// HostInterface structure.
-type HostInterface struct {
-	Interface string `json:"interface"`
-	DHCP      bool   `json:"dhcp"`
-	IPv4      string `json:"ipv4,omitempty"`
-	HwAddr    string `json:"hwAddr"`
-	SubnetID  string `json:"subnetId,omitempty"`
+	ID       string   `json:"id"`
+	Host     string   `json:"host"`
+	Build    bool     `json:"build"`
+	Debug    bool     `json:"debug"`
+	GPT      bool     `json:"gpt"`
+	TagID    string   `json:"tagId"`
+	KOpts    string   `json:"kOpts"`
+	TenantID string   `json:"tenantId"`
+	Labels   []string `json:"labels"`
+	SiteID   string   `json:"siteId"`
 }
 
 // JSON output for a host.
 func (h *Host) JSON() []byte {
 	b, _ := json.MarshalIndent(h, "", "  ")
-	return b
-}
-
-// JSON output for a host interface.
-func (i *HostInterface) JSON() []byte {
-	b, _ := json.MarshalIndent(i, "", "  ")
 	return b
 }
 
