@@ -32,9 +32,9 @@ create() {
 get() {
     local endp="$1" id="$2"
 
-    echo "GET: http://localhost:8080/${APIVERS}/${endp}/id/${id}"
+    echo "GET: http://localhost:8080/${APIVERS}/${endp}/${id}"
     echo "DATA:"
-    curl -s -H "Content-Type: application/json" "http://localhost:8080/${APIVERS}/${endp}/id/${id}"
+    curl -s -H "Content-Type: application/json" "http://localhost:8080/${APIVERS}/${endp}/${id}"
     echo
 }
 
@@ -227,7 +227,7 @@ EOF
 
 cpt "Create Interface 1"
 interface1_id=$(create "interfaces" "$(cat $TMPFILE)")
-cpt "Get Interface"
+cpt "Get Interface 1"
 get "interfaces" $interface1_id
 
 #
@@ -244,7 +244,7 @@ EOF
 
 cpt "Create Interface 2"
 interface2_id=$(create "interfaces" "$(cat $TMPFILE)")
-cpt "Get Interface"
+cpt "Get Interface 2"
 get "interfaces" $interface2_id
 
 rm -f $TMPFILE

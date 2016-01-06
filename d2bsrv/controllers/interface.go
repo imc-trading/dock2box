@@ -78,7 +78,7 @@ func (c *InterfaceController) Get(w http.ResponseWriter, r *http.Request) {
 	s := models.Interface{}
 
 	// Get entry
-	if err := c.session.DB(c.database).C("interfacess").FindId(oid).One(&s); err != nil {
+	if err := c.session.DB(c.database).C("interfaces").FindId(oid).One(&s); err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
