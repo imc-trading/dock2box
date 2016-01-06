@@ -62,22 +62,6 @@ func (c *TenantController) All(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *TenantController) Get(w http.ResponseWriter, r *http.Request) {
-	name := mux.Vars(r)["name"]
-
-	// Initialize empty struct
-	s := models.Tenant{}
-
-	// Get entry
-	if err := c.session.DB(c.database).C("tenants").Find(bson.M{"tenant": name}).One(&s); err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		return
-	}
-
-	// Write content-type, header and payload
-	jsonWriter(w, r, s, http.StatusOK)
-}
-
-func (c *TenantController) GetByID(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
 	// Validate ObjectId
@@ -86,7 +70,7 @@ func (c *TenantController) GetByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Get ID
+	// Get object id
 	oid := bson.ObjectIdHex(id)
 
 	// Initialize empty struct
@@ -146,21 +130,7 @@ func (c *TenantController) Create(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusCreated)
 }
 
-func (c *TenantController) Remove(w http.ResponseWriter, r *http.Request) {
-	// Get name
-	name := mux.Vars(r)["name"]
-
-	// Remove entry
-	if err := c.session.DB(c.database).C("tenants").Remove(bson.M{"tenant": name}); err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		return
-	}
-
-	// Write status
-	jsonWriter(w, r, nil, http.StatusOK)
-}
-
-func (c *TenantController) RemoveByID(w http.ResponseWriter, r *http.Request) {
+func (c *TenantController) Update(w http.ResponseWriter, r *http.Request) {
 	// Get ID
 	id := mux.Vars(r)["id"]
 
@@ -170,21 +140,8 @@ func (c *TenantController) RemoveByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Get new ID
+	// Get object id
 	oid := bson.ObjectIdHex(id)
-
-	// Remove entry
-	if err := c.session.DB(c.database).C("tenants").RemoveId(oid); err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		return
-	}
-
-	// Write status
-	jsonWriter(w, r, nil, http.StatusOK)
-}
-
-func (c *TenantController) Update(w http.ResponseWriter, r *http.Request) {
-	name := mux.Vars(r)["name"]
 
 	// Initialize empty struct
 	s := models.Tenant{}
@@ -216,10 +173,34 @@ func (c *TenantController) Update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Update entry
-	if err := c.session.DB(c.database).C("tenants").Update(bson.M{"tenant": name}, s); err != nil {
+	if err := c.session.DB(c.database).C("tenants").UpdateId(oid, s); err != nil {
 		jsonError(w, r, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
 	// Write content-type, header and payload
 	jsonWriter(w, r, s, http.StatusOK)
+}
+
+func (c *TenantController) Delete(w http.ResponseWriter, r *http.Request) {
+	// Get ID
+	id := mux.Vars(r)["id"]
+
+	// Validate ObjectId
+	if !bson.IsObjectIdHex(id) {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	// Get object id
+	oid := bson.ObjectIdHex(id)
+
+	// Remove entry
+	if err := c.session.DB(c.database).C("tenants").RemoveId(oid); err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	// Write status
+	jsonWriter(w, r, nil, http.StatusOK)
 }

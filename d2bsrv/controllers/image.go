@@ -56,49 +56,11 @@ func (c *ImageController) All(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	/*
-		if r.URL.Query().Get("embed") == "true" {
-			for i, v := range s {
-				// Get boot image
-				if err := c.session.DB(c.database).C("boot_images").FindId(v.BootImageID).One(&s[i].BootImage); err != nil {
-					w.WriteHeader(http.StatusNotFound)
-					return
-				}
-			}
-		}
-	*/
-
 	// Write content-type, header and payload
 	jsonWriter(w, r, s, http.StatusOK)
 }
 
 func (c *ImageController) Get(w http.ResponseWriter, r *http.Request) {
-	name := mux.Vars(r)["name"]
-
-	// Initialize empty struct
-	s := models.Image{}
-
-	// Get entry
-	if err := c.session.DB(c.database).C("images").Find(bson.M{"image": name}).One(&s); err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		return
-	}
-
-	/*
-		if r.URL.Query().Get("embed") == "true" {
-			// Get boot image
-			if err := c.session.DB(c.database).C("boot_images").FindId(s.BootImageID).One(&s.BootImage); err != nil {
-				w.WriteHeader(http.StatusNotFound)
-				return
-			}
-		}
-	*/
-
-	// Write content-type, header and payload
-	jsonWriter(w, r, s, http.StatusOK)
-}
-
-func (c *ImageController) GetByID(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
 	// Validate ObjectId
@@ -107,7 +69,7 @@ func (c *ImageController) GetByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Get ID
+	// Get object id
 	oid := bson.ObjectIdHex(id)
 
 	// Initialize empty struct
@@ -118,16 +80,6 @@ func (c *ImageController) GetByID(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
-
-	/*
-		if r.URL.Query().Get("embed") == "true" {
-			// Get boot image
-			if err := c.session.DB(c.database).C("boot_images").FindId(s.BootImageID).One(&s.BootImage); err != nil {
-				w.WriteHeader(http.StatusNotFound)
-				return
-			}
-		}
-	*/
 
 	// Write content-type, header and payload
 	jsonWriter(w, r, s, http.StatusOK)
@@ -166,9 +118,6 @@ func (c *ImageController) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Set refs
-	//	s.BootImageRef = "/boot-images/id/" + s.BootImageID.Hex()
-
 	// Insert entry
 	if err := c.session.DB(c.database).C("images").Insert(s); err != nil {
 		jsonError(w, r, err.Error(), http.StatusInternalServerError)
@@ -179,22 +128,8 @@ func (c *ImageController) Create(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusCreated)
 }
 
-func (c *ImageController) Remove(w http.ResponseWriter, r *http.Request) {
-	// Get name
-	name := mux.Vars(r)["name"]
-
-	// Remove entry
-	if err := c.session.DB(c.database).C("images").Remove(bson.M{"image": name}); err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		return
-	}
-
-	// Write status
-	jsonWriter(w, r, nil, http.StatusOK)
-}
-
-func (c *ImageController) RemoveByID(w http.ResponseWriter, r *http.Request) {
-	// Get ID
+func (c *ImageController) Update(w http.ResponseWriter, r *http.Request) {
+	// Get Id
 	id := mux.Vars(r)["id"]
 
 	// Validate ObjectId
@@ -203,21 +138,8 @@ func (c *ImageController) RemoveByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Get new ID
+	// Get object id
 	oid := bson.ObjectIdHex(id)
-
-	// Remove entry
-	if err := c.session.DB(c.database).C("images").RemoveId(oid); err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		return
-	}
-
-	// Write status
-	jsonWriter(w, r, nil, http.StatusOK)
-}
-
-func (c *ImageController) Update(w http.ResponseWriter, r *http.Request) {
-	name := mux.Vars(r)["name"]
 
 	// Initialize empty struct
 	s := models.Image{}
@@ -248,14 +170,34 @@ func (c *ImageController) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Set refs
-	//	s.BootImageRef = "/boot-images/id/" + s.BootImageID.Hex()
-
 	// Update entry
-	if err := c.session.DB(c.database).C("images").Update(bson.M{"image": name}, s); err != nil {
+	if err := c.session.DB(c.database).C("images").UpdateId(oid, s); err != nil {
 		jsonError(w, r, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	// Write content-type, header and payload
 	jsonWriter(w, r, s, http.StatusOK)
+}
+
+func (c *ImageController) Delete(w http.ResponseWriter, r *http.Request) {
+	// Get Id
+	id := mux.Vars(r)["id"]
+
+	// Validate ObjectId
+	if !bson.IsObjectIdHex(id) {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	// Get object id
+	oid := bson.ObjectIdHex(id)
+
+	// Remove entry
+	if err := c.session.DB(c.database).C("images").RemoveId(oid); err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	// Write status
+	jsonWriter(w, r, nil, http.StatusOK)
 }

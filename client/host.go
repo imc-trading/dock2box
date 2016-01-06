@@ -75,17 +75,6 @@ func (r *HostResource) Delete(name string) (*Host, error) {
 	return host, nil
 }
 
-// Exist host.
-func (r *HostResource) Exist(name string) (bool, error) {
-	c := *r.Client
-	s, err := c.Exist("/hosts", name)
-	if err != nil {
-		return false, err
-	}
-
-	return s, nil
-}
-
 // Get host.
 func (r *HostResource) Get(name string) (*Host, error) {
 	c := *r.Client

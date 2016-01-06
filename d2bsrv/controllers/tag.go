@@ -56,49 +56,11 @@ func (c *TagController) All(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	/*
-		if r.URL.Query().Get("embed") == "true" {
-			for i, v := range s {
-				// Get boot image
-				if err := c.session.DB(c.database).C("boot_images").FindId(v.BootTagID).One(&s[i].BootTag); err != nil {
-					w.WriteHeader(http.StatusNotFound)
-					return
-				}
-			}
-		}
-	*/
-
 	// Write content-type, header and payload
 	jsonWriter(w, r, s, http.StatusOK)
 }
 
 func (c *TagController) Get(w http.ResponseWriter, r *http.Request) {
-	name := mux.Vars(r)["name"]
-
-	// Initialize empty struct
-	s := models.Tag{}
-
-	// Get entry
-	if err := c.session.DB(c.database).C("tags").Find(bson.M{"tag": name}).One(&s); err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		return
-	}
-
-	/*
-		if r.URL.Query().Get("embed") == "true" {
-			// Get boot image
-			if err := c.session.DB(c.database).C("boot_images").FindId(s.BootTagID).One(&s.BootTag); err != nil {
-				w.WriteHeader(http.StatusNotFound)
-				return
-			}
-		}
-	*/
-
-	// Write content-type, header and payload
-	jsonWriter(w, r, s, http.StatusOK)
-}
-
-func (c *TagController) GetByID(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
 	// Validate ObjectId
@@ -107,7 +69,7 @@ func (c *TagController) GetByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Get ID
+	// Get object id
 	oid := bson.ObjectIdHex(id)
 
 	// Initialize empty struct
@@ -118,16 +80,6 @@ func (c *TagController) GetByID(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
-
-	/*
-		if r.URL.Query().Get("embed") == "true" {
-			// Get boot image
-			if err := c.session.DB(c.database).C("boot_images").FindId(s.BootTagID).One(&s.BootTag); err != nil {
-				w.WriteHeader(http.StatusNotFound)
-				return
-			}
-		}
-	*/
 
 	// Write content-type, header and payload
 	jsonWriter(w, r, s, http.StatusOK)
@@ -166,9 +118,6 @@ func (c *TagController) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Set refs
-	//	s.BootTagRef = "/boot-images/id/" + s.BootTagID.Hex()
-
 	// Insert entry
 	if err := c.session.DB(c.database).C("tags").Insert(s); err != nil {
 		jsonError(w, r, err.Error(), http.StatusInternalServerError)
@@ -179,21 +128,7 @@ func (c *TagController) Create(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusCreated)
 }
 
-func (c *TagController) Remove(w http.ResponseWriter, r *http.Request) {
-	// Get name
-	name := mux.Vars(r)["name"]
-
-	// Remove entry
-	if err := c.session.DB(c.database).C("tags").Remove(bson.M{"tags": name}); err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		return
-	}
-
-	// Write status
-	jsonWriter(w, r, nil, http.StatusOK)
-}
-
-func (c *TagController) RemoveByID(w http.ResponseWriter, r *http.Request) {
+func (c *TagController) Update(w http.ResponseWriter, r *http.Request) {
 	// Get ID
 	id := mux.Vars(r)["id"]
 
@@ -203,21 +138,8 @@ func (c *TagController) RemoveByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Get new ID
+	// Get object id
 	oid := bson.ObjectIdHex(id)
-
-	// Remove entry
-	if err := c.session.DB(c.database).C("tags").RemoveId(oid); err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		return
-	}
-
-	// Write status
-	jsonWriter(w, r, nil, http.StatusOK)
-}
-
-func (c *TagController) Update(w http.ResponseWriter, r *http.Request) {
-	name := mux.Vars(r)["name"]
 
 	// Initialize empty struct
 	s := models.Tag{}
@@ -248,15 +170,35 @@ func (c *TagController) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Set refs
-	//	s.BootTagRef = "/boot-images/id/" + s.BootTagID.Hex()
-
 	// Update entry
-	if err := c.session.DB(c.database).C("tags").Update(bson.M{"tag": name}, s); err != nil {
+	if err := c.session.DB(c.database).C("tags").UpdateId(oid, s); err != nil {
 		jsonError(w, r, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	// Write content-type, header and payload
 	jsonWriter(w, r, s, http.StatusOK)
+}
+
+func (c *TagController) Delete(w http.ResponseWriter, r *http.Request) {
+	// Get ID
+	id := mux.Vars(r)["id"]
+
+	// Validate ObjectId
+	if !bson.IsObjectIdHex(id) {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	// Get object id
+	oid := bson.ObjectIdHex(id)
+
+	// Remove entry
+	if err := c.session.DB(c.database).C("tags").RemoveId(oid); err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	// Write status
+	jsonWriter(w, r, nil, http.StatusOK)
 }

@@ -71,41 +71,15 @@ func (c *SubnetController) All(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *SubnetController) Get(w http.ResponseWriter, r *http.Request) {
-	name := mux.Vars(r)["name"]
-	prefix := mux.Vars(r)["prefix"]
-
-	// Initialize empty struct
-	s := models.Subnet{}
-
-	// Get entry
-	if err := c.session.DB(c.database).C("subnets").Find(bson.M{"subnet": name + "/" + prefix}).One(&s); err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		return
-	}
-
-	if r.URL.Query().Get("embed") == "true" {
-		// Get site
-		if err := c.session.DB(c.database).C("sites").FindId(s.SiteID).One(&s.Site); err != nil {
-			w.WriteHeader(http.StatusNotFound)
-			return
-		}
-	}
-
-	// Write content-type, header and payload
-	jsonWriter(w, r, s, http.StatusOK)
-}
-
-func (c *SubnetController) GetByID(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
 	// Validate ObjectId
 	if !bson.IsObjectIdHex(id) {
-		//		jsonError(w, r, fmt.Errorf("Incorrectly formated ID: %s", id), http.StatusInternalServerError)
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 
-	// Get ID
+	// Get object id
 	oid := bson.ObjectIdHex(id)
 
 	// Initialize empty struct
@@ -175,22 +149,7 @@ func (c *SubnetController) Create(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusCreated)
 }
 
-func (c *SubnetController) Remove(w http.ResponseWriter, r *http.Request) {
-	// Get name
-	name := mux.Vars(r)["name"]
-	prefix := mux.Vars(r)["prefix"]
-
-	// Remove entry
-	if err := c.session.DB(c.database).C("subnets").Remove(bson.M{"subnet": name + "/" + prefix}); err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		return
-	}
-
-	// Write status
-	jsonWriter(w, r, nil, http.StatusOK)
-}
-
-func (c *SubnetController) RemoveByID(w http.ResponseWriter, r *http.Request) {
+func (c *SubnetController) Update(w http.ResponseWriter, r *http.Request) {
 	// Get ID
 	id := mux.Vars(r)["id"]
 
@@ -200,22 +159,8 @@ func (c *SubnetController) RemoveByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Get new ID
+	// Get object id
 	oid := bson.ObjectIdHex(id)
-
-	// Remove entry
-	if err := c.session.DB(c.database).C("subnets").RemoveId(oid); err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		return
-	}
-
-	// Write status
-	jsonWriter(w, r, nil, http.StatusOK)
-}
-
-func (c *SubnetController) Update(w http.ResponseWriter, r *http.Request) {
-	name := mux.Vars(r)["name"]
-	prefix := mux.Vars(r)["prefix"]
 
 	// Initialize empty struct
 	s := models.Subnet{}
@@ -247,10 +192,34 @@ func (c *SubnetController) Update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Update entry
-	if err := c.session.DB(c.database).C("subnets").Update(bson.M{"subnet": name + "/" + prefix}, s); err != nil {
+	if err := c.session.DB(c.database).C("subnets").UpdateId(oid, s); err != nil {
 		jsonError(w, r, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
 	// Write content-type, header and payload
 	jsonWriter(w, r, s, http.StatusOK)
+}
+
+func (c *SubnetController) Delete(w http.ResponseWriter, r *http.Request) {
+	// Get ID
+	id := mux.Vars(r)["id"]
+
+	// Validate ObjectId
+	if !bson.IsObjectIdHex(id) {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	// Get object id
+	oid := bson.ObjectIdHex(id)
+
+	// Remove entry
+	if err := c.session.DB(c.database).C("subnets").RemoveId(oid); err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	// Write status
+	jsonWriter(w, r, nil, http.StatusOK)
 }

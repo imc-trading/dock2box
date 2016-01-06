@@ -58,97 +58,11 @@ func (c *InterfaceController) All(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	/*
-		if r.URL.Query().Get("embed") == "true" {
-			for i, v := range s {
-				// Get image
-				if err := c.session.DB(c.database).C("images").FindId(v.ImageID).One(&s[i].Image); err != nil {
-					w.WriteHeader(http.StatusNotFound)
-					return
-				}
-
-				// Get tenant
-				if err := c.session.DB(c.database).C("tenants").FindId(v.TenantID).One(&s[i].Tenant); err != nil {
-					w.WriteHeader(http.StatusNotFound)
-					return
-				}
-
-				// Get site
-				if err := c.session.DB(c.database).C("sites").FindId(v.SiteID).One(&s[i].Site); err != nil {
-					w.WriteHeader(http.StatusNotFound)
-					return
-				}
-
-				for i2, v2 := range s[i].Interfaces {
-					if v2.SubnetID == "" {
-						continue
-					}
-
-					// Get subnet
-					if err := c.session.DB(c.database).C("subnets").FindId(v2.SubnetID).One(&s[i].Interfaces[i2].Subnet); err != nil {
-						w.WriteHeader(http.StatusNotFound)
-						return
-					}
-				}
-			}
-		}
-	*/
-
 	// Write content-type, header and payload
 	jsonWriter(w, r, s, http.StatusOK)
 }
 
 func (c *InterfaceController) Get(w http.ResponseWriter, r *http.Request) {
-	name := mux.Vars(r)["name"]
-
-	// Initialize empty struct
-	s := models.Interface{}
-
-	// Get entry
-	if err := c.session.DB(c.database).C("interfacess").Find(bson.M{"interface": name}).One(&s); err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		return
-	}
-
-	/*
-		if r.URL.Query().Get("embed") == "true" {
-			// Get image
-			if err := c.session.DB(c.database).C("images").FindId(s.ImageID).One(&s.Image); err != nil {
-				w.WriteHeader(http.StatusNotFound)
-				return
-			}
-
-			// Get tenant
-			if err := c.session.DB(c.database).C("tenants").FindId(s.TenantID).One(&s.Tenant); err != nil {
-				w.WriteHeader(http.StatusNotFound)
-				return
-			}
-
-			// Get site
-			if err := c.session.DB(c.database).C("sites").FindId(s.SiteID).One(&s.Site); err != nil {
-				w.WriteHeader(http.StatusNotFound)
-				return
-			}
-
-			for i, v := range s.Interfaces {
-				if v.SubnetID == "" {
-					continue
-				}
-
-				// Get subnet
-				if err := c.session.DB(c.database).C("subnets").FindId(v.SubnetID).One(&s.Interfaces[i].Subnet); err != nil {
-					w.WriteHeader(http.StatusNotFound)
-					return
-				}
-			}
-		}
-	*/
-
-	// Write content-type, header and payload
-	jsonWriter(w, r, s, http.StatusOK)
-}
-
-func (c *InterfaceController) GetByID(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
 	// Validate ObjectId
@@ -157,7 +71,7 @@ func (c *InterfaceController) GetByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Get ID
+	// Get object id
 	oid := bson.ObjectIdHex(id)
 
 	// Initialize empty struct
@@ -168,40 +82,6 @@ func (c *InterfaceController) GetByID(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
-
-	/*
-		if r.URL.Query().Get("embed") == "true" {
-			// Get image
-			if err := c.session.DB(c.database).C("images").FindId(s.ImageID).One(&s.Image); err != nil {
-				w.WriteHeader(http.StatusNotFound)
-				return
-			}
-
-			// Get tenant
-			if err := c.session.DB(c.database).C("tenants").FindId(s.TenantID).One(&s.Tenant); err != nil {
-				w.WriteHeader(http.StatusNotFound)
-				return
-			}
-
-			// Get site
-			if err := c.session.DB(c.database).C("sites").FindId(s.SiteID).One(&s.Site); err != nil {
-				w.WriteHeader(http.StatusNotFound)
-				return
-			}
-
-			for i, v := range s.Interfaces {
-				if v.SubnetID == "" {
-					continue
-				}
-
-				// Get subnet
-				if err := c.session.DB(c.database).C("subnets").FindId(v.SubnetID).One(&s.Interfaces[i].Subnet); err != nil {
-					w.WriteHeader(http.StatusNotFound)
-					return
-				}
-			}
-		}
-	*/
 
 	// Write content-type, header and payload
 	jsonWriter(w, r, s, http.StatusOK)
@@ -250,30 +130,7 @@ func (c *InterfaceController) Create(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusCreated)
 }
 
-func (c *InterfaceController) Remove(w http.ResponseWriter, r *http.Request) {
-	// Get name
-	name := mux.Vars(r)["name"]
-
-	// Initialize empty struct
-	s := models.Interface{}
-
-	// Get entry
-	if err := c.session.DB(c.database).C("interfaces").Find(bson.M{"interface": name}).One(&s); err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		return
-	}
-
-	// Remove entry
-	if err := c.session.DB(c.database).C("interfaces").Remove(bson.M{"interface": name}); err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		return
-	}
-
-	// Write status
-	jsonWriter(w, r, s, http.StatusOK)
-}
-
-func (c *InterfaceController) RemoveByID(w http.ResponseWriter, r *http.Request) {
+func (c *InterfaceController) Update(w http.ResponseWriter, r *http.Request) {
 	// Get ID
 	id := mux.Vars(r)["id"]
 
@@ -283,30 +140,8 @@ func (c *InterfaceController) RemoveByID(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	// Get new ID
+	// Get object id
 	oid := bson.ObjectIdHex(id)
-
-	// Initialize empty struct
-	s := models.Interface{}
-
-	// Get entry
-	if err := c.session.DB(c.database).C("interfaces").FindId(oid).One(&s); err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		return
-	}
-
-	// Remove entry
-	if err := c.session.DB(c.database).C("interfaces").RemoveId(oid); err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		return
-	}
-
-	// Write status
-	jsonWriter(w, r, s, http.StatusOK)
-}
-
-func (c *InterfaceController) Update(w http.ResponseWriter, r *http.Request) {
-	name := mux.Vars(r)["name"]
 
 	// Initialize empty struct
 	s := models.Interface{}
@@ -338,10 +173,43 @@ func (c *InterfaceController) Update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Update entry
-	if err := c.session.DB(c.database).C("interfaces").Update(bson.M{"interface": name}, s); err != nil {
+	if err := c.session.DB(c.database).C("interfaces").UpdateId(oid, s); err != nil {
 		jsonError(w, r, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
 	// Write content-type, header and payload
+	jsonWriter(w, r, s, http.StatusOK)
+}
+
+func (c *InterfaceController) Delete(w http.ResponseWriter, r *http.Request) {
+	// Get ID
+	id := mux.Vars(r)["id"]
+
+	// Validate ObjectId
+	if !bson.IsObjectIdHex(id) {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	// Get object id
+	oid := bson.ObjectIdHex(id)
+
+	// Initialize empty struct
+	s := models.Interface{}
+
+	// Get entry
+	if err := c.session.DB(c.database).C("interfaces").FindId(oid).One(&s); err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	// Remove entry
+	if err := c.session.DB(c.database).C("interfaces").RemoveId(oid); err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	// Write status
 	jsonWriter(w, r, s, http.StatusOK)
 }
