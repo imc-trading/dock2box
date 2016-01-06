@@ -56,6 +56,28 @@ func main() {
 	r.HandleFunc("/"+version.APIVersion+"/hosts/{name}", host.Remove).Methods("DELETE")
 	r.HandleFunc("/"+version.APIVersion+"/hosts/id/{id}", host.RemoveByID).Methods("DELETE")
 
+	// Interface
+	// Get Controller instance
+	intfs := controllers.NewInterfaceController(getSession())
+
+	// Set Database
+	intfs.SetDatabase(*database)
+
+	// Set Schema URI
+	intfs.SetSchemaURI(*schemaURI)
+
+	// Create Index
+	//    host.CreateIndex()
+
+	// Add handlers for endpoints
+	r.HandleFunc("/"+version.APIVersion+"/interfaces", intfs.All).Methods("GET")
+	r.HandleFunc("/"+version.APIVersion+"/interfaces/{name}", intfs.Get).Methods("GET")
+	r.HandleFunc("/"+version.APIVersion+"/interfaces/id/{id}", intfs.GetByID).Methods("GET")
+	r.HandleFunc("/"+version.APIVersion+"/interfaces", intfs.Create).Methods("POST")
+	r.HandleFunc("/"+version.APIVersion+"/interfaces/{name}", intfs.Update).Methods("PUT")
+	r.HandleFunc("/"+version.APIVersion+"/interfaces/{name}", intfs.Remove).Methods("DELETE")
+	r.HandleFunc("/"+version.APIVersion+"/interfaces/id/{id}", intfs.RemoveByID).Methods("DELETE")
+
 	// Site
 	// Get Controller instance
 	site := controllers.NewSiteController(getSession())

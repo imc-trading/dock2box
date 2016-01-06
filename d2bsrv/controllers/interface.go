@@ -13,45 +13,47 @@ import (
 	"github.com/imc-trading/dock2box/d2bsrv/models"
 )
 
-type HostController struct {
+type InterfaceController struct {
 	database  string
 	schemaURI string
 	session   *mgo.Session
 }
 
-func NewHostController(s *mgo.Session) *HostController {
-	return &HostController{
+func NewInterfaceController(s *mgo.Session) *InterfaceController {
+	return &InterfaceController{
 		database:  "d2b",
-		schemaURI: "file://schemas/host.json",
+		schemaURI: "file://schemas/interface.json",
 		session:   s,
 	}
 }
 
-func (c *HostController) SetDatabase(database string) {
+func (c *InterfaceController) SetDatabase(database string) {
 	c.database = database
 }
 
-func (c *HostController) SetSchemaURI(uri string) {
-	c.schemaURI = uri + "/host.json"
+func (c *InterfaceController) SetSchemaURI(uri string) {
+	c.schemaURI = uri + "/interface.json"
 }
 
-func (c *HostController) CreateIndex() {
+/*
+func (c *InterfaceController) CreateIndex() {
 	index := mgo.Index{
-		Key:    []string{"host"},
+		Key:    []string{"interface"},
 		Unique: true,
 	}
 
-	if err := c.session.DB(c.database).C("hosts").EnsureIndex(index); err != nil {
+	if err := c.session.DB(c.database).C("interfaces").EnsureIndex(index); err != nil {
 		panic(err)
 	}
 }
+*/
 
-func (c *HostController) All(w http.ResponseWriter, r *http.Request) {
+func (c *InterfaceController) All(w http.ResponseWriter, r *http.Request) {
 	// Initialize empty struct list
-	s := []models.Host{}
+	s := []models.Interface{}
 
 	// Get all entries
-	if err := c.session.DB(c.database).C("hosts").Find(nil).All(&s); err != nil {
+	if err := c.session.DB(c.database).C("interfaces").Find(nil).All(&s); err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
@@ -96,14 +98,14 @@ func (c *HostController) All(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusOK)
 }
 
-func (c *HostController) Get(w http.ResponseWriter, r *http.Request) {
+func (c *InterfaceController) Get(w http.ResponseWriter, r *http.Request) {
 	name := mux.Vars(r)["name"]
 
 	// Initialize empty struct
-	s := models.Host{}
+	s := models.Interface{}
 
 	// Get entry
-	if err := c.session.DB(c.database).C("hosts").Find(bson.M{"host": name}).One(&s); err != nil {
+	if err := c.session.DB(c.database).C("interfacess").Find(bson.M{"interface": name}).One(&s); err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
@@ -146,7 +148,7 @@ func (c *HostController) Get(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusOK)
 }
 
-func (c *HostController) GetByID(w http.ResponseWriter, r *http.Request) {
+func (c *InterfaceController) GetByID(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
 	// Validate ObjectId
@@ -159,10 +161,10 @@ func (c *HostController) GetByID(w http.ResponseWriter, r *http.Request) {
 	oid := bson.ObjectIdHex(id)
 
 	// Initialize empty struct
-	s := models.Host{}
+	s := models.Interface{}
 
 	// Get entry
-	if err := c.session.DB(c.database).C("hosts").FindId(oid).One(&s); err != nil {
+	if err := c.session.DB(c.database).C("interfacess").FindId(oid).One(&s); err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
@@ -205,9 +207,9 @@ func (c *HostController) GetByID(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusOK)
 }
 
-func (c *HostController) Create(w http.ResponseWriter, r *http.Request) {
+func (c *InterfaceController) Create(w http.ResponseWriter, r *http.Request) {
 	// Initialize empty struct
-	s := models.Host{}
+	s := models.Interface{}
 
 	// Decode JSON into struct
 	err := json.NewDecoder(r.Body).Decode(&s)
@@ -238,13 +240,8 @@ func (c *HostController) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Set refs
-	//	s.ImageRef = "/images/id/" + s.ImageID.Hex()
-	//	s.TenantRef = "/tenants/id/" + s.TenantID.Hex()
-	//	s.SiteRef = "/sites/id/" + s.SiteID.Hex()
-
 	// Insert entry
-	if err := c.session.DB(c.database).C("hosts").Insert(s); err != nil {
+	if err := c.session.DB(c.database).C("interfaces").Insert(s); err != nil {
 		jsonError(w, r, "Insert: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -253,21 +250,21 @@ func (c *HostController) Create(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusCreated)
 }
 
-func (c *HostController) Remove(w http.ResponseWriter, r *http.Request) {
+func (c *InterfaceController) Remove(w http.ResponseWriter, r *http.Request) {
 	// Get name
 	name := mux.Vars(r)["name"]
 
 	// Initialize empty struct
-	s := models.Host{}
+	s := models.Interface{}
 
 	// Get entry
-	if err := c.session.DB(c.database).C("hosts").Find(bson.M{"host": name}).One(&s); err != nil {
+	if err := c.session.DB(c.database).C("interfaces").Find(bson.M{"interface": name}).One(&s); err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 
 	// Remove entry
-	if err := c.session.DB(c.database).C("hosts").Remove(bson.M{"host": name}); err != nil {
+	if err := c.session.DB(c.database).C("interfaces").Remove(bson.M{"interface": name}); err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
@@ -276,7 +273,7 @@ func (c *HostController) Remove(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusOK)
 }
 
-func (c *HostController) RemoveByID(w http.ResponseWriter, r *http.Request) {
+func (c *InterfaceController) RemoveByID(w http.ResponseWriter, r *http.Request) {
 	// Get ID
 	id := mux.Vars(r)["id"]
 
@@ -290,16 +287,16 @@ func (c *HostController) RemoveByID(w http.ResponseWriter, r *http.Request) {
 	oid := bson.ObjectIdHex(id)
 
 	// Initialize empty struct
-	s := models.Host{}
+	s := models.Interface{}
 
 	// Get entry
-	if err := c.session.DB(c.database).C("hosts").FindId(oid).One(&s); err != nil {
+	if err := c.session.DB(c.database).C("interfaces").FindId(oid).One(&s); err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 
 	// Remove entry
-	if err := c.session.DB(c.database).C("hosts").RemoveId(oid); err != nil {
+	if err := c.session.DB(c.database).C("interfaces").RemoveId(oid); err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
@@ -308,11 +305,11 @@ func (c *HostController) RemoveByID(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusOK)
 }
 
-func (c *HostController) Update(w http.ResponseWriter, r *http.Request) {
+func (c *InterfaceController) Update(w http.ResponseWriter, r *http.Request) {
 	name := mux.Vars(r)["name"]
 
 	// Initialize empty struct
-	s := models.Host{}
+	s := models.Interface{}
 
 	// Decode JSON into struct
 	err := json.NewDecoder(r.Body).Decode(&s)
@@ -341,7 +338,7 @@ func (c *HostController) Update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Update entry
-	if err := c.session.DB(c.database).C("hosts").Update(bson.M{"host": name}, s); err != nil {
+	if err := c.session.DB(c.database).C("interfaces").Update(bson.M{"interface": name}, s); err != nil {
 		jsonError(w, r, err.Error(), http.StatusInternalServerError)
 		return
 	}

@@ -166,9 +166,9 @@ cat << EOF > $TMPFILE
 EOF
 
 cpt "Create Tag"
-tag_id=$(create "tags")
+tag1_id=$(create "tags")
 cpt "Get Tag"
-get "tags" $tag_id
+get "tags" $tag1_id
 
 #
 # Tag 2
@@ -183,9 +183,9 @@ cat << EOF > $TMPFILE
 EOF
 
 cpt "Create Tag"
-tag_id=$(create "tags")
+tag2_id=$(create "tags")
 cpt "Get Tag"
-get "tags" $tag_id
+get "tags" $tag2_id
 
 #
 # Host
@@ -196,27 +196,13 @@ cat << EOF > $TMPFILE
   "build": true,
   "debug": true,
   "gpt": false,
-  "tagId": "${tag_id}",
+  "tagId": "${tag1_id}",
   "kOpts": "None",
   "tenantId": "${tenant_id}",
   "labels": [
     "web-server"
   ],
-  "siteId": "${site_id}",
-  "interfaces": [
-    {
-      "interface": "eth0",
-      "dhcp": false,
-      "ipv4": "192.168.0.1",
-      "hwAddr": "a1:4c:6f:31:6c:d2",
-      "subnetId": "${subnet_id}"
-    },
-    {
-      "interface": "eth1",
-      "dhcp": true,
-      "hwAddr": "a1:4c:6f:31:6c:d2"
-    }
-  ]
+  "siteId": "${site_id}"
 }
 EOF
 
@@ -224,5 +210,41 @@ cpt "Create Host"
 host_id=$(create "hosts" "$(cat $TMPFILE)")
 cpt "Get Host"
 get "hosts" $host_id
+
+#
+# Interface 1
+#
+cat << EOF > $TMPFILE
+{
+  "interface": "eth0",
+  "dhcp": false,
+  "ipv4": "192.168.0.1",
+  "hwAddr": "a1:4c:6f:31:6c:d2",
+  "subnetId": "${subnet_id}",
+  "hostId": "${host_id}"
+}
+EOF
+
+cpt "Create Interface 1"
+interface1_id=$(create "interfaces" "$(cat $TMPFILE)")
+cpt "Get Interface"
+get "interfaces" $interface1_id
+
+#
+# Interface 2
+#
+cat << EOF > $TMPFILE
+{
+  "interface": "eth1",
+  "dhcp": true,
+  "hwAddr": "a1:4c:6f:31:6c:d2",
+  "hostId": "${host_id}"
+}
+EOF
+
+cpt "Create Interface 2"
+interface2_id=$(create "interfaces" "$(cat $TMPFILE)")
+cpt "Get Interface"
+get "interfaces" $interface2_id
 
 rm -f $TMPFILE

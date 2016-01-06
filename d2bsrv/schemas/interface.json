@@ -13,14 +13,19 @@
     "fixed": {
       "type": "object",
       "required": [
+        "id",
         "interface",
         "dhcp",
         "hwAddr",
         "ipv4",
-        "subnetId"
+        "subnetId",
+        "hostId"
       ],
       "additionalProperties": false,
       "properties": {
+        "id": {
+          "$ref": "types.json#definitions/id"
+        },
         "interface": {
           "type": "string",
           "pattern": "^[a-z][a-z0-9]+$"
@@ -41,18 +46,26 @@
         },
         "subnetId": {
           "$ref": "types.json#definitions/id"
+        },
+        "hostId": {
+          "$ref": "types.json#definitions/id"
         }
       }
     },
     "dhcp": {
       "type": "object",
       "required": [
+        "id",
         "interface",
         "dhcp",
-        "hwAddr"
+        "hwAddr",
+        "hostId"
       ],
       "additionalProperties": false,
       "properties": {
+        "id": {
+          "$ref": "types.json#definitions/id"
+        },
         "interface": {
           "type": "string",
           "pattern": "^[a-z][a-z0-9]+$"
@@ -66,6 +79,9 @@
         "hwAddr": {
           "type": "string",
           "pattern": "^([0-9a-f]{2}:){5}[0-9a-f]{2}$"
+        },
+        "hostId": {
+          "$ref": "types.json#definitions/id"
         }
       }
     }

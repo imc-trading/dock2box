@@ -49,13 +49,6 @@
     },
     "siteId": {
       "$ref": "types.json#definitions/id"
-    },
-    "interfaces": {
-      "type": "array",
-      "items": {
-        "$ref": "interface.json#"
-      },
-      "uniqueItems": true
     }
   }
 }
