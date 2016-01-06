@@ -237,7 +237,7 @@ cat << EOF > $TMPFILE
 {
   "interface": "eth1",
   "dhcp": true,
-  "hwAddr": "a1:4c:6f:31:6c:d2",
+  "hwAddr": "b1:4c:6f:31:6c:d2",
   "hostId": "${host_id}"
 }
 EOF

@@ -141,6 +141,9 @@ func main() {
 	// Set Database
 	tag.SetDatabase(*database)
 
+	// Create Index
+	tag.CreateIndex()
+
 	// Add handlers for endpoints
 	r.HandleFunc("/"+version.APIVersion+"/tags", tag.All).Methods("GET")
 	r.HandleFunc("/"+version.APIVersion+"/tags/{id}", tag.Get).Methods("GET")

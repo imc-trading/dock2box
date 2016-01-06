@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"reflect"
 
 	"github.com/gorilla/mux"
 	"github.com/xeipuuv/gojsonschema"
@@ -47,11 +48,27 @@ func (c *HostController) CreateIndex() {
 }
 
 func (c *HostController) All(w http.ResponseWriter, r *http.Request) {
+	// Get allowed key names
+	keys, _ := structTags(reflect.ValueOf(models.Host{}), "json")
+
+	// Query
+	cond := bson.M{}
+	for k, v := range r.URL.Query() {
+		if _, ok := keys[k]; !ok {
+			jsonError(w, r, fmt.Sprintf("Incorrect key used in query: %s", k), http.StatusBadRequest)
+			return
+		} else if bson.IsObjectIdHex(v[0]) {
+			cond[k] = bson.ObjectIdHex(v[0])
+		} else {
+			cond[k] = v[0]
+		}
+	}
+
 	// Initialize empty struct list
 	s := []models.Host{}
 
 	// Get all entries
-	if err := c.session.DB(c.database).C("hosts").Find(nil).All(&s); err != nil {
+	if err := c.session.DB(c.database).C("hosts").Find(cond).All(&s); err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
