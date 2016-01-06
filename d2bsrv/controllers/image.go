@@ -71,13 +71,14 @@ func (c *ImageController) All(w http.ResponseWriter, r *http.Request) {
 
 	// Sort
 	sort := []string{}
-	for _, k := range strings.Split(qry["sort"][0], ",") {
-		fmt.Println(k)
-		if _, ok := keys[strings.TrimLeft(k, "+-")]; !ok {
-			jsonError(w, r, fmt.Sprintf("Incorrect key used in sort: %s", k), http.StatusBadRequest)
-			return
+	if _, ok := qry["sort"]; ok {
+		for _, k := range strings.Split(qry["sort"][0], ",") {
+			if _, ok := keys[strings.TrimLeft(k, "+-")]; !ok {
+				jsonError(w, r, fmt.Sprintf("Incorrect key used in sort: %s", k), http.StatusBadRequest)
+				return
+			}
+			sort = append(sort, k)
 		}
-		sort = append(sort, k)
 	}
 
 	// Initialize empty struct list

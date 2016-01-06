@@ -71,13 +71,14 @@ func (c *SubnetController) All(w http.ResponseWriter, r *http.Request) {
 
 	// Sort
 	sort := []string{}
-	for _, k := range strings.Split(qry["sort"][0], ",") {
-		fmt.Println(k)
-		if _, ok := keys[strings.TrimLeft(k, "+-")]; !ok {
-			jsonError(w, r, fmt.Sprintf("Incorrect key used in sort: %s", k), http.StatusBadRequest)
-			return
+	if _, ok := qry["sort"]; ok {
+		for _, k := range strings.Split(qry["sort"][0], ",") {
+			if _, ok := keys[strings.TrimLeft(k, "+-")]; !ok {
+				jsonError(w, r, fmt.Sprintf("Incorrect key used in sort: %s", k), http.StatusBadRequest)
+				return
+			}
+			sort = append(sort, k)
 		}
-		sort = append(sort, k)
 	}
 
 	// Initialize empty struct list
@@ -168,9 +169,6 @@ func (c *SubnetController) Create(w http.ResponseWriter, r *http.Request) {
 		jsonError(w, r, errors, http.StatusInternalServerError)
 		return
 	}
-
-	// Set refs
-	s.SiteRef = "/subnets/id/" + s.SiteID.Hex()
 
 	// Insert entry
 	if err := c.session.DB(c.database).C("subnets").Insert(s); err != nil {
