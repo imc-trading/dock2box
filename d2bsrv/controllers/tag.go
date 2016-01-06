@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"reflect"
+	"strings"
 
 	"github.com/gorilla/mux"
 	"github.com/xeipuuv/gojsonschema"
@@ -53,7 +54,11 @@ func (c *TagController) All(w http.ResponseWriter, r *http.Request) {
 
 	// Query
 	cond := bson.M{}
-	for k, v := range r.URL.Query() {
+	qry := r.URL.Query()
+	for k, v := range qry {
+		if k == "envelope" || k == "embed" || k == "sort" {
+			continue
+		}
 		if _, ok := keys[k]; !ok {
 			jsonError(w, r, fmt.Sprintf("Incorrect key used in query: %s", k), http.StatusBadRequest)
 			return
@@ -64,11 +69,22 @@ func (c *TagController) All(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	// Sort
+	sort := []string{}
+	for _, k := range strings.Split(qry["sort"][0], ",") {
+		fmt.Println(k)
+		if _, ok := keys[strings.TrimLeft(k, "+-")]; !ok {
+			jsonError(w, r, fmt.Sprintf("Incorrect key used in sort: %s", k), http.StatusBadRequest)
+			return
+		}
+		sort = append(sort, k)
+	}
+
 	// Initialize empty struct list
 	s := []models.Tag{}
 
 	// Get all entries
-	if err := c.session.DB(c.database).C("tags").Find(cond).All(&s); err != nil {
+	if err := c.session.DB(c.database).C("tags").Find(cond).Sort(sort...).All(&s); err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
