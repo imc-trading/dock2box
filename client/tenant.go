@@ -19,6 +19,38 @@ func (t *Tenant) JSON() []byte {
 	return b
 }
 
+// All tenants.
+func (r *TenantResource) All() (*[]Tenant, error) {
+	c := *r.Client
+	j, err := c.All("/tenants")
+	if err != nil {
+		return nil, err
+	}
+
+	tenants := &[]Tenant{}
+	if err := json.Unmarshal(j, tenants); err != nil {
+		return nil, err
+	}
+
+	return tenants, nil
+}
+
+// Get tenant.
+func (r *TenantResource) Get(id string) (*Tenant, error) {
+	c := *r.Client
+	j, err := c.Get("/tenants", id)
+	if err != nil {
+		return nil, err
+	}
+
+	tenant := &Tenant{}
+	if err := json.Unmarshal(j, tenant); err != nil {
+		return nil, err
+	}
+
+	return tenant, nil
+}
+
 // Create tenant.
 func (r *TenantResource) Create(s *Tenant) (*Tenant, error) {
 	c := *r.Client
@@ -36,9 +68,9 @@ func (r *TenantResource) Create(s *Tenant) (*Tenant, error) {
 }
 
 // Update tenant.
-func (r *TenantResource) Update(name string, s *Tenant) (*Tenant, error) {
+func (r *TenantResource) Update(id string, s *Tenant) (*Tenant, error) {
 	c := *r.Client
-	j, err := c.Update("/tenants/"+name, s)
+	j, err := c.Update("/tenants/", id, s)
 	if err != nil {
 		return nil, err
 	}
@@ -52,9 +84,9 @@ func (r *TenantResource) Update(name string, s *Tenant) (*Tenant, error) {
 }
 
 // Delete tenant.
-func (r *TenantResource) Delete(name string) (*Tenant, error) {
+func (r *TenantResource) Delete(id string) (*Tenant, error) {
 	c := *r.Client
-	j, err := c.Delete("/tenants", name)
+	j, err := c.Delete("/tenants", id)
 	if err != nil {
 		return nil, err
 	}
@@ -65,36 +97,4 @@ func (r *TenantResource) Delete(name string) (*Tenant, error) {
 	}
 
 	return tenant, nil
-}
-
-// Get tenant.
-func (r *TenantResource) Get(name string) (*Tenant, error) {
-	c := *r.Client
-	j, err := c.Get("/tenants", name)
-	if err != nil {
-		return nil, err
-	}
-
-	tenant := &Tenant{}
-	if err := json.Unmarshal(j, tenant); err != nil {
-		return nil, err
-	}
-
-	return tenant, nil
-}
-
-// All tenants.
-func (r *TenantResource) All() (*[]Tenant, error) {
-	c := *r.Client
-	j, err := c.All("/tenants")
-	if err != nil {
-		return nil, err
-	}
-
-	tenants := &[]Tenant{}
-	if err := json.Unmarshal(j, tenants); err != nil {
-		return nil, err
-	}
-
-	return tenants, nil
 }

@@ -22,6 +22,38 @@ func (s *Subnet) JSON() []byte {
 	return b
 }
 
+// All subnets.
+func (r *SubnetResource) All() (*[]Subnet, error) {
+	c := *r.Client
+	j, err := c.All("/subnets")
+	if err != nil {
+		return nil, err
+	}
+
+	subnets := &[]Subnet{}
+	if err := json.Unmarshal(j, subnets); err != nil {
+		return nil, err
+	}
+
+	return subnets, nil
+}
+
+// Get subnet.
+func (r *SubnetResource) Get(id string) (*Subnet, error) {
+	c := *r.Client
+	j, err := c.Get("/subnets", id)
+	if err != nil {
+		return nil, err
+	}
+
+	subnet := &Subnet{}
+	if err := json.Unmarshal(j, subnet); err != nil {
+		return nil, err
+	}
+
+	return subnet, nil
+}
+
 // Create subnet.
 func (r *SubnetResource) Create(s *Subnet) (*Subnet, error) {
 	c := *r.Client
@@ -39,9 +71,9 @@ func (r *SubnetResource) Create(s *Subnet) (*Subnet, error) {
 }
 
 // Update subnet.
-func (r *SubnetResource) Update(name string, s *Subnet) (*Subnet, error) {
+func (r *SubnetResource) Update(id string, s *Subnet) (*Subnet, error) {
 	c := *r.Client
-	j, err := c.Update("/subnets/"+name, s)
+	j, err := c.Update("/subnets/", id, s)
 	if err != nil {
 		return nil, err
 	}
@@ -55,9 +87,9 @@ func (r *SubnetResource) Update(name string, s *Subnet) (*Subnet, error) {
 }
 
 // Delete subnet.
-func (r *SubnetResource) Delete(name string) (*Subnet, error) {
+func (r *SubnetResource) Delete(id string) (*Subnet, error) {
 	c := *r.Client
-	j, err := c.Delete("/subnets", name)
+	j, err := c.Delete("/subnets", id)
 	if err != nil {
 		return nil, err
 	}
@@ -68,36 +100,4 @@ func (r *SubnetResource) Delete(name string) (*Subnet, error) {
 	}
 
 	return subnet, nil
-}
-
-// Get subnet.
-func (r *SubnetResource) Get(name string) (*Subnet, error) {
-	c := *r.Client
-	j, err := c.Get("/subnets", name)
-	if err != nil {
-		return nil, err
-	}
-
-	subnet := &Subnet{}
-	if err := json.Unmarshal(j, subnet); err != nil {
-		return nil, err
-	}
-
-	return subnet, nil
-}
-
-// All subnets.
-func (r *SubnetResource) All() (*[]Subnet, error) {
-	c := *r.Client
-	j, err := c.All("/subnets")
-	if err != nil {
-		return nil, err
-	}
-
-	subnets := &[]Subnet{}
-	if err := json.Unmarshal(j, subnets); err != nil {
-		return nil, err
-	}
-
-	return subnets, nil
 }

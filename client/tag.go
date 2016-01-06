@@ -22,6 +22,38 @@ func (s *Tag) JSON() []byte {
 	return b
 }
 
+// All tags.
+func (r *TagResource) All() (*[]Tag, error) {
+	c := *r.Client
+	j, err := c.All("/tags")
+	if err != nil {
+		return nil, err
+	}
+
+	tags := &[]Tag{}
+	if err := json.Unmarshal(j, tags); err != nil {
+		return nil, err
+	}
+
+	return tags, nil
+}
+
+// Get tag.
+func (r *TagResource) Get(id string) (*Tag, error) {
+	c := *r.Client
+	j, err := c.Get("/tags", id)
+	if err != nil {
+		return nil, err
+	}
+
+	tag := &Tag{}
+	if err := json.Unmarshal(j, tag); err != nil {
+		return nil, err
+	}
+
+	return tag, nil
+}
+
 // Create tag.
 func (r *TagResource) Create(s *Tag) (*Tag, error) {
 	c := *r.Client
@@ -39,9 +71,9 @@ func (r *TagResource) Create(s *Tag) (*Tag, error) {
 }
 
 // Update tag.
-func (r *TagResource) Update(name string, s *Tag) (*Tag, error) {
+func (r *TagResource) Update(id string, s *Tag) (*Tag, error) {
 	c := *r.Client
-	j, err := c.Update("/tags/"+name, s)
+	j, err := c.Update("/tags/", id, s)
 	if err != nil {
 		return nil, err
 	}
@@ -55,9 +87,9 @@ func (r *TagResource) Update(name string, s *Tag) (*Tag, error) {
 }
 
 // Delete tag.
-func (r *TagResource) Delete(name string) (*Tag, error) {
+func (r *TagResource) Delete(id string) (*Tag, error) {
 	c := *r.Client
-	j, err := c.Delete("/tags", name)
+	j, err := c.Delete("/tags", id)
 	if err != nil {
 		return nil, err
 	}
@@ -68,36 +100,4 @@ func (r *TagResource) Delete(name string) (*Tag, error) {
 	}
 
 	return tag, nil
-}
-
-// Get tag.
-func (r *TagResource) Get(name string) (*Tag, error) {
-	c := *r.Client
-	j, err := c.Get("/tags", name)
-	if err != nil {
-		return nil, err
-	}
-
-	tag := &Tag{}
-	if err := json.Unmarshal(j, tag); err != nil {
-		return nil, err
-	}
-
-	return tag, nil
-}
-
-// All tags.
-func (r *TagResource) All() (*[]Tag, error) {
-	c := *r.Client
-	j, err := c.All("/tags")
-	if err != nil {
-		return nil, err
-	}
-
-	tags := &[]Tag{}
-	if err := json.Unmarshal(j, tags); err != nil {
-		return nil, err
-	}
-
-	return tags, nil
 }

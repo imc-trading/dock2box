@@ -27,6 +27,38 @@ func (h *Host) JSON() []byte {
 	return b
 }
 
+// All hosts.
+func (r *HostResource) All() (*[]Host, error) {
+	c := *r.Client
+	j, err := c.All("/hosts")
+	if err != nil {
+		return nil, err
+	}
+
+	hosts := &[]Host{}
+	if err := json.Unmarshal(j, hosts); err != nil {
+		return nil, err
+	}
+
+	return hosts, nil
+}
+
+// Get host.
+func (r *HostResource) Get(id string) (*Host, error) {
+	c := *r.Client
+	j, err := c.Get("/hosts", id)
+	if err != nil {
+		return nil, err
+	}
+
+	host := &Host{}
+	if err := json.Unmarshal(j, host); err != nil {
+		return nil, err
+	}
+
+	return host, nil
+}
+
 // Create host.
 func (r *HostResource) Create(h *Host) (*Host, error) {
 	c := *r.Client
@@ -44,9 +76,9 @@ func (r *HostResource) Create(h *Host) (*Host, error) {
 }
 
 // Update host.
-func (r *HostResource) Update(name string, h *Host) (*Host, error) {
+func (r *HostResource) Update(id string, h *Host) (*Host, error) {
 	c := *r.Client
-	j, err := c.Update("/hosts/"+name, h)
+	j, err := c.Update("/hosts/", id, h)
 	if err != nil {
 		return nil, err
 	}
@@ -60,9 +92,9 @@ func (r *HostResource) Update(name string, h *Host) (*Host, error) {
 }
 
 // Delete host.
-func (r *HostResource) Delete(name string) (*Host, error) {
+func (r *HostResource) Delete(id string) (*Host, error) {
 	c := *r.Client
-	j, err := c.Delete("/hosts", name)
+	j, err := c.Delete("/hosts", id)
 	if err != nil {
 		return nil, err
 	}
@@ -73,52 +105,4 @@ func (r *HostResource) Delete(name string) (*Host, error) {
 	}
 
 	return host, nil
-}
-
-// Get host.
-func (r *HostResource) Get(name string) (*Host, error) {
-	c := *r.Client
-	j, err := c.Get("/hosts", name)
-	if err != nil {
-		return nil, err
-	}
-
-	host := &Host{}
-	if err := json.Unmarshal(j, host); err != nil {
-		return nil, err
-	}
-
-	return host, nil
-}
-
-// GetByID host.
-func (r *HostResource) GetByID(id string) (*Host, error) {
-	c := *r.Client
-	j, err := c.Get("/hosts/id", id)
-	if err != nil {
-		return nil, err
-	}
-
-	host := &Host{}
-	if err := json.Unmarshal(j, host); err != nil {
-		return nil, err
-	}
-
-	return host, nil
-}
-
-// All hosts.
-func (r *HostResource) All() (*[]Host, error) {
-	c := *r.Client
-	j, err := c.All("/hosts")
-	if err != nil {
-		return nil, err
-	}
-
-	hosts := &[]Host{}
-	if err := json.Unmarshal(j, hosts); err != nil {
-		return nil, err
-	}
-
-	return hosts, nil
 }

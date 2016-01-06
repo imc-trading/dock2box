@@ -24,6 +24,38 @@ func (i *Interface) JSON() []byte {
 	return b
 }
 
+// All interfaces.
+func (r *InterfaceResource) All() (*[]Interface, error) {
+	c := *r.Client
+	j, err := c.All("/interfaces")
+	if err != nil {
+		return nil, err
+	}
+
+	intfs := &[]Interface{}
+	if err := json.Unmarshal(j, intfs); err != nil {
+		return nil, err
+	}
+
+	return intfs, nil
+}
+
+// Get interface.
+func (r *InterfaceResource) Get(id string) (*Interface, error) {
+	c := *r.Client
+	j, err := c.Get("/interfaces", id)
+	if err != nil {
+		return nil, err
+	}
+
+	intf := &Interface{}
+	if err := json.Unmarshal(j, intf); err != nil {
+		return nil, err
+	}
+
+	return intf, nil
+}
+
 // Create interface.
 func (r *InterfaceResource) Create(h *Interface) (*Interface, error) {
 	c := *r.Client
@@ -41,9 +73,9 @@ func (r *InterfaceResource) Create(h *Interface) (*Interface, error) {
 }
 
 // Update interface.
-func (r *InterfaceResource) Update(name string, h *Interface) (*Interface, error) {
+func (r *InterfaceResource) Update(id string, h *Interface) (*Interface, error) {
 	c := *r.Client
-	j, err := c.Update("/interfaces/"+name, h)
+	j, err := c.Update("/interfaces/", id, h)
 	if err != nil {
 		return nil, err
 	}
@@ -57,9 +89,9 @@ func (r *InterfaceResource) Update(name string, h *Interface) (*Interface, error
 }
 
 // Delete interface.
-func (r *InterfaceResource) Delete(name string) (*Interface, error) {
+func (r *InterfaceResource) Delete(id string) (*Interface, error) {
 	c := *r.Client
-	j, err := c.Delete("/interfaces", name)
+	j, err := c.Delete("/interfaces", id)
 	if err != nil {
 		return nil, err
 	}
@@ -70,52 +102,4 @@ func (r *InterfaceResource) Delete(name string) (*Interface, error) {
 	}
 
 	return intf, nil
-}
-
-// Get interface.
-func (r *InterfaceResource) Get(name string) (*Interface, error) {
-	c := *r.Client
-	j, err := c.Get("/interfaces", name)
-	if err != nil {
-		return nil, err
-	}
-
-	intf := &Interface{}
-	if err := json.Unmarshal(j, intf); err != nil {
-		return nil, err
-	}
-
-	return intf, nil
-}
-
-// GetByID interface.
-func (r *InterfaceResource) GetByID(id string) (*Interface, error) {
-	c := *r.Client
-	j, err := c.Get("/interfaces/id", id)
-	if err != nil {
-		return nil, err
-	}
-
-	intf := &Interface{}
-	if err := json.Unmarshal(j, intf); err != nil {
-		return nil, err
-	}
-
-	return intf, nil
-}
-
-// All interfaces.
-func (r *InterfaceResource) All() (*[]Interface, error) {
-	c := *r.Client
-	j, err := c.All("/interfaces")
-	if err != nil {
-		return nil, err
-	}
-
-	intfs := &[]Interface{}
-	if err := json.Unmarshal(j, intfs); err != nil {
-		return nil, err
-	}
-
-	return intfs, nil
 }

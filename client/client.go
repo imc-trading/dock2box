@@ -1,8 +1,5 @@
 package client
 
-// TODO
-// - Change logging to have levels debug, info, warn, error, fatal
-
 import (
 	"bytes"
 	"encoding/json"
@@ -67,6 +64,47 @@ func (c Client) Fatalf(fmt string, args ...interface{}) {
 	log.Fatalf(fmt, args...)
 }
 
+// All resources.
+func (c Client) All(endp string) ([]byte, error) {
+	url := c.URL + endp
+	c.Infof("url: %s", url)
+
+	resp, err := http.Get(url + "?envelope=false")
+	if err != nil {
+		return []byte{}, err
+	}
+	defer resp.Body.Close()
+	cont, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return []byte{}, err
+	}
+
+	return cont, nil
+}
+
+// Get resource.
+func (c Client) Get(endp string, id string) ([]byte, error) {
+	url := c.URL + endp + "/" + id
+	c.Infof("url: %s", url)
+
+	resp, err := http.Get(url + "?envelope=false")
+	if err != nil {
+		return []byte{}, err
+	}
+
+	if resp.StatusCode != 200 {
+		return []byte{}, fmt.Errorf("Get %s: failed with status code %d", url, resp.StatusCode)
+	}
+
+	defer resp.Body.Close()
+	cont, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return []byte{}, err
+	}
+
+	return cont, nil
+}
+
 // Create resource.
 func (c Client) Create(endp string, s interface{}) ([]byte, error) {
 	url := c.URL + endp
@@ -93,8 +131,8 @@ func (c Client) Create(endp string, s interface{}) ([]byte, error) {
 }
 
 // Update resource.
-func (c Client) Update(endp string, s interface{}) ([]byte, error) {
-	url := c.URL + endp
+func (c Client) Update(endp string, id string, s interface{}) ([]byte, error) {
+	url := c.URL + endp + "/" + id
 	c.Infof("header: application/json, method: PUT, url: %s", url)
 
 	b, _ := json.MarshalIndent(&s, "", "  ")
@@ -118,8 +156,8 @@ func (c Client) Update(endp string, s interface{}) ([]byte, error) {
 }
 
 // Delete resource.
-func (c Client) Delete(endp string, name string) ([]byte, error) {
-	url := c.URL + endp + "/" + name
+func (c Client) Delete(endp string, id string) ([]byte, error) {
+	url := c.URL + endp + "/" + id
 	c.Infof("url: %s", url)
 
 	req, err := http.NewRequest("DELETE", url+"?envelope=false", bytes.NewBuffer([]byte{}))
@@ -135,66 +173,6 @@ func (c Client) Delete(endp string, name string) ([]byte, error) {
 		return []byte{}, fmt.Errorf("Delete %s: failed with status code %d", url, resp.StatusCode)
 	}
 
-	defer resp.Body.Close()
-	cont, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return []byte{}, err
-	}
-
-	return cont, nil
-}
-
-// Get resource.
-func (c Client) Get(endp string, name string) ([]byte, error) {
-	url := c.URL + endp + "/" + name
-	c.Infof("url: %s", url)
-
-	resp, err := http.Get(url + "?envelope=false")
-	if err != nil {
-		return []byte{}, err
-	}
-
-	if resp.StatusCode != 200 {
-		return []byte{}, fmt.Errorf("Get %s: failed with status code %d", url, resp.StatusCode)
-	}
-
-	defer resp.Body.Close()
-	cont, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return []byte{}, err
-	}
-
-	return cont, nil
-}
-
-// Exist resource.
-func (c Client) Exist(endp string, name string) (bool, error) {
-	url := c.URL + endp + "/" + name
-	c.Infof("url: %s", url)
-
-	resp, err := http.Get(url + "?envelope=false")
-	if err != nil {
-		return false, err
-	}
-
-	switch resp.StatusCode {
-	case 404:
-		return false, nil
-	case 200:
-		return true, nil
-	}
-	return false, fmt.Errorf("Get %s: failed with status code %d", url, resp.StatusCode)
-}
-
-// All resources.
-func (c Client) All(endp string) ([]byte, error) {
-	url := c.URL + endp
-	c.Infof("url: %s", url)
-
-	resp, err := http.Get(url + "?envelope=false")
-	if err != nil {
-		return []byte{}, err
-	}
 	defer resp.Body.Close()
 	cont, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
