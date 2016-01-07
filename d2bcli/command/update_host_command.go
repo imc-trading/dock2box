@@ -39,6 +39,7 @@ func NewUpdateHostCommand() cli.Command {
 	}
 }
 
+/*
 func updateHostInterface(clnt *client.Client, siteID string, v client.HostInterface) client.HostInterface {
 	ifs := client.HostInterface{
 		Interface: prompt.String("Interface", prompt.Prompt{Default: v.Interface, FuncPtr: prompt.Regex, FuncInp: "^[a-z][a-z0-9]+$"}),
@@ -53,6 +54,7 @@ func updateHostInterface(clnt *client.Client, siteID string, v client.HostInterf
 
 	return ifs
 }
+*/
 
 func updateHostCommandFunc(c *cli.Context) {
 	if len(c.Args()) == 0 {
@@ -92,9 +94,11 @@ func updateHostCommandFunc(c *cli.Context) {
 		h.TenantID = *chooseTenants(clnt, v.TenantID)
 		h.SiteID = *chooseSite(clnt, v.SiteID)
 
-		for _, v := range v.Interfaces {
-			h.Interfaces = append(h.Interfaces, updateHostInterface(clnt, h.SiteID, v))
-		}
+		/*
+			for _, v := range v.Interfaces {
+				h.Interfaces = append(h.Interfaces, updateHostInterface(clnt, h.SiteID, v))
+			}
+		*/
 
 		// Is this correct?
 		fmt.Println(string(h.JSON()))

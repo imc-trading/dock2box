@@ -11,11 +11,11 @@ APIVERS="v1"
 create() {
     local endp="$1" resp
 
-    echo "POST: http://localhost:8080/${APIVERS}/${endp}" >&2
+    echo "POST: http://localhost:8080/${APIVERS}/${endp}?envelope=true" >&2
     echo "PAYLOAD:" >&2
     echo "$(cat $TMPFILE)" >&2
 
-    resp=$(curl -s -H "Content-Type: application/json" -X POST -d "$(cat $TMPFILE)" "http://localhost:8080/${APIVERS}/${endp}")
+    resp=$(curl -s -H "Content-Type: application/json" -X POST -d "$(cat $TMPFILE)" "http://localhost:8080/${APIVERS}/${endp}?envelope=true")
 
     echo "RESPONSE:" >&2
     echo "$resp" >&2
@@ -32,9 +32,9 @@ create() {
 get() {
     local endp="$1" id="$2"
 
-    echo "GET: http://localhost:8080/${APIVERS}/${endp}/${id}"
+    echo "GET: http://localhost:8080/${APIVERS}/${endp}/${id}?envelope=true"
     echo "DATA:"
-    curl -s -H "Content-Type: application/json" "http://localhost:8080/${APIVERS}/${endp}/${id}"
+    curl -s -H "Content-Type: application/json" "http://localhost:8080/${APIVERS}/${endp}/${id}?envelope=true"
     echo
 }
 

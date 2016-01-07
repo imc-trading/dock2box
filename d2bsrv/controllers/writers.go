@@ -3,6 +3,7 @@ package controllers
 import (
 	"encoding/json"
 	"net/http"
+	"strings"
 )
 
 type JSONEnvelope struct {
@@ -15,7 +16,14 @@ func jsonError(w http.ResponseWriter, r *http.Request, e interface{}, c int, env
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(c)
 
-	if envelope == false || r.URL.Query().Get("envelope") == "false" {
+	switch strings.ToLower(r.URL.Query().Get("envelope")) {
+	case "true":
+		envelope = true
+	case "false":
+		envelope = false
+	}
+
+	if envelope == false {
 		var b []byte
 		if r.URL.Query().Get("indent") == "false" {
 			b, _ = json.Marshal(&e)
@@ -44,7 +52,14 @@ func jsonWriter(w http.ResponseWriter, r *http.Request, d interface{}, c int, en
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(c)
 
-	if envelope == false || r.URL.Query().Get("envelope") == "false" {
+	switch strings.ToLower(r.URL.Query().Get("envelope")) {
+	case "true":
+		envelope = true
+	case "false":
+		envelope = false
+	}
+
+	if envelope == false {
 		var b []byte
 		if r.URL.Query().Get("indent") == "false" {
 			b, _ = json.Marshal(&d)
