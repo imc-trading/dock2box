@@ -65,6 +65,13 @@ func main() {
 	// Create new router
 	r := mux.NewRouter()
 
+	// Root
+	// Get Controller instance
+	root := controllers.NewRootController(*baseURI, envelope, hateoas)
+
+	// Add handlers for endpoints
+	r.HandleFunc("/"+version.APIVersion, root.All).Methods("GET")
+
 	// Host
 	// Get Controller instance
 	host := controllers.NewHostController(getSession(), *baseURI, envelope, hateoas)
