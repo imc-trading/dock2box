@@ -59,7 +59,7 @@ func (c *InterfaceController) CreateIndex() {
 
 func (c *InterfaceController) All(w http.ResponseWriter, r *http.Request) {
 	// Get allowed key names
-	keys, _ := structTags(reflect.ValueOf(models.Interface{}), "json")
+	keys, _ := structTags(reflect.ValueOf(models.Interface{}), "json", "bson")
 
 	// Query
 	cond := bson.M{}

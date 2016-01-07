@@ -51,7 +51,7 @@ func (c *TenantController) CreateIndex() {
 
 func (c *TenantController) All(w http.ResponseWriter, r *http.Request) {
 	// Get allowed key names
-	keys, _ := structTags(reflect.ValueOf(models.Tenant{}), "json")
+	keys, _ := structTags(reflect.ValueOf(models.Tenant{}), "json", "bson")
 
 	// Query
 	cond := bson.M{}

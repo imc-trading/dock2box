@@ -50,7 +50,7 @@ func (c *SiteController) CreateIndex() {
 
 func (c *SiteController) All(w http.ResponseWriter, r *http.Request) {
 	// Get allowed key names
-	keys, _ := structTags(reflect.ValueOf(models.Site{}), "json")
+	keys, _ := structTags(reflect.ValueOf(models.Site{}), "json", "bson")
 
 	// Query
 	cond := bson.M{}

@@ -50,7 +50,7 @@ func (c *ImageController) CreateIndex() {
 
 func (c *ImageController) All(w http.ResponseWriter, r *http.Request) {
 	// Get allowed key names
-	keys, _ := structTags(reflect.ValueOf(models.Image{}), "json")
+	keys, _ := structTags(reflect.ValueOf(models.Image{}), "json", "bson")
 
 	// Query
 	cond := bson.M{}

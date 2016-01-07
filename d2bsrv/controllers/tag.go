@@ -52,7 +52,7 @@ func (c *TagController) CreateIndex() {
 
 func (c *TagController) All(w http.ResponseWriter, r *http.Request) {
 	// Get allowed key names
-	keys, _ := structTags(reflect.ValueOf(models.Tag{}), "field")
+	keys, _ := structTags(reflect.ValueOf(models.Tag{}), "field", "bson")
 
 	// Query
 	cond := bson.M{}
@@ -65,21 +65,31 @@ func (c *TagController) All(w http.ResponseWriter, r *http.Request) {
 			jsonError(w, r, fmt.Sprintf("Incorrect key used in query: %s", k), http.StatusBadRequest)
 			return
 		} else if bson.IsObjectIdHex(v[0]) {
-			cond[k] = bson.ObjectIdHex(v[0])
+			cond[keys[k]] = bson.ObjectIdHex(v[0])
 		} else {
-			cond[k] = v[0]
+			cond[keys[k]] = v[0]
 		}
 	}
 
 	// Sort
 	sort := []string{}
 	if _, ok := qry["sort"]; ok {
-		for _, k := range strings.Split(qry["sort"][0], ",") {
-			if _, ok := keys[strings.TrimLeft(k, "+-")]; !ok {
+		for _, str := range strings.Split(qry["sort"][0], ",") {
+			op := ""
+			k := str
+			switch str[0] {
+			case '+':
+				op = "+"
+				k = str[1:len(str)]
+			case '-':
+				op = "-"
+				k = str[1:len(str)]
+			}
+			if _, ok := keys[k]; !ok {
 				jsonError(w, r, fmt.Sprintf("Incorrect key used in sort: %s", k), http.StatusBadRequest)
 				return
 			}
-			sort = append(sort, k)
+			sort = append(sort, op+keys[k])
 		}
 	}
 
@@ -91,7 +101,7 @@ func (c *TagController) All(w http.ResponseWriter, r *http.Request) {
 				jsonError(w, r, fmt.Sprintf("Incorrect key used in fields: %s", k), http.StatusBadRequest)
 				return
 			}
-			fields[k] = 1
+			fields[keys[k]] = 1
 		}
 	}
 
