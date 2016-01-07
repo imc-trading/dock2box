@@ -1,6 +1,7 @@
 package command
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 
@@ -9,28 +10,24 @@ import (
 	"github.com/imc-trading/dock2box/client"
 )
 
-func NewGetTagCommand() cli.Command {
+func NewGetHostsCommand() cli.Command {
 	return cli.Command{
-		Name:  "tag",
-		Usage: "Get tag",
+		Name:  "hosts",
+		Usage: "Get all hosts",
 		Flags: []cli.Flag{},
 		Action: func(c *cli.Context) {
-			getTagCommandFunc(c)
+			getHostsCommandFunc(c)
 		},
 	}
 }
 
-func getTagCommandFunc(c *cli.Context) {
-	if len(c.Args()) == 0 {
-		log.Fatal("You need to specify a tag")
-	}
-	tag := c.Args()[0]
-
+func getHostsCommandFunc(c *cli.Context) {
 	clnt := client.New(c.GlobalString("server"))
 
-	i, err := clnt.Tag.Get(tag)
+	h, err := clnt.Host.All()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
-	fmt.Printf("%v\n", string(i.JSON()))
+	b, _ := json.MarshalIndent(h, "", "  ")
+	fmt.Printf("%v\n", string(b))
 }

@@ -11,11 +11,17 @@ func NewGetCommand() cli.Command {
 		Usage: "Get resource",
 		Subcommands: []cli.Command{
 			NewGetHostCommand(),
+			NewGetHostsCommand(),
 			NewGetImageCommand(),
+			NewGetImagesCommand(),
 			NewGetTagCommand(),
+			NewGetTagsCommand(),
 			NewGetSubnetCommand(),
+			NewGetSubnetsCommand(),
 			NewGetSiteCommand(),
+			NewGetSitesCommand(),
 			NewGetTenantCommand(),
+			NewGetTenantsCommand(),
 		},
 	}
 }
