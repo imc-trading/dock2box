@@ -130,16 +130,19 @@ func (c *TagController) All(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// HATEOAS Links
-	fmt.Println(c.hateoas)
 	if c.hateoas == true || r.URL.Query().Get("hateoas") == "true" {
 		for i, v := range s {
-			s[i].Links = &[]models.Link{
-				models.Link{
+			links := []models.Link{}
+
+			if v.ImageID != "" {
+				links = append(links, models.Link{
 					HRef:   c.baseURI + "/images/" + v.ImageID.Hex(),
 					Rel:    "self",
 					Method: "GET",
-				},
+				})
 			}
+
+			s[i].Links = &links
 		}
 	}
 
@@ -178,14 +181,18 @@ func (c *TagController) Get(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// HATEOAS Links
-	if r.URL.Query().Get("hateoas") == "true" {
-		s.Links = &[]models.Link{
-			models.Link{
+	if c.hateoas == true || r.URL.Query().Get("hateoas") == "true" {
+		links := []models.Link{}
+
+		if s.ImageID != "" {
+			links = append(links, models.Link{
 				HRef:   c.baseURI + "/images/" + s.ImageID.Hex(),
 				Rel:    "self",
 				Method: "GET",
-			},
+			})
 		}
+
+		s.Links = &links
 	}
 
 	// Write content-type, header and payload

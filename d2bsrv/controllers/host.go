@@ -139,6 +139,39 @@ func (c *HostController) All(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	// HATEOAS Links
+	if c.hateoas == true || r.URL.Query().Get("hateoas") == "true" {
+		for i, v := range s {
+			links := []models.Link{}
+
+			if v.TagID != "" {
+				links = append(links, models.Link{
+					HRef:   c.baseURI + "/tags/" + v.TagID.Hex(),
+					Rel:    "self",
+					Method: "GET",
+				})
+			}
+
+			if v.TenantID != "" {
+				links = append(links, models.Link{
+					HRef:   c.baseURI + "/tenants/" + v.TenantID.Hex(),
+					Rel:    "self",
+					Method: "GET",
+				})
+			}
+
+			if v.SiteID != "" {
+				links = append(links, models.Link{
+					HRef:   c.baseURI + "/sites/" + v.SiteID.Hex(),
+					Rel:    "self",
+					Method: "GET",
+				})
+			}
+
+			s[i].Links = &links
+		}
+	}
+
 	// Write content-type, header and payload
 	jsonWriter(w, r, s, http.StatusOK, c.envelope)
 }
@@ -181,6 +214,37 @@ func (c *HostController) Get(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusNotFound)
 			return
 		}
+	}
+
+	// HATEOAS Links
+	if c.hateoas == true || r.URL.Query().Get("hateoas") == "true" {
+		links := []models.Link{}
+
+		if s.TagID != "" {
+			links = append(links, models.Link{
+				HRef:   c.baseURI + "/tags/" + s.TagID.Hex(),
+				Rel:    "self",
+				Method: "GET",
+			})
+		}
+
+		if s.TenantID != "" {
+			links = append(links, models.Link{
+				HRef:   c.baseURI + "/tenants/" + s.TenantID.Hex(),
+				Rel:    "self",
+				Method: "GET",
+			})
+		}
+
+		if s.SiteID != "" {
+			links = append(links, models.Link{
+				HRef:   c.baseURI + "/sites/" + s.SiteID.Hex(),
+				Rel:    "self",
+				Method: "GET",
+			})
+		}
+
+		s.Links = &links
 	}
 
 	// Write content-type, header and payload

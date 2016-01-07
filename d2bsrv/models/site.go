@@ -11,4 +11,5 @@ type Site struct {
 	ArtifactRepository string        `field:"artifactRepository" json:"artifactRepository,omitempty" bson:"artifactRepository"`
 	PXETheme           string        `field:"pxeTheme" json:"pxeTheme,omitempty" bson:"pxeTheme"`
 	NamingScheme       string        `field:"namingScheme" json:"namingScheme,omitempty" bson:"namingScheme"`
+	Links              *[]Link       `json:"links,omitempty"`
 }

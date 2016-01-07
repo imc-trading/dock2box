@@ -129,6 +129,19 @@ func (c *SubnetController) All(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	// HATEOAS Links
+	if c.hateoas == true || r.URL.Query().Get("hateoas") == "true" {
+		for i, v := range s {
+			s[i].Links = &[]models.Link{
+				models.Link{
+					HRef:   c.baseURI + "/sites/" + v.SiteID.Hex(),
+					Rel:    "self",
+					Method: "GET",
+				},
+			}
+		}
+	}
+
 	// Write content-type, header and payload
 	jsonWriter(w, r, s, http.StatusOK, c.envelope)
 }
@@ -168,6 +181,17 @@ func (c *SubnetController) Get(w http.ResponseWriter, r *http.Request) {
 		if err := c.session.DB(c.database).C("sites").FindId(s.SiteID).One(&s.Site); err != nil {
 			w.WriteHeader(http.StatusNotFound)
 			return
+		}
+	}
+
+	// HATEOAS Links
+	if c.hateoas == true || r.URL.Query().Get("hateoas") == "true" {
+		s.Links = &[]models.Link{
+			models.Link{
+				HRef:   c.baseURI + "/sites/" + s.SiteID.Hex(),
+				Rel:    "self",
+				Method: "GET",
+			},
 		}
 	}
 

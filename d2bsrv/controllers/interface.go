@@ -145,6 +145,31 @@ func (c *InterfaceController) All(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	// HATEOAS Links
+	if c.hateoas == true || r.URL.Query().Get("hateoas") == "true" {
+		for i, v := range s {
+			links := []models.Link{}
+
+			if v.SubnetID != "" {
+				links = append(links, models.Link{
+					HRef:   c.baseURI + "/subnets/" + v.SubnetID.Hex(),
+					Rel:    "self",
+					Method: "GET",
+				})
+			}
+
+			if v.HostID != "" {
+				links = append(links, models.Link{
+					HRef:   c.baseURI + "/hosts/" + v.HostID.Hex(),
+					Rel:    "self",
+					Method: "GET",
+				})
+			}
+
+			s[i].Links = &links
+		}
+	}
+
 	// Write content-type, header and payload
 	jsonWriter(w, r, s, http.StatusOK, c.envelope)
 }
@@ -183,6 +208,45 @@ func (c *InterfaceController) Get(w http.ResponseWriter, r *http.Request) {
 		if err := c.session.DB(c.database).C("hosts").FindId(s.HostID).One(&s.Host); err != nil {
 			w.WriteHeader(http.StatusNotFound)
 			return
+		}
+	}
+
+	// HATEOAS Links
+	if c.hateoas == true || r.URL.Query().Get("hateoas") == "true" {
+		links := []models.Link{}
+
+		if s.SubnetID != "" {
+			links = append(links, models.Link{
+				HRef:   c.baseURI + "/subnets/" + s.SubnetID.Hex(),
+				Rel:    "self",
+				Method: "GET",
+			})
+		}
+
+		if s.HostID != "" {
+			links = append(links, models.Link{
+				HRef:   c.baseURI + "/hosts/" + s.HostID.Hex(),
+				Rel:    "self",
+				Method: "GET",
+			})
+		}
+
+		s.Links = &links
+	}
+
+	// HATEOAS Links
+	if c.hateoas == true || r.URL.Query().Get("hateoas") == "true" {
+		s.Links = &[]models.Link{
+			models.Link{
+				HRef:   c.baseURI + "/subnets/" + s.SubnetID.Hex(),
+				Rel:    "self",
+				Method: "GET",
+			},
+			models.Link{
+				HRef:   c.baseURI + "/hosts/" + s.HostID.Hex(),
+				Rel:    "self",
+				Method: "GET",
+			},
 		}
 	}
 

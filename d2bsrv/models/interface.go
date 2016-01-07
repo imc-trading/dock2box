@@ -12,4 +12,5 @@ type Interface struct {
 	Subnet    *Subnet       `json:"subnet,omitempty"`
 	HostID    bson.ObjectId `field:"hostId" json:"hostId" bson:"hostId"`
 	Host      *Host         `json:"host,omitempty"`
+	Links     *[]Link       `json:"links,omitempty"`
 }

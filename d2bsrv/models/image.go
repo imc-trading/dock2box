@@ -11,4 +11,5 @@ type Image struct {
 	BootTag   *Tag          `json:"bootTag,omitempty"`
 	BootImage *Image        `json:"bootImage,omitempty"`
 	Tags      *[]Tag        `json:"tags,omitempty"`
+	Links     *[]Link       `json:"links,omitempty"`
 }

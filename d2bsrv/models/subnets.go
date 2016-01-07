@@ -9,4 +9,5 @@ type Subnet struct {
 	Gw     string        `field:"gw" json:"gw,omitempty" bson:"gw"`
 	SiteID bson.ObjectId `field:"siteId" json:"siteId,omitempty" bson:"siteId"`
 	Site   *Site         `json:"site,omitempty"`
+	Links  *[]Link       `json:"links,omitempty"`
 }

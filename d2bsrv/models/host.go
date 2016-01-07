@@ -20,4 +20,5 @@ type Host struct {
 	SiteID     bson.ObjectId `field:"siteId" json:"siteId,omitempty" bson:"siteId"`
 	Site       *Site         `json:"site,omitempty"`
 	Interfaces *[]Interface  `json:"interfaces,omitempty"`
+	Links      *[]Link       `json:"links,omitempty"`
 }

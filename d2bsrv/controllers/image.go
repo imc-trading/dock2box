@@ -131,6 +131,23 @@ func (c *ImageController) All(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	// HATEOAS Links
+	if c.hateoas == true || r.URL.Query().Get("hateoas") == "true" {
+		for i, v := range s {
+			links := []models.Link{}
+
+			if v.BootTagID != "" {
+				links = append(links, models.Link{
+					HRef:   c.baseURI + "/tags/" + v.BootTagID.Hex(),
+					Rel:    "self",
+					Method: "GET",
+				})
+			}
+
+			s[i].Links = &links
+		}
+	}
+
 	// Write content-type, header and payload
 	jsonWriter(w, r, s, http.StatusOK, c.envelope)
 }
@@ -165,6 +182,21 @@ func (c *ImageController) Get(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 		}
+	}
+
+	// HATEOAS Links
+	if c.hateoas == true || r.URL.Query().Get("hateoas") == "true" {
+		links := []models.Link{}
+
+		if s.BootTagID != "" {
+			links = append(links, models.Link{
+				HRef:   c.baseURI + "/tags/" + s.BootTagID.Hex(),
+				Rel:    "self",
+				Method: "GET",
+			})
+		}
+
+		s.Links = &links
 	}
 
 	// Write content-type, header and payload
@@ -261,6 +293,7 @@ func (c *ImageController) Update(w http.ResponseWriter, r *http.Request) {
 		jsonError(w, r, err.Error(), http.StatusInternalServerError, c.envelope)
 		return
 	}
+
 	// Write content-type, header and payload
 	jsonWriter(w, r, s, http.StatusOK, c.envelope)
 }
