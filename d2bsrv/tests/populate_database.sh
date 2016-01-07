@@ -194,7 +194,7 @@ cat << EOF > $TMPFILE
 {
   "host": "test1.example.com",
   "build": true,
-  "debug": true,
+  "debug": false,
   "gpt": false,
   "tagId": "${tag1_id}",
   "kOpts": "None",
