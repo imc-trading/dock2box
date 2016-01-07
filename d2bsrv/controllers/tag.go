@@ -16,16 +16,18 @@ import (
 )
 
 type TagController struct {
+	session   *mgo.Session
 	database  string
 	schemaURI string
-	session   *mgo.Session
+	baseURI   string
 }
 
-func NewTagController(s *mgo.Session) *TagController {
+func NewTagController(s *mgo.Session, b string) *TagController {
 	return &TagController{
+		session:   s,
 		database:  "d2b",
 		schemaURI: "file://schemas/tag.json",
-		session:   s,
+		baseURI:   b,
 	}
 }
 
@@ -106,7 +108,7 @@ func (c *TagController) All(w http.ResponseWriter, r *http.Request) {
 		for i, v := range s {
 			s[i].Links = &[]models.Link{
 				models.Link{
-					HRef:   "/images/" + v.ImageID.Hex(),
+					HRef:   c.baseURI + "/images/" + v.ImageID.Hex(),
 					Rel:    "self",
 					Method: "GET",
 				},
@@ -145,6 +147,17 @@ func (c *TagController) Get(w http.ResponseWriter, r *http.Request) {
 		if err := c.session.DB(c.database).C("images").FindId(s.ImageID).One(&s.Image); err != nil {
 			w.WriteHeader(http.StatusNotFound)
 			return
+		}
+	}
+
+	// HATEOAS Links
+	if r.URL.Query().Get("hateoas") == "true" {
+		s.Links = &[]models.Link{
+			models.Link{
+				HRef:   c.baseURI + "/images/" + s.ImageID.Hex(),
+				Rel:    "self",
+				Method: "GET",
+			},
 		}
 	}
 

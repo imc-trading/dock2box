@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
@@ -16,20 +17,34 @@ import (
 )
 
 func main() {
-	// Options.
+	// Options
 	appVersion := flag.Bool("version", false, "Version")
 	bind := flag.String("bind", "127.0.0.1:8080", "Bind to address and port")
 	database := flag.String("database", "d2b", "Database name")
 	schemaURI := flag.String("schema-uri", "file://schemas", "URI to JSON schemas")
+	baseURI := flag.String("base-uri", "", "Base URI for server")
 	flag.Parse()
 
-	// Print version.
+	// Print version
 	if *appVersion {
 		fmt.Printf("d2bsrv %s\n", version.Version)
 		os.Exit(0)
 	}
 
 	log.Printf("Using JSON schema URI: %s", *schemaURI)
+
+	// Get Base URI
+	if *baseURI == "" {
+		hostname, err := os.Hostname()
+		if err != nil {
+			log.Fatal(err.Error())
+		}
+		port := strings.Split(*bind, ":")[1]
+		str := "http://" + hostname + ":" + port + "/" + version.APIVersion
+		baseURI = &str
+	}
+
+	log.Printf("Using Base URI: %s", *baseURI)
 
 	// Create new router
 	r := mux.NewRouter()
@@ -136,7 +151,7 @@ func main() {
 
 	// Tag
 	// Get Controller instance
-	tag := controllers.NewTagController(getSession())
+	tag := controllers.NewTagController(getSession(), *baseURI)
 
 	// Set Database
 	tag.SetDatabase(*database)
@@ -190,6 +205,7 @@ func main() {
 	http.Handle("/", r)
 
 	// Fire up the server
+	log.Printf("Bind to: %s", *bind)
 	logr := handlers.LoggingHandler(os.Stdout, r)
 	log.Fatal(http.ListenAndServe(*bind, logr))
 }
