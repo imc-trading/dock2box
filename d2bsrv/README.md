@@ -7,6 +7,7 @@ To make queries just add the field and value, you can specify one or several fie
 > At the moment it only support's equal to.
 
 **Example:**
+
 ```
 /v1/tags?tag=latest&imageId=568d2ba85d099040397ae363
 ```
@@ -24,14 +25,14 @@ This allows you to specify which fields you want in the result.
 
 This allows you to sort the result ascending or descending, you can specify one or several fields.
 
-**Example Ascending:**
+**Example ascending:**
 ```
 /v1/tags?sort=tag,created
 ```
 
 You can sort descending by adding a minus sign.
 
-**Example Descending:**
+**Example descending:**
 ```
 /v1/tags?sort=tag,-created
 ```
@@ -47,7 +48,7 @@ This enabled/disables embedding data in an envelope with additional info that no
 /v1/tags?envelope=true
 ```
 
-**Example Output:**
+**Example output:**
 ```
 {
   "code": 200,
@@ -68,15 +69,15 @@ This enables/disables HATEOAS which includes links to methods and related endpoi
 /v1/tags?hateoas=true
 ```
 
-**Example Output:**
+**Example output:**
 ```
-    "links": [
-      {
-        "href": "http://yggdrasil.trading.imc.intra:8080/v1/images/568d2ba85d099040397ae363",
-        "rel": "self",
-        "method": "GET"
-      }
-    ]
+"links": [
+  {
+    "href": "http://yggdrasil.trading.imc.intra:8080/v1/images/568d2ba85d099040397ae363",
+    "rel": "self",
+    "method": "GET"
+  }
+]
 ```
 
 > This can be disabled globally by using *-disable-hateoas* when starting the server.
@@ -90,19 +91,28 @@ This enables/disables embedding related data in the result. This will affect per
 /v1/tags?embed=true
 ```
 
-**Example Output:**
+**Example output:**
 ```
-    {
-      "id": "568d2ba85d099040397ae365",
-      "tag": "untested",
-      "created": "2015-12-01T13:01:05Z",
-      "sha256": "37ff8e2ae04a1570781a63a247fce789352beae2889f1d720b2efbec50ef8e0d",
-      "imageId": "568d2ba85d099040397ae363",
-      "image": {
-        "id": "568d2ba85d099040397ae363",
-        "image": "test2",
-        "type": "docker",
-        "bootTagId": "568d2ba85d099040397ae362"
-      }
-    }
+{
+  "id": "568d2ba85d099040397ae365",
+  "tag": "untested",
+  "created": "2015-12-01T13:01:05Z",
+  "sha256": "37ff8e2ae04a1570781a63a247fce789352beae2889f1d720b2efbec50ef8e0d",
+  "imageId": "568d2ba85d099040397ae363",
+  "image": {
+    "id": "568d2ba85d099040397ae363",
+    "image": "test2",
+    "type": "docker",
+    "bootTagId": "568d2ba85d099040397ae362"
+  }
+}
 ```
+
+# Data model
+
+# ROADMAP
+
+- Add checks for foreign keys when creating/updating an entry
+- Add more complex queries
+- Refactor boiler plate code in each controller and nornmalize it
+- Rename upper-case ID to Id
