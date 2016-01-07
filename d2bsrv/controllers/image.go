@@ -19,13 +19,19 @@ type ImageController struct {
 	database  string
 	schemaURI string
 	session   *mgo.Session
+	baseURI   string
+	envelope  bool
+	hateoas   bool
 }
 
-func NewImageController(s *mgo.Session) *ImageController {
+func NewImageController(s *mgo.Session, b string, e bool, h bool) *ImageController {
 	return &ImageController{
 		database:  "d2b",
 		schemaURI: "file://schemas/image.json",
 		session:   s,
+		baseURI:   b,
+		envelope:  e,
+		hateoas:   h,
 	}
 }
 
@@ -60,7 +66,7 @@ func (c *ImageController) All(w http.ResponseWriter, r *http.Request) {
 			continue
 		}
 		if _, ok := keys[k]; !ok {
-			jsonError(w, r, fmt.Sprintf("Incorrect key used in query: %s", k), http.StatusBadRequest)
+			jsonError(w, r, fmt.Sprintf("Incorrect key used in query: %s", k), http.StatusBadRequest, c.envelope)
 			return
 		} else if bson.IsObjectIdHex(v[0]) {
 			cond[k] = bson.ObjectIdHex(v[0])
@@ -74,7 +80,7 @@ func (c *ImageController) All(w http.ResponseWriter, r *http.Request) {
 	if _, ok := qry["sort"]; ok {
 		for _, k := range strings.Split(qry["sort"][0], ",") {
 			if _, ok := keys[strings.TrimLeft(k, "+-")]; !ok {
-				jsonError(w, r, fmt.Sprintf("Incorrect key used in sort: %s", k), http.StatusBadRequest)
+				jsonError(w, r, fmt.Sprintf("Incorrect key used in sort: %s", k), http.StatusBadRequest, c.envelope)
 				return
 			}
 			sort = append(sort, k)
@@ -104,7 +110,7 @@ func (c *ImageController) All(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Write content-type, header and payload
-	jsonWriter(w, r, s, http.StatusOK)
+	jsonWriter(w, r, s, http.StatusOK, c.envelope)
 }
 
 func (c *ImageController) Get(w http.ResponseWriter, r *http.Request) {
@@ -140,7 +146,7 @@ func (c *ImageController) Get(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Write content-type, header and payload
-	jsonWriter(w, r, s, http.StatusOK)
+	jsonWriter(w, r, s, http.StatusOK, c.envelope)
 }
 
 func (c *ImageController) Create(w http.ResponseWriter, r *http.Request) {
@@ -150,7 +156,7 @@ func (c *ImageController) Create(w http.ResponseWriter, r *http.Request) {
 	// Decode JSON into struct
 	err := json.NewDecoder(r.Body).Decode(&s)
 	if err != nil {
-		jsonError(w, r, "Failed to deconde JSON: "+err.Error(), http.StatusInternalServerError)
+		jsonError(w, r, "Failed to deconde JSON: "+err.Error(), http.StatusInternalServerError, c.envelope)
 		return
 	}
 
@@ -163,7 +169,7 @@ func (c *ImageController) Create(w http.ResponseWriter, r *http.Request) {
 
 	res, err := gojsonschema.Validate(schemaLoader, docLoader)
 	if err != nil {
-		jsonError(w, r, "Failed to load schema: "+err.Error(), http.StatusInternalServerError)
+		jsonError(w, r, "Failed to load schema: "+err.Error(), http.StatusInternalServerError, c.envelope)
 		return
 	}
 
@@ -172,18 +178,18 @@ func (c *ImageController) Create(w http.ResponseWriter, r *http.Request) {
 		for _, e := range res.Errors() {
 			errors = append(errors, fmt.Sprintf("%s: %s", e.Context().String(), e.Description()))
 		}
-		jsonError(w, r, errors, http.StatusInternalServerError)
+		jsonError(w, r, errors, http.StatusInternalServerError, c.envelope)
 		return
 	}
 
 	// Insert entry
 	if err := c.session.DB(c.database).C("images").Insert(s); err != nil {
-		jsonError(w, r, err.Error(), http.StatusInternalServerError)
+		jsonError(w, r, err.Error(), http.StatusInternalServerError, c.envelope)
 		return
 	}
 
 	// Write content-type, header and payload
-	jsonWriter(w, r, s, http.StatusCreated)
+	jsonWriter(w, r, s, http.StatusCreated, c.envelope)
 }
 
 func (c *ImageController) Update(w http.ResponseWriter, r *http.Request) {
@@ -205,7 +211,7 @@ func (c *ImageController) Update(w http.ResponseWriter, r *http.Request) {
 	// Decode JSON into struct
 	err := json.NewDecoder(r.Body).Decode(&s)
 	if err != nil {
-		jsonError(w, r, "Failed to deconde JSON: "+err.Error(), http.StatusInternalServerError)
+		jsonError(w, r, "Failed to deconde JSON: "+err.Error(), http.StatusInternalServerError, c.envelope)
 		return
 	}
 
@@ -215,7 +221,7 @@ func (c *ImageController) Update(w http.ResponseWriter, r *http.Request) {
 
 	res, err := gojsonschema.Validate(schemaLoader, docLoader)
 	if err != nil {
-		jsonError(w, r, "Failed to load schema: "+err.Error(), http.StatusInternalServerError)
+		jsonError(w, r, "Failed to load schema: "+err.Error(), http.StatusInternalServerError, c.envelope)
 		return
 	}
 
@@ -224,17 +230,17 @@ func (c *ImageController) Update(w http.ResponseWriter, r *http.Request) {
 		for _, e := range res.Errors() {
 			errors = append(errors, fmt.Sprintf("%s: %s", e.Context().String(), e.Description()))
 		}
-		jsonError(w, r, errors, http.StatusInternalServerError)
+		jsonError(w, r, errors, http.StatusInternalServerError, c.envelope)
 		return
 	}
 
 	// Update entry
 	if err := c.session.DB(c.database).C("images").UpdateId(oid, s); err != nil {
-		jsonError(w, r, err.Error(), http.StatusInternalServerError)
+		jsonError(w, r, err.Error(), http.StatusInternalServerError, c.envelope)
 		return
 	}
 	// Write content-type, header and payload
-	jsonWriter(w, r, s, http.StatusOK)
+	jsonWriter(w, r, s, http.StatusOK, c.envelope)
 }
 
 func (c *ImageController) Delete(w http.ResponseWriter, r *http.Request) {
@@ -257,5 +263,5 @@ func (c *ImageController) Delete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Write status
-	jsonWriter(w, r, nil, http.StatusOK)
+	jsonWriter(w, r, nil, http.StatusOK, c.envelope)
 }

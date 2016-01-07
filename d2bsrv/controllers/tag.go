@@ -20,14 +20,18 @@ type TagController struct {
 	database  string
 	schemaURI string
 	baseURI   string
+	envelope  bool
+	hateoas   bool
 }
 
-func NewTagController(s *mgo.Session, b string) *TagController {
+func NewTagController(s *mgo.Session, b string, e bool, h bool) *TagController {
 	return &TagController{
 		session:   s,
 		database:  "d2b",
 		schemaURI: "file://schemas/tag.json",
 		baseURI:   b,
+		envelope:  e,
+		hateoas:   h,
 	}
 }
 
@@ -62,7 +66,7 @@ func (c *TagController) All(w http.ResponseWriter, r *http.Request) {
 			continue
 		}
 		if _, ok := keys[k]; !ok {
-			jsonError(w, r, fmt.Sprintf("Incorrect key used in query: %s", k), http.StatusBadRequest)
+			jsonError(w, r, fmt.Sprintf("Incorrect key used in query: %s", k), http.StatusBadRequest, c.envelope)
 			return
 		} else if bson.IsObjectIdHex(v[0]) {
 			cond[keys[k]] = bson.ObjectIdHex(v[0])
@@ -86,7 +90,7 @@ func (c *TagController) All(w http.ResponseWriter, r *http.Request) {
 				k = str[1:len(str)]
 			}
 			if _, ok := keys[k]; !ok {
-				jsonError(w, r, fmt.Sprintf("Incorrect key used in sort: %s", k), http.StatusBadRequest)
+				jsonError(w, r, fmt.Sprintf("Incorrect key used in sort: %s", k), http.StatusBadRequest, c.envelope)
 				return
 			}
 			sort = append(sort, op+keys[k])
@@ -98,7 +102,7 @@ func (c *TagController) All(w http.ResponseWriter, r *http.Request) {
 	if _, ok := qry["fields"]; ok {
 		for _, k := range strings.Split(qry["fields"][0], ",") {
 			if _, ok := keys[k]; !ok {
-				jsonError(w, r, fmt.Sprintf("Incorrect key used in fields: %s", k), http.StatusBadRequest)
+				jsonError(w, r, fmt.Sprintf("Incorrect key used in fields: %s", k), http.StatusBadRequest, c.envelope)
 				return
 			}
 			fields[keys[k]] = 1
@@ -126,7 +130,8 @@ func (c *TagController) All(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// HATEOAS Links
-	if r.URL.Query().Get("hateoas") == "true" {
+	fmt.Println(c.hateoas)
+	if c.hateoas == true || r.URL.Query().Get("hateoas") == "true" {
 		for i, v := range s {
 			s[i].Links = &[]models.Link{
 				models.Link{
@@ -139,7 +144,7 @@ func (c *TagController) All(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Write content-type, header and payload
-	jsonWriter(w, r, s, http.StatusOK)
+	jsonWriter(w, r, s, http.StatusOK, c.envelope)
 }
 
 func (c *TagController) Get(w http.ResponseWriter, r *http.Request) {
@@ -184,7 +189,7 @@ func (c *TagController) Get(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Write content-type, header and payload
-	jsonWriter(w, r, s, http.StatusOK)
+	jsonWriter(w, r, s, http.StatusOK, c.envelope)
 }
 
 func (c *TagController) Create(w http.ResponseWriter, r *http.Request) {
@@ -194,7 +199,7 @@ func (c *TagController) Create(w http.ResponseWriter, r *http.Request) {
 	// Decode JSON into struct
 	err := json.NewDecoder(r.Body).Decode(&s)
 	if err != nil {
-		jsonError(w, r, "Failed to deconde JSON: "+err.Error(), http.StatusInternalServerError)
+		jsonError(w, r, "Failed to deconde JSON: "+err.Error(), http.StatusInternalServerError, c.envelope)
 		return
 	}
 
@@ -207,7 +212,7 @@ func (c *TagController) Create(w http.ResponseWriter, r *http.Request) {
 
 	res, err := gojsonschema.Validate(schemaLoader, docLoader)
 	if err != nil {
-		jsonError(w, r, "Failed to load schema: "+err.Error(), http.StatusInternalServerError)
+		jsonError(w, r, "Failed to load schema: "+err.Error(), http.StatusInternalServerError, c.envelope)
 		return
 	}
 
@@ -216,18 +221,18 @@ func (c *TagController) Create(w http.ResponseWriter, r *http.Request) {
 		for _, e := range res.Errors() {
 			errors = append(errors, fmt.Sprintf("%s: %s", e.Context().String(), e.Description()))
 		}
-		jsonError(w, r, errors, http.StatusInternalServerError)
+		jsonError(w, r, errors, http.StatusInternalServerError, c.envelope)
 		return
 	}
 
 	// Insert entry
 	if err := c.session.DB(c.database).C("tags").Insert(s); err != nil {
-		jsonError(w, r, err.Error(), http.StatusInternalServerError)
+		jsonError(w, r, err.Error(), http.StatusInternalServerError, c.envelope)
 		return
 	}
 
 	// Write content-type, header and payload
-	jsonWriter(w, r, s, http.StatusCreated)
+	jsonWriter(w, r, s, http.StatusCreated, c.envelope)
 }
 
 func (c *TagController) Update(w http.ResponseWriter, r *http.Request) {
@@ -249,7 +254,7 @@ func (c *TagController) Update(w http.ResponseWriter, r *http.Request) {
 	// Decode JSON into struct
 	err := json.NewDecoder(r.Body).Decode(&s)
 	if err != nil {
-		jsonError(w, r, "Failed to deconde JSON: "+err.Error(), http.StatusInternalServerError)
+		jsonError(w, r, "Failed to deconde JSON: "+err.Error(), http.StatusInternalServerError, c.envelope)
 		return
 	}
 
@@ -259,7 +264,7 @@ func (c *TagController) Update(w http.ResponseWriter, r *http.Request) {
 
 	res, err := gojsonschema.Validate(schemaLoader, docLoader)
 	if err != nil {
-		jsonError(w, r, "Failed to load schema: "+err.Error(), http.StatusInternalServerError)
+		jsonError(w, r, "Failed to load schema: "+err.Error(), http.StatusInternalServerError, c.envelope)
 		return
 	}
 
@@ -268,18 +273,18 @@ func (c *TagController) Update(w http.ResponseWriter, r *http.Request) {
 		for _, e := range res.Errors() {
 			errors = append(errors, fmt.Sprintf("%s: %s", e.Context().String(), e.Description()))
 		}
-		jsonError(w, r, errors, http.StatusInternalServerError)
+		jsonError(w, r, errors, http.StatusInternalServerError, c.envelope)
 		return
 	}
 
 	// Update entry
 	if err := c.session.DB(c.database).C("tags").UpdateId(oid, s); err != nil {
-		jsonError(w, r, err.Error(), http.StatusInternalServerError)
+		jsonError(w, r, err.Error(), http.StatusInternalServerError, c.envelope)
 		return
 	}
 
 	// Write content-type, header and payload
-	jsonWriter(w, r, s, http.StatusOK)
+	jsonWriter(w, r, s, http.StatusOK, c.envelope)
 }
 
 func (c *TagController) Delete(w http.ResponseWriter, r *http.Request) {
@@ -302,5 +307,5 @@ func (c *TagController) Delete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Write status
-	jsonWriter(w, r, nil, http.StatusOK)
+	jsonWriter(w, r, nil, http.StatusOK, c.envelope)
 }

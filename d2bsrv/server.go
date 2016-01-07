@@ -23,6 +23,8 @@ func main() {
 	database := flag.String("database", "d2b", "Database name")
 	schemaURI := flag.String("schema-uri", "file://schemas", "URI to JSON schemas")
 	baseURI := flag.String("base-uri", "", "Base URI for server")
+	disableHATEOAS := flag.Bool("disable-hateoas", false, "Disable HATEOAS per default")
+	enableEnvelope := flag.Bool("enable-envelope", false, "Enable Envelopes per default")
 	flag.Parse()
 
 	// Print version
@@ -46,12 +48,26 @@ func main() {
 
 	log.Printf("Using Base URI: %s", *baseURI)
 
+	// Get global HATEOAS setting
+	hateoas := true
+	if *disableHATEOAS == true {
+		hateoas = false
+	}
+	log.Printf("Use HATEOAS per default: %v", hateoas)
+
+	// Get global envelope setting
+	envelope := false
+	if *enableEnvelope == true {
+		envelope = true
+	}
+	log.Printf("Use Envelope per default: %v", envelope)
+
 	// Create new router
 	r := mux.NewRouter()
 
 	// Host
 	// Get Controller instance
-	host := controllers.NewHostController(getSession())
+	host := controllers.NewHostController(getSession(), *baseURI, envelope, hateoas)
 
 	// Set Database
 	host.SetDatabase(*database)
@@ -71,7 +87,7 @@ func main() {
 
 	// Interface
 	// Get Controller instance
-	intfs := controllers.NewInterfaceController(getSession())
+	intfs := controllers.NewInterfaceController(getSession(), *baseURI, envelope, hateoas)
 
 	// Set Database
 	intfs.SetDatabase(*database)
@@ -91,7 +107,7 @@ func main() {
 
 	// Site
 	// Get Controller instance
-	site := controllers.NewSiteController(getSession())
+	site := controllers.NewSiteController(getSession(), *baseURI, envelope, hateoas)
 
 	// Set Database
 	site.SetDatabase(*database)
@@ -111,7 +127,7 @@ func main() {
 
 	// Subnet
 	// Get Controller instance
-	subnet := controllers.NewSubnetController(getSession())
+	subnet := controllers.NewSubnetController(getSession(), *baseURI, envelope, hateoas)
 
 	// Set Schema URI
 	subnet.SetSchemaURI(*schemaURI)
@@ -131,7 +147,7 @@ func main() {
 
 	// Image
 	// Get Controller instance
-	image := controllers.NewImageController(getSession())
+	image := controllers.NewImageController(getSession(), *baseURI, envelope, hateoas)
 
 	// Set Database
 	image.SetDatabase(*database)
@@ -151,7 +167,7 @@ func main() {
 
 	// Tag
 	// Get Controller instance
-	tag := controllers.NewTagController(getSession(), *baseURI)
+	tag := controllers.NewTagController(getSession(), *baseURI, envelope, hateoas)
 
 	// Set Database
 	tag.SetDatabase(*database)
@@ -168,7 +184,7 @@ func main() {
 
 	// Tenant
 	// Get Controller instance
-	tenant := controllers.NewTenantController(getSession())
+	tenant := controllers.NewTenantController(getSession(), *baseURI, envelope, hateoas)
 
 	// Set Database
 	tenant.SetDatabase(*database)

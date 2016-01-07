@@ -11,11 +11,11 @@ type JSONEnvelope struct {
 	Errors interface{} `json:"errors,omitempty"`
 }
 
-func jsonError(w http.ResponseWriter, r *http.Request, e interface{}, c int) {
+func jsonError(w http.ResponseWriter, r *http.Request, e interface{}, c int, envelope bool) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(c)
 
-	if r.URL.Query().Get("envelope") == "false" {
+	if envelope == false || r.URL.Query().Get("envelope") == "false" {
 		var b []byte
 		if r.URL.Query().Get("indent") == "false" {
 			b, _ = json.Marshal(&e)
@@ -40,11 +40,11 @@ func jsonError(w http.ResponseWriter, r *http.Request, e interface{}, c int) {
 	w.Write(b)
 }
 
-func jsonWriter(w http.ResponseWriter, r *http.Request, d interface{}, c int) {
+func jsonWriter(w http.ResponseWriter, r *http.Request, d interface{}, c int, envelope bool) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(c)
 
-	if r.URL.Query().Get("envelope") == "false" {
+	if envelope == false || r.URL.Query().Get("envelope") == "false" {
 		var b []byte
 		if r.URL.Query().Get("indent") == "false" {
 			b, _ = json.Marshal(&d)

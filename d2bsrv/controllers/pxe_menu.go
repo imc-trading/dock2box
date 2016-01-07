@@ -141,7 +141,7 @@ func (c PXEMenuController) PXEMenu(w http.ResponseWriter, r *http.Request) {
 		if err := c.session.DB(c.database).C("subnets").Find(bson.M{"subnet": fmt.Sprintf("%s/%d", input.Network, input.Prefix)}).One(&input.Subnet); err != nil {
 			// Print debug.
 			if input.Debug == "true" {
-				jsonWriter(w, r, input, http.StatusOK)
+				jsonWriter(w, r, input, http.StatusOK, false)
 				return
 			}
 
@@ -164,7 +164,7 @@ func (c PXEMenuController) PXEMenu(w http.ResponseWriter, r *http.Request) {
 
 		// Print debug.
 		if input.Debug == "true" {
-			jsonWriter(w, r, input, http.StatusOK)
+			jsonWriter(w, r, input, http.StatusOK, false)
 			return
 		}
 
@@ -217,7 +217,7 @@ func (c PXEMenuController) PXEMenu(w http.ResponseWriter, r *http.Request) {
 
 	// Print debug.
 	if input.Debug == "true" {
-		jsonWriter(w, r, input, http.StatusOK)
+		jsonWriter(w, r, input, http.StatusOK, false)
 		return
 	}
 

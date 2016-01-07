@@ -114,5 +114,5 @@ This enables/disables embedding related data in the result. This will affect per
 
 - Add checks for foreign keys when creating/updating an entry
 - Add more complex queries
-- Refactor boiler plate code in each controller and nornmalize it
+- Refactor boiler plate code in each controller and normalize it
 - Rename upper-case ID to Id
