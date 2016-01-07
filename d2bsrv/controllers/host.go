@@ -140,7 +140,14 @@ func (c *HostController) All(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// HATEOAS Links
-	if c.hateoas == true || r.URL.Query().Get("hateoas") == "true" {
+	hateoas := c.hateoas
+	switch strings.ToLower(r.URL.Query().Get("hateoas")) {
+	case "true":
+		hateoas = true
+	case "false":
+		hateoas = false
+	}
+	if hateoas == true {
 		for i, v := range s {
 			links := []models.Link{}
 
@@ -217,7 +224,14 @@ func (c *HostController) Get(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// HATEOAS Links
-	if c.hateoas == true || r.URL.Query().Get("hateoas") == "true" {
+	hateoas := c.hateoas
+	switch strings.ToLower(r.URL.Query().Get("hateoas")) {
+	case "true":
+		hateoas = true
+	case "false":
+		hateoas = false
+	}
+	if hateoas == true {
 		links := []models.Link{}
 
 		if s.TagID != "" {

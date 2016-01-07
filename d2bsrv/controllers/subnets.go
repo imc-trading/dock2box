@@ -130,7 +130,14 @@ func (c *SubnetController) All(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// HATEOAS Links
-	if c.hateoas == true || r.URL.Query().Get("hateoas") == "true" {
+	hateoas := c.hateoas
+	switch strings.ToLower(r.URL.Query().Get("hateoas")) {
+	case "true":
+		hateoas = true
+	case "false":
+		hateoas = false
+	}
+	if hateoas == true {
 		for i, v := range s {
 			s[i].Links = &[]models.Link{
 				models.Link{
@@ -185,7 +192,14 @@ func (c *SubnetController) Get(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// HATEOAS Links
-	if c.hateoas == true || r.URL.Query().Get("hateoas") == "true" {
+	hateoas := c.hateoas
+	switch strings.ToLower(r.URL.Query().Get("hateoas")) {
+	case "true":
+		hateoas = true
+	case "false":
+		hateoas = false
+	}
+	if hateoas == true {
 		s.Links = &[]models.Link{
 			models.Link{
 				HRef:   c.baseURI + "/sites/" + s.SiteID.Hex(),
