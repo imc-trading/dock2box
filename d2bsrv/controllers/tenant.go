@@ -57,34 +57,56 @@ func (c *TenantController) CreateIndex() {
 
 func (c *TenantController) All(w http.ResponseWriter, r *http.Request) {
 	// Get allowed key names
-	keys, _ := structTags(reflect.ValueOf(models.Tenant{}), "json", "bson")
+	keys, _ := structTags(reflect.ValueOf(models.Tag{}), "field", "bson")
 
 	// Query
 	cond := bson.M{}
 	qry := r.URL.Query()
 	for k, v := range qry {
-		if k == "envelope" || k == "embed" || k == "sort" {
+		if k == "envelope" || k == "embed" || k == "sort" || k == "hateoas" || k == "fields" {
 			continue
 		}
 		if _, ok := keys[k]; !ok {
 			jsonError(w, r, fmt.Sprintf("Incorrect key used in query: %s", k), http.StatusBadRequest, c.envelope)
 			return
 		} else if bson.IsObjectIdHex(v[0]) {
-			cond[k] = bson.ObjectIdHex(v[0])
+			cond[keys[k]] = bson.ObjectIdHex(v[0])
 		} else {
-			cond[k] = v[0]
+			cond[keys[k]] = v[0]
 		}
 	}
 
 	// Sort
 	sort := []string{}
 	if _, ok := qry["sort"]; ok {
-		for _, k := range strings.Split(qry["sort"][0], ",") {
-			if _, ok := keys[strings.TrimLeft(k, "+-")]; !ok {
+		for _, str := range strings.Split(qry["sort"][0], ",") {
+			op := ""
+			k := str
+			switch str[0] {
+			case '+':
+				op = "+"
+				k = str[1:len(str)]
+			case '-':
+				op = "-"
+				k = str[1:len(str)]
+			}
+			if _, ok := keys[k]; !ok {
 				jsonError(w, r, fmt.Sprintf("Incorrect key used in sort: %s", k), http.StatusBadRequest, c.envelope)
 				return
 			}
-			sort = append(sort, k)
+			sort = append(sort, op+keys[k])
+		}
+	}
+
+	// Fields
+	fields := bson.M{}
+	if _, ok := qry["fields"]; ok {
+		for _, k := range strings.Split(qry["fields"][0], ",") {
+			if _, ok := keys[k]; !ok {
+				jsonError(w, r, fmt.Sprintf("Incorrect key used in fields: %s", k), http.StatusBadRequest, c.envelope)
+				return
+			}
+			fields[keys[k]] = 1
 		}
 	}
 
@@ -92,7 +114,7 @@ func (c *TenantController) All(w http.ResponseWriter, r *http.Request) {
 	s := []models.Tenant{}
 
 	// Get all entries
-	if err := c.session.DB(c.database).C("tenants").Find(cond).Sort(sort...).All(&s); err != nil {
+	if err := c.session.DB(c.database).C("tenants").Find(cond).Sort(sort...).Select(fields).All(&s); err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
