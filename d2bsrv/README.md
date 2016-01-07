@@ -1,3 +1,23 @@
+# Usage
+
+```
+Usage of ./d2bsrv:
+  -base-uri string
+    	Base URI for server
+  -bind string
+    	Bind to address and port (default "127.0.0.1:8080")
+  -database string
+    	Database name (default "d2b")
+  -disable-hateoas
+    	Disable HATEOAS per default
+  -enable-envelope
+    	Enable Envelopes per default
+  -schema-uri string
+    	URI to JSON schemas (default "file://schemas")
+  -version
+    	Version
+```
+
 # Filtering
 
 ## Query
