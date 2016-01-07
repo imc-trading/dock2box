@@ -52,13 +52,13 @@ func (c *TagController) CreateIndex() {
 
 func (c *TagController) All(w http.ResponseWriter, r *http.Request) {
 	// Get allowed key names
-	keys, _ := structTags(reflect.ValueOf(models.Tag{}), "json")
+	keys, _ := structTags(reflect.ValueOf(models.Tag{}), "field")
 
 	// Query
 	cond := bson.M{}
 	qry := r.URL.Query()
 	for k, v := range qry {
-		if k == "envelope" || k == "embed" || k == "sort" || k == "hateoas" {
+		if k == "envelope" || k == "embed" || k == "sort" || k == "hateoas" || k == "fields" {
 			continue
 		}
 		if _, ok := keys[k]; !ok {
@@ -83,11 +83,23 @@ func (c *TagController) All(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	// Fields
+	fields := bson.M{}
+	if _, ok := qry["fields"]; ok {
+		for _, k := range strings.Split(qry["fields"][0], ",") {
+			if _, ok := keys[k]; !ok {
+				jsonError(w, r, fmt.Sprintf("Incorrect key used in fields: %s", k), http.StatusBadRequest)
+				return
+			}
+			fields[k] = 1
+		}
+	}
+
 	// Initialize empty struct list
 	s := []models.Tag{}
 
 	// Get all entries
-	if err := c.session.DB(c.database).C("tags").Find(cond).Sort(sort...).All(&s); err != nil {
+	if err := c.session.DB(c.database).C("tags").Find(cond).Sort(sort...).Select(fields).All(&s); err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
