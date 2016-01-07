@@ -110,20 +110,82 @@ This enables/disables embedding related data in the result. This will affect per
 
 # Data model
 
-## Hosts
+## Host
 
 Field | Type | Description
 --- | --- | ---
-Id | Unique id | Unique Id for host
+id | Unique id | Unique Id for host
 host | String | Hostname
 build | Boolean | If host should be provisioned when PXE booting
 debug | Boolean | Debug info and no reboot after provisioning finishes
 gpt | Boolean | Use GUID Partition Table
-tagId | Foreign key | Foreign key to image/tag
+tagId | Foreign key | Image and tag
 kOpts | String | Kernel options
-tenantId | Foreign key | Foreign key to tenant
+tenantId | Foreign key | Tenant
 labels | List of strings | Labels for host
-siteId | Foreign key | Foreign key to site
+siteId | Foreign key | Site
+
+## Interface
+
+Field | Type | Description
+--- | --- | ---
+id | Unique id | Unique Id for interface
+interface | String | Interface name
+dhcp | Boolean | Use DHCP
+ipv4 | String | IP address (only for fixed IP address)
+hwAddr | String | Hardware address
+subnetId | Foreign key | Subnet (only for fixed IP address)
+hostId | Foreign key | Host
+
+## Image
+
+Field | Type | Description
+--- | --- | ---
+id | Unique id | Unique Id for interface
+image | String | Image name
+type | String | Image type dockera ,file or boot
+kOpts | String | Kernel options (only for boot image)
+bootTagId | Foreign key | Boot image and tag (only for boot image)
+
+## Tag
+
+Field | Type | Description
+--- | --- | ---
+id | Unique id | Unique Id for tag
+tag | String | Tag name
+created | Date-time | When tag was created
+sha256 | String | SHA256 checksum of image
+imageId | Foreign key | Image
+
+## Site
+
+Field | Type | Description
+--- | --- | ---
+id | Unique id | Unique Id for interface
+site | String | Site name
+domain | String Domain name
+dns | List of strings | DNS servers
+dockerRegistry | String | Docker registry
+ArtifactRepository | String | Artifact repository for file images and scripts
+pxeTheme | String | Theme for PXE boot menu
+namingScheme | String | Dynamic naming scheme for unregistered hosts
+
+## Subnet
+
+Field | Type | Description
+--- | --- | ---
+id | Unique id | Unique Id for interface
+subnet | String | Subnet IP address and Prefix
+mask | String | Mask
+gw | String | Gateway
+siteId | String | Site
+
+## Tenant
+
+Field | Type | Description
+--- | --- | ---
+id | Unique id | Unique Id for interface
+tenant | String | Tenant name
 
 # ROADMAP
 
