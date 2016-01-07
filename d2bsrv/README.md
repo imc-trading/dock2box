@@ -110,6 +110,21 @@ This enables/disables embedding related data in the result. This will affect per
 
 # Data model
 
+## Hosts
+
+Field | Type | Description
+--- | --- | ---
+Id | Unique id | Unique Id for host
+host | String | Hostname
+build | Boolean | If host should be provisioned when PXE booting
+debug | Boolean | Debug info and no reboot after provisioning finishes
+gpt | Boolean | Use GUID Partition Table
+tagId | Foreign key | Foreign key to image/tag
+kOpts | String | Kernel options
+tenantId | Foreign key | Foreign key to tenant
+labels | List of strings | Labels for host
+siteId | Foreign key | Foreign key to site
+
 # ROADMAP
 
 - Add checks for foreign keys when creating/updating an entry
