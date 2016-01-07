@@ -19,7 +19,7 @@ import (
 func main() {
 	// Options
 	appVersion := flag.Bool("version", false, "Version")
-	bind := flag.String("bind", "0.0.0.1:8080", "Bind to address and port")
+	bind := flag.String("bind", "0.0.0.0:8080", "Bind to address and port")
 	database := flag.String("database", "d2b", "Database name")
 	schemaURI := flag.String("schema-uri", "file://schemas", "URI to JSON schemas")
 	baseURI := flag.String("base-uri", "", "Base URI for server")
