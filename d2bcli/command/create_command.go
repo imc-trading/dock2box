@@ -11,6 +11,7 @@ func NewCreateCommand() cli.Command {
 		Usage: "Create resource",
 		Subcommands: []cli.Command{
 			NewCreateHostCommand(),
+			NewCreateInterfaceCommand(),
 			NewCreateSiteCommand(),
 			NewCreateSubnetCommand(),
 			NewCreateImageCommand(),
