@@ -1,7 +1,7 @@
-USER=imc-trading
+USER=mickep76
 NAME=d2bsrv
-SRC=src/github.com/${USER}/${NAME}
-TAG:=$(shell awk -F '"' '/Version/ {print $$2}' ${SRC}/version.go)
+TAG=0.1
+SRC=src/github.com/${USER}/dock2box/${NAME}
 BUILD=.build
 
 all: build
@@ -10,6 +10,7 @@ clean:
 	rm -rf pkg bin ${BUILD}
 
 build:
+	go get github.com/constabulary/gb/...
 	gb build all
 
 docker-clean:
