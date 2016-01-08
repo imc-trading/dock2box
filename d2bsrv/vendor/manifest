@@ -1,0 +1,60 @@
+{
+	"version": 0,
+	"dependencies": [
+		{
+			"importpath": "github.com/gorilla/context",
+			"repository": "https://github.com/gorilla/context",
+			"revision": "1c83b3eabd45b6d76072b66b746c20815fb2872d",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/gorilla/handlers",
+			"repository": "https://github.com/gorilla/handlers",
+			"revision": "1af6d56d7cd39d982856bc0cee11142baf392c52",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/gorilla/mux",
+			"repository": "https://github.com/gorilla/mux",
+			"revision": "26a6070f849969ba72b72256e9f14cf519751690",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/xeipuuv/gojsonpointer",
+			"repository": "https://github.com/xeipuuv/gojsonpointer",
+			"revision": "e0fe6f68307607d540ed8eac07a342c33fa1b54a",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/xeipuuv/gojsonreference",
+			"repository": "https://github.com/xeipuuv/gojsonreference",
+			"revision": "e02fc20de94c78484cd5ffb007f8af96be030a45",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/xeipuuv/gojsonschema",
+			"repository": "https://github.com/xeipuuv/gojsonschema",
+			"revision": "3988ac14d6f66842abf574a0615d2935ef5dab9d",
+			"branch": "master"
+		},
+		{
+			"importpath": "gopkg.in/mgo.v2",
+			"repository": "https://gopkg.in/mgo.v2",
+			"revision": "e30de8ac9ae3b30df7065f766c71f88bba7d4e49",
+			"branch": "v2"
+		},
+		{
+			"importpath": "gopkg.in/mgo.v2/bson",
+			"repository": "https://gopkg.in/mgo.v2",
+			"revision": "e30de8ac9ae3b30df7065f766c71f88bba7d4e49",
+			"branch": "v2",
+			"path": "/bson"
+		},
+		{
+			"importpath": "gopkg.in/tomb.v2",
+			"repository": "https://gopkg.in/tomb.v2",
+			"revision": "14b3d72120e8d10ea6e6b7f87f7175734b1faab8",
+			"branch": "v2"
+		}
+	]
+}
