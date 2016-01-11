@@ -1,4 +1,3 @@
 #!/bin/sh
 
-cd /data/db
-tar -czf - .
+tar -czf - /data/db

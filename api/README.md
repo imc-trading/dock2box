@@ -5,7 +5,7 @@ Usage of ./api:
   -base-uri string
     	Base URI for server
   -bind string
-    	Bind to address and port (default "127.0.0.1:8080")
+    	Bind to address and port (default "0.0.0.1:8080")
   -database string
     	Database name (default "d2b")
   -disable-hateoas
