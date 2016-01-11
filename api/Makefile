@@ -10,7 +10,6 @@ clean:
 	rm -rf pkg bin ${BUILD}
 
 build:
-	go get github.com/constabulary/gb/...
 	gb build all
 
 docker: docker-build
@@ -19,7 +18,8 @@ docker-clean: clean
 	docker rmi ${NAME} &>/dev/null || true
 
 docker-build: docker-clean
-	docker run --rm -it -v "$$PWD":/go -w /go mickep76/alpine-golang:latest
+	docker pull mickep76/alpine-golang:latest
+	docker run --rm -it -v "$$PWD":/api -w /api mickep76/alpine-golang:latest
 	docker build --pull=true --no-cache -t ${REPO}/${NAME}:${TAG} .
 	( cd datavol; docker build --pull=true --no-cache -t ${REPO}/mongo-data:${TAG} . )
 
