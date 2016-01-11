@@ -7,15 +7,22 @@ unset GREP_OPTIONS
 
 TMPFILE="/tmp/test.json"
 APIVERS="v1"
+URL="http://localhost:8080"
+
+if [ -n "${DOCKER_HOST}" ]; then
+  DOCKER_IP_PORT=${DOCKER_HOST#tcp://}
+  DOCKER_IP=${DOCKER_IP_PORT%:*}
+  URL="http://${DOCKER_IP}:8080"
+fi
 
 create() {
     local endp="$1" resp
 
-    echo "POST: http://localhost:8080/${APIVERS}/${endp}?envelope=true" >&2
+    echo "POST: ${URL}/${APIVERS}/${endp}?envelope=true" >&2
     echo "PAYLOAD:" >&2
     echo "$(cat $TMPFILE)" >&2
 
-    resp=$(curl -s -H "Content-Type: application/json" -X POST -d "$(cat $TMPFILE)" "http://localhost:8080/${APIVERS}/${endp}?envelope=true")
+    resp=$(curl -s -H "Content-Type: application/json" -X POST -d "$(cat $TMPFILE)" "${URL}/${APIVERS}/${endp}?envelope=true")
 
     echo "RESPONSE:" >&2
     echo "$resp" >&2
@@ -32,9 +39,9 @@ create() {
 get() {
     local endp="$1" id="$2"
 
-    echo "GET: http://localhost:8080/${APIVERS}/${endp}/${id}?envelope=true"
+    echo "GET: ${URL}/${APIVERS}/${endp}/${id}?envelope=true"
     echo "DATA:"
-    curl -s -H "Content-Type: application/json" "http://localhost:8080/${APIVERS}/${endp}/${id}?envelope=true"
+    curl -s -H "Content-Type: application/json" "${URL}/${APIVERS}/${endp}/${id}?envelope=true"
     echo
 }
 
