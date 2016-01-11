@@ -21,6 +21,7 @@ docker-clean: clean
 docker-build: docker-clean
 	docker run --rm -it -v "$$PWD":/go -w /go mickep76/alpine-golang:latest
 	docker build --pull=true --no-cache -t ${USER}/${NAME}:${TAG} .
+	( cd datavol; docker build --pull=true --no-cache -t ${USER}/mongo-data . )
 
 docker-push: docker-build
 	docker login -u ${USER}
