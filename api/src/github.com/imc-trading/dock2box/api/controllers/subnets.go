@@ -12,10 +12,10 @@ import (
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 
-	"github.com/imc-trading/dock2box/d2bsrv/models"
+	"github.com/imc-trading/dock2box/api/models"
 )
 
-type SiteController struct {
+type SubnetController struct {
 	database  string
 	schemaURI string
 	session   *mgo.Session
@@ -24,10 +24,10 @@ type SiteController struct {
 	hateoas   bool
 }
 
-func NewSiteController(s *mgo.Session, b string, e bool, h bool) *SiteController {
-	return &SiteController{
+func NewSubnetController(s *mgo.Session, b string, e bool, h bool) *SubnetController {
+	return &SubnetController{
 		database:  "d2b",
-		schemaURI: "file://schemas/site.json",
+		schemaURI: "file://schemas/subnet.json",
 		session:   s,
 		baseURI:   b,
 		envelope:  e,
@@ -35,26 +35,26 @@ func NewSiteController(s *mgo.Session, b string, e bool, h bool) *SiteController
 	}
 }
 
-func (c *SiteController) SetDatabase(database string) {
+func (c *SubnetController) SetDatabase(database string) {
 	c.database = database
 }
 
-func (c *SiteController) SetSchemaURI(uri string) {
-	c.schemaURI = uri + "/site.json"
+func (c *SubnetController) SetSchemaURI(uri string) {
+	c.schemaURI = uri + "/subnet.json"
 }
 
-func (c *SiteController) CreateIndex() {
+func (c *SubnetController) CreateIndex() {
 	index := mgo.Index{
-		Key:    []string{"site"},
+		Key:    []string{"subnet"},
 		Unique: true,
 	}
 
-	if err := c.session.DB(c.database).C("sites").EnsureIndex(index); err != nil {
+	if err := c.session.DB(c.database).C("subnets").EnsureIndex(index); err != nil {
 		panic(err)
 	}
 }
 
-func (c *SiteController) All(w http.ResponseWriter, r *http.Request) {
+func (c *SubnetController) All(w http.ResponseWriter, r *http.Request) {
 	// Get allowed key names
 	keys, _ := structTags(reflect.ValueOf(models.Tag{}), "field", "bson")
 
@@ -110,19 +110,50 @@ func (c *SiteController) All(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Initialize empty struct list
-	s := []models.Site{}
+	s := []models.Subnet{}
 
 	// Get all entries
-	if err := c.session.DB(c.database).C("sites").Find(cond).Sort(sort...).Select(fields).All(&s); err != nil {
+	if err := c.session.DB(c.database).C("subnets").Find(cond).Sort(sort...).Select(fields).All(&s); err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
+	}
+
+	// Embed related data
+	if r.URL.Query().Get("embed") == "true" {
+		for i, v := range s {
+			// Get site
+			if err := c.session.DB(c.database).C("sites").FindId(v.SiteID).One(&s[i].Site); err != nil {
+				w.WriteHeader(http.StatusNotFound)
+				return
+			}
+		}
+	}
+
+	// HATEOAS Links
+	hateoas := c.hateoas
+	switch strings.ToLower(r.URL.Query().Get("hateoas")) {
+	case "true":
+		hateoas = true
+	case "false":
+		hateoas = false
+	}
+	if hateoas == true {
+		for i, v := range s {
+			s[i].Links = &[]models.Link{
+				models.Link{
+					HRef:   c.baseURI + "/sites/" + v.SiteID.Hex(),
+					Rel:    "self",
+					Method: "GET",
+				},
+			}
+		}
 	}
 
 	// Write content-type, header and payload
 	jsonWriter(w, r, s, http.StatusOK, c.envelope)
 }
 
-func (c *SiteController) Get(w http.ResponseWriter, r *http.Request) {
+func (c *SubnetController) Get(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
 	// Validate ObjectId
@@ -135,21 +166,56 @@ func (c *SiteController) Get(w http.ResponseWriter, r *http.Request) {
 	oid := bson.ObjectIdHex(id)
 
 	// Initialize empty struct
-	s := models.Site{}
+	s := models.Subnet{}
 
 	// Get entry
-	if err := c.session.DB(c.database).C("sites").FindId(oid).One(&s); err != nil {
+	if err := c.session.DB(c.database).C("subnets").FindId(oid).One(&s); err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
+	}
+
+	if r.URL.Query().Get("embed") == "true" {
+		// Get site
+		if err := c.session.DB(c.database).C("sites").FindId(s.SiteID).One(&s.Site); err != nil {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+	}
+
+	// Embed related data
+	if r.URL.Query().Get("embed") == "true" {
+		// Get site
+		if err := c.session.DB(c.database).C("sites").FindId(s.SiteID).One(&s.Site); err != nil {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+	}
+
+	// HATEOAS Links
+	hateoas := c.hateoas
+	switch strings.ToLower(r.URL.Query().Get("hateoas")) {
+	case "true":
+		hateoas = true
+	case "false":
+		hateoas = false
+	}
+	if hateoas == true {
+		s.Links = &[]models.Link{
+			models.Link{
+				HRef:   c.baseURI + "/sites/" + s.SiteID.Hex(),
+				Rel:    "self",
+				Method: "GET",
+			},
+		}
 	}
 
 	// Write content-type, header and payload
 	jsonWriter(w, r, s, http.StatusOK, c.envelope)
 }
 
-func (c *SiteController) Create(w http.ResponseWriter, r *http.Request) {
+func (c *SubnetController) Create(w http.ResponseWriter, r *http.Request) {
 	// Initialize empty struct
-	s := models.Site{}
+	s := models.Subnet{}
 
 	// Decode JSON into struct
 	err := json.NewDecoder(r.Body).Decode(&s)
@@ -181,7 +247,7 @@ func (c *SiteController) Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Insert entry
-	if err := c.session.DB(c.database).C("sites").Insert(s); err != nil {
+	if err := c.session.DB(c.database).C("subnets").Insert(s); err != nil {
 		jsonError(w, r, err.Error(), http.StatusInternalServerError, c.envelope)
 		return
 	}
@@ -190,7 +256,7 @@ func (c *SiteController) Create(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusCreated, c.envelope)
 }
 
-func (c *SiteController) Update(w http.ResponseWriter, r *http.Request) {
+func (c *SubnetController) Update(w http.ResponseWriter, r *http.Request) {
 	// Get ID
 	id := mux.Vars(r)["id"]
 
@@ -204,7 +270,7 @@ func (c *SiteController) Update(w http.ResponseWriter, r *http.Request) {
 	oid := bson.ObjectIdHex(id)
 
 	// Initialize empty struct
-	s := models.Site{}
+	s := models.Subnet{}
 
 	// Decode JSON into struct
 	err := json.NewDecoder(r.Body).Decode(&s)
@@ -233,7 +299,7 @@ func (c *SiteController) Update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Update entry
-	if err := c.session.DB(c.database).C("sites").UpdateId(oid, s); err != nil {
+	if err := c.session.DB(c.database).C("subnets").UpdateId(oid, s); err != nil {
 		jsonError(w, r, err.Error(), http.StatusInternalServerError, c.envelope)
 		return
 	}
@@ -242,7 +308,7 @@ func (c *SiteController) Update(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusOK, c.envelope)
 }
 
-func (c *SiteController) Delete(w http.ResponseWriter, r *http.Request) {
+func (c *SubnetController) Delete(w http.ResponseWriter, r *http.Request) {
 	// Get ID
 	id := mux.Vars(r)["id"]
 
@@ -256,7 +322,7 @@ func (c *SiteController) Delete(w http.ResponseWriter, r *http.Request) {
 	oid := bson.ObjectIdHex(id)
 
 	// Remove entry
-	if err := c.session.DB(c.database).C("sites").RemoveId(oid); err != nil {
+	if err := c.session.DB(c.database).C("subnets").RemoveId(oid); err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}

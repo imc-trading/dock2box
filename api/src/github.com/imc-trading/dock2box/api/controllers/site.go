@@ -3,7 +3,6 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"reflect"
 	"strings"
@@ -13,10 +12,10 @@ import (
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 
-	"github.com/imc-trading/dock2box/d2bsrv/models"
+	"github.com/imc-trading/dock2box/api/models"
 )
 
-type TenantController struct {
+type SiteController struct {
 	database  string
 	schemaURI string
 	session   *mgo.Session
@@ -25,10 +24,10 @@ type TenantController struct {
 	hateoas   bool
 }
 
-func NewTenantController(s *mgo.Session, b string, e bool, h bool) *TenantController {
-	return &TenantController{
+func NewSiteController(s *mgo.Session, b string, e bool, h bool) *SiteController {
+	return &SiteController{
 		database:  "d2b",
-		schemaURI: "file://schemas/tenant.json",
+		schemaURI: "file://schemas/site.json",
 		session:   s,
 		baseURI:   b,
 		envelope:  e,
@@ -36,26 +35,26 @@ func NewTenantController(s *mgo.Session, b string, e bool, h bool) *TenantContro
 	}
 }
 
-func (c *TenantController) SetDatabase(database string) {
+func (c *SiteController) SetDatabase(database string) {
 	c.database = database
 }
 
-func (c *TenantController) SetSchemaURI(uri string) {
-	c.schemaURI = uri + "/tenant.json"
+func (c *SiteController) SetSchemaURI(uri string) {
+	c.schemaURI = uri + "/site.json"
 }
 
-func (c *TenantController) CreateIndex() {
+func (c *SiteController) CreateIndex() {
 	index := mgo.Index{
-		Key:    []string{"tenant"},
+		Key:    []string{"site"},
 		Unique: true,
 	}
 
-	if err := c.session.DB(c.database).C("tenants").EnsureIndex(index); err != nil {
+	if err := c.session.DB(c.database).C("sites").EnsureIndex(index); err != nil {
 		panic(err)
 	}
 }
 
-func (c *TenantController) All(w http.ResponseWriter, r *http.Request) {
+func (c *SiteController) All(w http.ResponseWriter, r *http.Request) {
 	// Get allowed key names
 	keys, _ := structTags(reflect.ValueOf(models.Tag{}), "field", "bson")
 
@@ -111,10 +110,10 @@ func (c *TenantController) All(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Initialize empty struct list
-	s := []models.Tenant{}
+	s := []models.Site{}
 
 	// Get all entries
-	if err := c.session.DB(c.database).C("tenants").Find(cond).Sort(sort...).Select(fields).All(&s); err != nil {
+	if err := c.session.DB(c.database).C("sites").Find(cond).Sort(sort...).Select(fields).All(&s); err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
@@ -123,7 +122,7 @@ func (c *TenantController) All(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusOK, c.envelope)
 }
 
-func (c *TenantController) Get(w http.ResponseWriter, r *http.Request) {
+func (c *SiteController) Get(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
 	// Validate ObjectId
@@ -136,10 +135,10 @@ func (c *TenantController) Get(w http.ResponseWriter, r *http.Request) {
 	oid := bson.ObjectIdHex(id)
 
 	// Initialize empty struct
-	s := models.Tenant{}
+	s := models.Site{}
 
 	// Get entry
-	if err := c.session.DB(c.database).C("tenants").FindId(oid).One(&s); err != nil {
+	if err := c.session.DB(c.database).C("sites").FindId(oid).One(&s); err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
@@ -148,9 +147,9 @@ func (c *TenantController) Get(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusOK, c.envelope)
 }
 
-func (c *TenantController) Create(w http.ResponseWriter, r *http.Request) {
+func (c *SiteController) Create(w http.ResponseWriter, r *http.Request) {
 	// Initialize empty struct
-	s := models.Tenant{}
+	s := models.Site{}
 
 	// Decode JSON into struct
 	err := json.NewDecoder(r.Body).Decode(&s)
@@ -163,7 +162,6 @@ func (c *TenantController) Create(w http.ResponseWriter, r *http.Request) {
 	s.ID = bson.NewObjectId()
 
 	// Validate input using JSON Schema
-	log.Printf("Using schema: %s", c.schemaURI)
 	docLoader := gojsonschema.NewGoLoader(s)
 	schemaLoader := gojsonschema.NewReferenceLoader(c.schemaURI)
 
@@ -183,7 +181,7 @@ func (c *TenantController) Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Insert entry
-	if err := c.session.DB(c.database).C("tenants").Insert(s); err != nil {
+	if err := c.session.DB(c.database).C("sites").Insert(s); err != nil {
 		jsonError(w, r, err.Error(), http.StatusInternalServerError, c.envelope)
 		return
 	}
@@ -192,7 +190,7 @@ func (c *TenantController) Create(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusCreated, c.envelope)
 }
 
-func (c *TenantController) Update(w http.ResponseWriter, r *http.Request) {
+func (c *SiteController) Update(w http.ResponseWriter, r *http.Request) {
 	// Get ID
 	id := mux.Vars(r)["id"]
 
@@ -206,7 +204,7 @@ func (c *TenantController) Update(w http.ResponseWriter, r *http.Request) {
 	oid := bson.ObjectIdHex(id)
 
 	// Initialize empty struct
-	s := models.Tenant{}
+	s := models.Site{}
 
 	// Decode JSON into struct
 	err := json.NewDecoder(r.Body).Decode(&s)
@@ -235,7 +233,7 @@ func (c *TenantController) Update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Update entry
-	if err := c.session.DB(c.database).C("tenants").UpdateId(oid, s); err != nil {
+	if err := c.session.DB(c.database).C("sites").UpdateId(oid, s); err != nil {
 		jsonError(w, r, err.Error(), http.StatusInternalServerError, c.envelope)
 		return
 	}
@@ -244,7 +242,7 @@ func (c *TenantController) Update(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusOK, c.envelope)
 }
 
-func (c *TenantController) Delete(w http.ResponseWriter, r *http.Request) {
+func (c *SiteController) Delete(w http.ResponseWriter, r *http.Request) {
 	// Get ID
 	id := mux.Vars(r)["id"]
 
@@ -258,7 +256,7 @@ func (c *TenantController) Delete(w http.ResponseWriter, r *http.Request) {
 	oid := bson.ObjectIdHex(id)
 
 	// Remove entry
-	if err := c.session.DB(c.database).C("tenants").RemoveId(oid); err != nil {
+	if err := c.session.DB(c.database).C("sites").RemoveId(oid); err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}

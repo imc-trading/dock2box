@@ -1,9 +1,9 @@
 FROM gliderlabs/alpine
 
-COPY bin/d2bsrv /d2bsrv
+COPY bin/api /api
 COPY schemas /schemas
 COPY templates /templates
 COPY img /img
 
 EXPOSE 8080
-ENTRYPOINT ["/d2bsrv"]
+ENTRYPOINT ["/api"]

@@ -12,8 +12,8 @@ import (
 	"github.com/gorilla/mux"
 	"gopkg.in/mgo.v2"
 
-	"github.com/imc-trading/dock2box/d2bsrv/controllers"
-	"github.com/imc-trading/dock2box/d2bsrv/version"
+	"github.com/imc-trading/dock2box/api/controllers"
+	"github.com/imc-trading/dock2box/api/version"
 )
 
 func main() {
@@ -42,7 +42,7 @@ func main() {
 
 	// Print version
 	if *appVersion {
-		fmt.Printf("d2bsrv %s\n", version.Version)
+		fmt.Printf("%s\n", version.Version)
 		os.Exit(0)
 	}
 

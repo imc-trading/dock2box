@@ -12,7 +12,7 @@ import (
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 
-	"github.com/imc-trading/dock2box/d2bsrv/models"
+	"github.com/imc-trading/dock2box/api/models"
 )
 
 func Center(size int, deco string, str string) string {

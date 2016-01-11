@@ -1,11 +1,11 @@
 api:
-  image: mickep76/d2bsrv:0.1
+  image: dock2box/d2bsrv:0.1
   ports:
     - "8080:8080"
   links:
     - db:MONGO
 data:
-  image: mickep76/mongo-data
+  image: dock2box/mongo-data
   command: tail -f /dev/null
   volumes:
     - /data/db

@@ -3,6 +3,7 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"reflect"
 	"strings"
@@ -12,10 +13,10 @@ import (
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 
-	"github.com/imc-trading/dock2box/d2bsrv/models"
+	"github.com/imc-trading/dock2box/api/models"
 )
 
-type SubnetController struct {
+type TenantController struct {
 	database  string
 	schemaURI string
 	session   *mgo.Session
@@ -24,10 +25,10 @@ type SubnetController struct {
 	hateoas   bool
 }
 
-func NewSubnetController(s *mgo.Session, b string, e bool, h bool) *SubnetController {
-	return &SubnetController{
+func NewTenantController(s *mgo.Session, b string, e bool, h bool) *TenantController {
+	return &TenantController{
 		database:  "d2b",
-		schemaURI: "file://schemas/subnet.json",
+		schemaURI: "file://schemas/tenant.json",
 		session:   s,
 		baseURI:   b,
 		envelope:  e,
@@ -35,26 +36,26 @@ func NewSubnetController(s *mgo.Session, b string, e bool, h bool) *SubnetContro
 	}
 }
 
-func (c *SubnetController) SetDatabase(database string) {
+func (c *TenantController) SetDatabase(database string) {
 	c.database = database
 }
 
-func (c *SubnetController) SetSchemaURI(uri string) {
-	c.schemaURI = uri + "/subnet.json"
+func (c *TenantController) SetSchemaURI(uri string) {
+	c.schemaURI = uri + "/tenant.json"
 }
 
-func (c *SubnetController) CreateIndex() {
+func (c *TenantController) CreateIndex() {
 	index := mgo.Index{
-		Key:    []string{"subnet"},
+		Key:    []string{"tenant"},
 		Unique: true,
 	}
 
-	if err := c.session.DB(c.database).C("subnets").EnsureIndex(index); err != nil {
+	if err := c.session.DB(c.database).C("tenants").EnsureIndex(index); err != nil {
 		panic(err)
 	}
 }
 
-func (c *SubnetController) All(w http.ResponseWriter, r *http.Request) {
+func (c *TenantController) All(w http.ResponseWriter, r *http.Request) {
 	// Get allowed key names
 	keys, _ := structTags(reflect.ValueOf(models.Tag{}), "field", "bson")
 
@@ -110,50 +111,19 @@ func (c *SubnetController) All(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Initialize empty struct list
-	s := []models.Subnet{}
+	s := []models.Tenant{}
 
 	// Get all entries
-	if err := c.session.DB(c.database).C("subnets").Find(cond).Sort(sort...).Select(fields).All(&s); err != nil {
+	if err := c.session.DB(c.database).C("tenants").Find(cond).Sort(sort...).Select(fields).All(&s); err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
-	}
-
-	// Embed related data
-	if r.URL.Query().Get("embed") == "true" {
-		for i, v := range s {
-			// Get site
-			if err := c.session.DB(c.database).C("sites").FindId(v.SiteID).One(&s[i].Site); err != nil {
-				w.WriteHeader(http.StatusNotFound)
-				return
-			}
-		}
-	}
-
-	// HATEOAS Links
-	hateoas := c.hateoas
-	switch strings.ToLower(r.URL.Query().Get("hateoas")) {
-	case "true":
-		hateoas = true
-	case "false":
-		hateoas = false
-	}
-	if hateoas == true {
-		for i, v := range s {
-			s[i].Links = &[]models.Link{
-				models.Link{
-					HRef:   c.baseURI + "/sites/" + v.SiteID.Hex(),
-					Rel:    "self",
-					Method: "GET",
-				},
-			}
-		}
 	}
 
 	// Write content-type, header and payload
 	jsonWriter(w, r, s, http.StatusOK, c.envelope)
 }
 
-func (c *SubnetController) Get(w http.ResponseWriter, r *http.Request) {
+func (c *TenantController) Get(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
 	// Validate ObjectId
@@ -166,56 +136,21 @@ func (c *SubnetController) Get(w http.ResponseWriter, r *http.Request) {
 	oid := bson.ObjectIdHex(id)
 
 	// Initialize empty struct
-	s := models.Subnet{}
+	s := models.Tenant{}
 
 	// Get entry
-	if err := c.session.DB(c.database).C("subnets").FindId(oid).One(&s); err != nil {
+	if err := c.session.DB(c.database).C("tenants").FindId(oid).One(&s); err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
-	}
-
-	if r.URL.Query().Get("embed") == "true" {
-		// Get site
-		if err := c.session.DB(c.database).C("sites").FindId(s.SiteID).One(&s.Site); err != nil {
-			w.WriteHeader(http.StatusNotFound)
-			return
-		}
-	}
-
-	// Embed related data
-	if r.URL.Query().Get("embed") == "true" {
-		// Get site
-		if err := c.session.DB(c.database).C("sites").FindId(s.SiteID).One(&s.Site); err != nil {
-			w.WriteHeader(http.StatusNotFound)
-			return
-		}
-	}
-
-	// HATEOAS Links
-	hateoas := c.hateoas
-	switch strings.ToLower(r.URL.Query().Get("hateoas")) {
-	case "true":
-		hateoas = true
-	case "false":
-		hateoas = false
-	}
-	if hateoas == true {
-		s.Links = &[]models.Link{
-			models.Link{
-				HRef:   c.baseURI + "/sites/" + s.SiteID.Hex(),
-				Rel:    "self",
-				Method: "GET",
-			},
-		}
 	}
 
 	// Write content-type, header and payload
 	jsonWriter(w, r, s, http.StatusOK, c.envelope)
 }
 
-func (c *SubnetController) Create(w http.ResponseWriter, r *http.Request) {
+func (c *TenantController) Create(w http.ResponseWriter, r *http.Request) {
 	// Initialize empty struct
-	s := models.Subnet{}
+	s := models.Tenant{}
 
 	// Decode JSON into struct
 	err := json.NewDecoder(r.Body).Decode(&s)
@@ -228,6 +163,7 @@ func (c *SubnetController) Create(w http.ResponseWriter, r *http.Request) {
 	s.ID = bson.NewObjectId()
 
 	// Validate input using JSON Schema
+	log.Printf("Using schema: %s", c.schemaURI)
 	docLoader := gojsonschema.NewGoLoader(s)
 	schemaLoader := gojsonschema.NewReferenceLoader(c.schemaURI)
 
@@ -247,7 +183,7 @@ func (c *SubnetController) Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Insert entry
-	if err := c.session.DB(c.database).C("subnets").Insert(s); err != nil {
+	if err := c.session.DB(c.database).C("tenants").Insert(s); err != nil {
 		jsonError(w, r, err.Error(), http.StatusInternalServerError, c.envelope)
 		return
 	}
@@ -256,7 +192,7 @@ func (c *SubnetController) Create(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusCreated, c.envelope)
 }
 
-func (c *SubnetController) Update(w http.ResponseWriter, r *http.Request) {
+func (c *TenantController) Update(w http.ResponseWriter, r *http.Request) {
 	// Get ID
 	id := mux.Vars(r)["id"]
 
@@ -270,7 +206,7 @@ func (c *SubnetController) Update(w http.ResponseWriter, r *http.Request) {
 	oid := bson.ObjectIdHex(id)
 
 	// Initialize empty struct
-	s := models.Subnet{}
+	s := models.Tenant{}
 
 	// Decode JSON into struct
 	err := json.NewDecoder(r.Body).Decode(&s)
@@ -299,7 +235,7 @@ func (c *SubnetController) Update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Update entry
-	if err := c.session.DB(c.database).C("subnets").UpdateId(oid, s); err != nil {
+	if err := c.session.DB(c.database).C("tenants").UpdateId(oid, s); err != nil {
 		jsonError(w, r, err.Error(), http.StatusInternalServerError, c.envelope)
 		return
 	}
@@ -308,7 +244,7 @@ func (c *SubnetController) Update(w http.ResponseWriter, r *http.Request) {
 	jsonWriter(w, r, s, http.StatusOK, c.envelope)
 }
 
-func (c *SubnetController) Delete(w http.ResponseWriter, r *http.Request) {
+func (c *TenantController) Delete(w http.ResponseWriter, r *http.Request) {
 	// Get ID
 	id := mux.Vars(r)["id"]
 
@@ -322,7 +258,7 @@ func (c *SubnetController) Delete(w http.ResponseWriter, r *http.Request) {
 	oid := bson.ObjectIdHex(id)
 
 	// Remove entry
-	if err := c.session.DB(c.database).C("subnets").RemoveId(oid); err != nil {
+	if err := c.session.DB(c.database).C("tenants").RemoveId(oid); err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}

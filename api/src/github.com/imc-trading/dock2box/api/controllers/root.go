@@ -3,7 +3,7 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/imc-trading/dock2box/d2bsrv/models"
+	"github.com/imc-trading/dock2box/api/models"
 )
 
 type RootController struct {
