@@ -213,3 +213,4 @@ tenant | String | Tenant name
 - Add more complex queries
 - Refactor boiler plate code in each controller and normalize it
 - Rename upper-case ID to Id
+- Add direct support for SSL and auth. for now rely on a proxy
