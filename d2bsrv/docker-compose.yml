@@ -1,0 +1,8 @@
+d2bsrv:
+  image: mickep76/d2bsrv:0.1
+  ports:
+    - "8080:8080"
+  links:
+    - mongo:MONGO
+mongo:
+  image: mongo
