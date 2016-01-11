@@ -17,10 +17,23 @@ import (
 )
 
 func main() {
+	serverDef := os.Getenv("MONGO_PORT_27017_TCP_ADDR")
+	if serverDef == "" {
+		serverDef = "127.0.0.1"
+	}
+
+	portDef := os.Getenv("MONGO_PORT_27017_TCP_PORT")
+	if portDef == "" {
+		portDef = "27017"
+	}
+
+	connDef := "mongodb://" + serverDef + ":" + portDef
+
 	// Options
 	appVersion := flag.Bool("version", false, "Version")
 	bind := flag.String("bind", "0.0.0.0:8080", "Bind to address and port")
 	database := flag.String("database", "d2b", "Database name")
+	dbServer := flag.String("database-server", connDef, "Database server")
 	schemaURI := flag.String("schema-uri", "file://schemas", "URI to JSON schemas")
 	baseURI := flag.String("base-uri", "", "Base URI for server")
 	disableHATEOAS := flag.Bool("disable-hateoas", false, "Disable HATEOAS per default")
@@ -62,6 +75,9 @@ func main() {
 	}
 	log.Printf("Use Envelope per default: %v", envelope)
 
+	// Get database session
+	session := getSession(*dbServer)
+
 	// Create new router
 	r := mux.NewRouter()
 
@@ -74,7 +90,7 @@ func main() {
 
 	// Host
 	// Get Controller instance
-	host := controllers.NewHostController(getSession(), *baseURI, envelope, hateoas)
+	host := controllers.NewHostController(session, *baseURI, envelope, hateoas)
 
 	// Set Database
 	host.SetDatabase(*database)
@@ -94,7 +110,7 @@ func main() {
 
 	// Interface
 	// Get Controller instance
-	intfs := controllers.NewInterfaceController(getSession(), *baseURI, envelope, hateoas)
+	intfs := controllers.NewInterfaceController(session, *baseURI, envelope, hateoas)
 
 	// Set Database
 	intfs.SetDatabase(*database)
@@ -114,7 +130,7 @@ func main() {
 
 	// Site
 	// Get Controller instance
-	site := controllers.NewSiteController(getSession(), *baseURI, envelope, hateoas)
+	site := controllers.NewSiteController(session, *baseURI, envelope, hateoas)
 
 	// Set Database
 	site.SetDatabase(*database)
@@ -134,7 +150,7 @@ func main() {
 
 	// Subnet
 	// Get Controller instance
-	subnet := controllers.NewSubnetController(getSession(), *baseURI, envelope, hateoas)
+	subnet := controllers.NewSubnetController(session, *baseURI, envelope, hateoas)
 
 	// Set Schema URI
 	subnet.SetSchemaURI(*schemaURI)
@@ -154,7 +170,7 @@ func main() {
 
 	// Image
 	// Get Controller instance
-	image := controllers.NewImageController(getSession(), *baseURI, envelope, hateoas)
+	image := controllers.NewImageController(session, *baseURI, envelope, hateoas)
 
 	// Set Database
 	image.SetDatabase(*database)
@@ -174,7 +190,7 @@ func main() {
 
 	// Tag
 	// Get Controller instance
-	tag := controllers.NewTagController(getSession(), *baseURI, envelope, hateoas)
+	tag := controllers.NewTagController(session, *baseURI, envelope, hateoas)
 
 	// Set Database
 	tag.SetDatabase(*database)
@@ -191,7 +207,7 @@ func main() {
 
 	// Tenant
 	// Get Controller instance
-	tenant := controllers.NewTenantController(getSession(), *baseURI, envelope, hateoas)
+	tenant := controllers.NewTenantController(session, *baseURI, envelope, hateoas)
 
 	// Set Database
 	tenant.SetDatabase(*database)
@@ -211,7 +227,7 @@ func main() {
 
 	// PXE Menu
 	// Get Controller instance
-	pc := controllers.NewPXEMenuController(getSession())
+	pc := controllers.NewPXEMenuController(session)
 
 	// Add handlers for endpoints
 	r.HandleFunc("/"+version.APIVersion+"/ipxe/{hwaddr}", pc.PXEMenu).Methods("GET")
@@ -234,9 +250,10 @@ func main() {
 }
 
 // getSession creates a new mongo session and panics if connection error occurs
-func getSession() *mgo.Session {
+func getSession(server string) *mgo.Session {
 	// Connect to our local mongo
-	s, err := mgo.Dial("mongodb://localhost")
+	log.Printf("Using database server: %v", server)
+	s, err := mgo.Dial(server)
 
 	// Check if connection error, is mongo running?
 	if err != nil {
