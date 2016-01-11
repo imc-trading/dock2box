@@ -13,7 +13,7 @@ build:
 	go get github.com/constabulary/gb/...
 	gb build all
 
-docker-clean:
+docker-clean: clean
 	docker rmi ${NAME} &>/dev/null || true
 
 docker-build: docker-clean
