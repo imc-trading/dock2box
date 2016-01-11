@@ -1,7 +1,7 @@
 # Usage
 
 ```
-Usage of ./d2bsrv:
+Usage of ./api:
   -base-uri string
     	Base URI for server
   -bind string
@@ -16,6 +16,15 @@ Usage of ./d2bsrv:
     	URI to JSON schemas (default "file://schemas")
   -version
     	Version
+```
+
+# Run it
+
+First clone the repo. then run it using Docker Compose.
+
+```
+docker-compose up
+tests/populate_database.sh
 ```
 
 # Filtering
