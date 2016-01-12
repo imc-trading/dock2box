@@ -215,11 +215,3 @@ Field | Type | Description
 --- | --- | ---
 id | Unique id | Unique Id for interface
 tenant | String | Tenant name
-
-# ROADMAP
-
-- Add checks for foreign keys when creating/updating an entry
-- Add more complex queries
-- Refactor boiler plate code in each controller and normalize it
-- Rename upper-case ID to Id
-- Add direct support for SSL and auth. for now rely on a proxy
