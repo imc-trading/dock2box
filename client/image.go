@@ -38,6 +38,22 @@ func (r *ImageResource) All() (*[]Image, error) {
 	return images, nil
 }
 
+// Query for image.
+func (r *ImageResource) Query(cond map[string]string) (*[]Image, error) {
+	c := *r.Client
+	j, err := c.Query("/images", cond)
+	if err != nil {
+		return nil, err
+	}
+
+	images := &[]Image{}
+	if err := json.Unmarshal(j, images); err != nil {
+		return nil, err
+	}
+
+	return images, nil
+}
+
 // Get image.
 func (r *ImageResource) Get(id string) (*Image, error) {
 	c := *r.Client

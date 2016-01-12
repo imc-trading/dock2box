@@ -38,6 +38,22 @@ func (r *SubnetResource) All() (*[]Subnet, error) {
 	return subnets, nil
 }
 
+// Query for hosts.
+func (r *SubnetResource) Query(cond map[string]string) (*[]Subnet, error) {
+	c := *r.Client
+	j, err := c.Query("/subnets", cond)
+	if err != nil {
+		return nil, err
+	}
+
+	subnets := &[]Subnet{}
+	if err := json.Unmarshal(j, subnets); err != nil {
+		return nil, err
+	}
+
+	return subnets, nil
+}
+
 // Get subnet.
 func (r *SubnetResource) Get(id string) (*Subnet, error) {
 	c := *r.Client

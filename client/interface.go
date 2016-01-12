@@ -40,6 +40,22 @@ func (r *InterfaceResource) All() (*[]Interface, error) {
 	return intfs, nil
 }
 
+// Query for interfaces.
+func (r *InterfaceResource) Query(cond map[string]string) (*[]Interface, error) {
+	c := *r.Client
+	j, err := c.Query("/interfaces", cond)
+	if err != nil {
+		return nil, err
+	}
+
+	intfs := &[]Interface{}
+	if err := json.Unmarshal(j, intfs); err != nil {
+		return nil, err
+	}
+
+	return intfs, nil
+}
+
 // Get interface.
 func (r *InterfaceResource) Get(id string) (*Interface, error) {
 	c := *r.Client

@@ -43,22 +43,6 @@ func (r *HostResource) All() (*[]Host, error) {
 	return hosts, nil
 }
 
-// Get host.
-func (r *HostResource) Get(id string) (*Host, error) {
-	c := *r.Client
-	j, err := c.Get("/hosts", id)
-	if err != nil {
-		return nil, err
-	}
-
-	host := &Host{}
-	if err := json.Unmarshal(j, host); err != nil {
-		return nil, err
-	}
-
-	return host, nil
-}
-
 // Query for hosts.
 func (r *HostResource) Query(cond map[string]string) (*[]Host, error) {
 	c := *r.Client
@@ -73,6 +57,22 @@ func (r *HostResource) Query(cond map[string]string) (*[]Host, error) {
 	}
 
 	return hosts, nil
+}
+
+// Get host.
+func (r *HostResource) Get(id string) (*Host, error) {
+	c := *r.Client
+	j, err := c.Get("/hosts", id)
+	if err != nil {
+		return nil, err
+	}
+
+	host := &Host{}
+	if err := json.Unmarshal(j, host); err != nil {
+		return nil, err
+	}
+
+	return host, nil
 }
 
 // Create host.

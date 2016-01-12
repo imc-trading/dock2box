@@ -35,6 +35,22 @@ func (r *TenantResource) All() (*[]Tenant, error) {
 	return tenants, nil
 }
 
+// Query for hosts.
+func (r *TenantResource) Query(cond map[string]string) (*[]Tenant, error) {
+	c := *r.Client
+	j, err := c.Query("/tenants", cond)
+	if err != nil {
+		return nil, err
+	}
+
+	tenants := &[]Tenant{}
+	if err := json.Unmarshal(j, tenants); err != nil {
+		return nil, err
+	}
+
+	return tenants, nil
+}
+
 // Get tenant.
 func (r *TenantResource) Get(id string) (*Tenant, error) {
 	c := *r.Client

@@ -41,6 +41,22 @@ func (r *SiteResource) All() (*[]Site, error) {
 	return sites, nil
 }
 
+// Query for sites.
+func (r *SiteResource) Query(cond map[string]string) (*[]Site, error) {
+	c := *r.Client
+	j, err := c.Query("/sites", cond)
+	if err != nil {
+		return nil, err
+	}
+
+	sites := &[]Site{}
+	if err := json.Unmarshal(j, sites); err != nil {
+		return nil, err
+	}
+
+	return sites, nil
+}
+
 // Get site.
 func (r *SiteResource) Get(id string) (*Site, error) {
 	c := *r.Client

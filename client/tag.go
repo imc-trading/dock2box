@@ -38,6 +38,22 @@ func (r *TagResource) All() (*[]Tag, error) {
 	return tags, nil
 }
 
+// Query for tags.
+func (r *TagResource) Query(cond map[string]string) (*[]Tag, error) {
+	c := *r.Client
+	j, err := c.Query("/tags", cond)
+	if err != nil {
+		return nil, err
+	}
+
+	tags := &[]Tag{}
+	if err := json.Unmarshal(j, tags); err != nil {
+		return nil, err
+	}
+
+	return tags, nil
+}
+
 // Get tag.
 func (r *TagResource) Get(id string) (*Tag, error) {
 	c := *r.Client
