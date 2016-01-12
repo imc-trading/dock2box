@@ -7,19 +7,20 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 )
 
 // Client structure.
 type Client struct {
-	URL      string
-	Host     HostResource
-	Inerface InterfaceResource
-	Image    ImageResource
-	Tag      TagResource
-	Site     SiteResource
-	Tenant   TenantResource
-	Subnet   SubnetResource
-	Debug    bool
+	URL       string
+	Host      HostResource
+	Interface InterfaceResource
+	Image     ImageResource
+	Tag       TagResource
+	Site      SiteResource
+	Tenant    TenantResource
+	Subnet    SubnetResource
+	Debug     bool
 }
 
 // New client.
@@ -38,36 +39,36 @@ func New(url string) *Client {
 }
 
 // SetDebug enable debug.
-func (c Client) SetDebug() {
+func (c *Client) SetDebug() {
 	c.Debug = true
 }
 
 // Info log
-func (c Client) Info(msg string) {
+func (c *Client) Info(msg string) {
 	if c.Debug {
 		log.Print(msg)
 	}
 }
 
 // Infof log
-func (c Client) Infof(fmt string, args ...interface{}) {
+func (c *Client) Infof(fmt string, args ...interface{}) {
 	if c.Debug {
 		log.Printf(fmt, args...)
 	}
 }
 
 // Fatal log and exit
-func (c Client) Fatal(msg string) {
+func (c *Client) Fatal(msg string) {
 	log.Fatal(msg)
 }
 
 // Fatalf log and exit
-func (c Client) Fatalf(fmt string, args ...interface{}) {
+func (c *Client) Fatalf(fmt string, args ...interface{}) {
 	log.Fatalf(fmt, args...)
 }
 
 // All resources.
-func (c Client) All(endp string) ([]byte, error) {
+func (c *Client) All(endp string) ([]byte, error) {
 	url := c.URL + endp
 	c.Infof("url: %s", url)
 
@@ -85,7 +86,7 @@ func (c Client) All(endp string) ([]byte, error) {
 }
 
 // Get resource.
-func (c Client) Get(endp string, id string) ([]byte, error) {
+func (c *Client) Get(endp string, id string) ([]byte, error) {
 	url := c.URL + endp + "/" + id
 	c.Infof("url: %s", url)
 
@@ -107,8 +108,35 @@ func (c Client) Get(endp string, id string) ([]byte, error) {
 	return cont, nil
 }
 
+// Query for resources.
+func (c *Client) Query(endp string, cond map[string]string) ([]byte, error) {
+	url := c.URL + endp + "?envelope=false&"
+	for k, v := range cond {
+		url = url + k + "=" + v + "&"
+	}
+	url = strings.TrimRight(url, "&")
+	c.Infof("url: %s", url)
+
+	resp, err := http.Get(url)
+	if err != nil {
+		return []byte{}, err
+	}
+
+	if resp.StatusCode != 200 {
+		return []byte{}, fmt.Errorf("Get %s: failed with status code %d", url, resp.StatusCode)
+	}
+
+	defer resp.Body.Close()
+	cont, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return []byte{}, err
+	}
+
+	return cont, nil
+}
+
 // Create resource.
-func (c Client) Create(endp string, s interface{}) ([]byte, error) {
+func (c *Client) Create(endp string, s interface{}) ([]byte, error) {
 	url := c.URL + endp
 	c.Infof("header: application/json, method: POST, url: %s", url)
 
@@ -133,7 +161,7 @@ func (c Client) Create(endp string, s interface{}) ([]byte, error) {
 }
 
 // Update resource.
-func (c Client) Update(endp string, id string, s interface{}) ([]byte, error) {
+func (c *Client) Update(endp string, id string, s interface{}) ([]byte, error) {
 	url := c.URL + endp + "/" + id
 	c.Infof("header: application/json, method: PUT, url: %s", url)
 
@@ -158,7 +186,7 @@ func (c Client) Update(endp string, id string, s interface{}) ([]byte, error) {
 }
 
 // Delete resource.
-func (c Client) Delete(endp string, id string) ([]byte, error) {
+func (c *Client) Delete(endp string, id string) ([]byte, error) {
 	url := c.URL + endp + "/" + id
 	c.Infof("url: %s", url)
 

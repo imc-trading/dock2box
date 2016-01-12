@@ -59,6 +59,22 @@ func (r *HostResource) Get(id string) (*Host, error) {
 	return host, nil
 }
 
+// Query for hosts.
+func (r *HostResource) Query(cond map[string]string) (*[]Host, error) {
+	c := *r.Client
+	j, err := c.Query("/hosts", cond)
+	if err != nil {
+		return nil, err
+	}
+
+	hosts := &[]Host{}
+	if err := json.Unmarshal(j, hosts); err != nil {
+		return nil, err
+	}
+
+	return hosts, nil
+}
+
 // Create host.
 func (r *HostResource) Create(h *Host) (*Host, error) {
 	c := *r.Client
