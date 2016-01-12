@@ -56,7 +56,9 @@ func (c *SubnetController) CreateIndex() {
 
 func (c *SubnetController) All(w http.ResponseWriter, r *http.Request) {
 	// Get allowed key names
-	keys, _ := structTags(reflect.ValueOf(models.Tag{}), "field", "bson")
+	es := reflect.ValueOf(models.Subnet{})
+	keys, _ := structTags(es, "field", "bson")
+	kinds, _ := structKinds(es, "field")
 
 	// Query
 	cond := bson.M{}
@@ -65,9 +67,20 @@ func (c *SubnetController) All(w http.ResponseWriter, r *http.Request) {
 		if k == "envelope" || k == "embed" || k == "sort" || k == "hateoas" || k == "fields" {
 			continue
 		}
+		//      fmt.Println(k, kinds[k]
 		if _, ok := keys[k]; !ok {
 			jsonError(w, r, fmt.Sprintf("Incorrect key used in query: %s", k), http.StatusBadRequest, c.envelope)
 			return
+		} else if kinds[k] == reflect.Bool {
+			switch strings.ToLower(v[0]) {
+			case "true":
+				cond[keys[k]] = true
+			case "false":
+				cond[keys[k]] = false
+			default:
+				jsonError(w, r, fmt.Sprintf("Incorrect value for key used in query needs to be either true/false: %s", k), http.StatusBadRequest, c.envelope)
+				return
+			}
 		} else if bson.IsObjectIdHex(v[0]) {
 			cond[keys[k]] = bson.ObjectIdHex(v[0])
 		} else {
