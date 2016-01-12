@@ -9,7 +9,7 @@ TMPFILE="/tmp/test.json"
 APIVERS="v1"
 URL="http://localhost:8080"
 
-if [ -n "${DOCKER_HOST}" ]; then
+if [ -n "${DOCKER_HOST:-}" ]; then
   DOCKER_IP_PORT=${DOCKER_HOST#tcp://}
   DOCKER_IP=${DOCKER_IP_PORT%:*}
   URL="http://${DOCKER_IP}:8080"
