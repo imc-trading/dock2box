@@ -11,6 +11,12 @@ func NewQueryCommand() cli.Command {
 		Usage: "Query for resources",
 		Subcommands: []cli.Command{
 			NewQueryHostCommand(),
+			NewQueryInterfaceCommand(),
+			NewQueryImageCommand(),
+			NewQueryTagCommand(),
+			NewQuerySiteCommand(),
+			NewQuerySubnetCommand(),
+			NewQueryTenantCommand(),
 		},
 	}
 }
