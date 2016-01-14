@@ -24,7 +24,7 @@ func NewCreateHostCommand() cli.Command {
 			cli.StringFlag{Name: "tag, t", Value: "", Usage: "Tag to use for provisioning"},
 			cli.StringFlag{Name: "version, v", Value: "latest", Usage: "Image version to use for provisioning"},
 			cli.StringFlag{Name: "kopts, k", Usage: "Kernel options"},
-			cli.StringFlag{Name: "tenant, t", Usage: "Tenant"},
+			cli.StringFlag{Name: "tenant, T", Usage: "Tenant"},
 			cli.StringFlag{Name: "labels, l", Usage: "Comma-separated list of labels"},
 			cli.StringFlag{Name: "site, s", Usage: "Site"},
 			cli.StringFlag{Name: "interface, I", Value: "eth0", Usage: "Interface"},

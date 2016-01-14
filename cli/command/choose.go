@@ -7,8 +7,8 @@ import (
 	"github.com/imc-trading/dock2box/client"
 )
 
-func chooseImage(clnt *client.Client, imageID string) *string {
-	r, err := clnt.Image.All()
+func chooseBootImage(clnt *client.Client, imageID string) *string {
+	r, err := clnt.Image.Query(map[string]string{"type": "boot"})
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
@@ -20,7 +20,28 @@ func chooseImage(clnt *client.Client, imageID string) *string {
 		if v.ID == imageID {
 			def = i
 		}
-		list = append(list, v.Image+" type: "+v.Type)
+		list = append(list, v.Image)
+	}
+	return &images[prompt.Choice("Choose boot image", def, list)].ID
+}
+
+func chooseImage(clnt *client.Client, imageID string) *string {
+	r, err := clnt.Image.All()
+	if err != nil {
+		log.Fatalf(err.Error())
+	}
+
+	images := *r
+	var list []string
+	def := -1
+	for i, v := range images {
+		if v.Type == "boot" {
+			continue
+		}
+		if v.ID == imageID {
+			def = i
+		}
+		list = append(list, v.Image)
 	}
 	return &images[prompt.Choice("Choose image", def, list)].ID
 }
@@ -41,7 +62,7 @@ func chooseTag(clnt *client.Client, tagID string) *string {
 		if v.ID == tagID {
 			def = i
 		}
-		list = append(list, v.Tag) // Same as in template
+		list = append(list, v.SHA256[0:7]+" "+v.Tag+" ("+v.Created+")")
 	}
 	return &tags[prompt.Choice("Choose tag", def, list)].ID
 }
