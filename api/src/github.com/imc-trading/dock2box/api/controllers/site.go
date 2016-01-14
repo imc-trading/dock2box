@@ -268,6 +268,15 @@ func (c *SiteController) Delete(w http.ResponseWriter, r *http.Request) {
 	// Get object id
 	oid := bson.ObjectIdHex(id)
 
+	// Initialize empty struct
+	s := models.Site{}
+
+	// Get entry
+	if err := c.session.DB(c.database).C("sites").FindId(oid).One(&s); err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
 	// Remove entry
 	if err := c.session.DB(c.database).C("sites").RemoveId(oid); err != nil {
 		w.WriteHeader(http.StatusNotFound)
@@ -275,5 +284,5 @@ func (c *SiteController) Delete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Write status
-	jsonWriter(w, r, nil, http.StatusOK, c.envelope)
+	jsonWriter(w, r, s, http.StatusOK, c.envelope)
 }

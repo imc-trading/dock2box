@@ -17,7 +17,7 @@ func NewDeleteInterfaceCommand() cli.Command {
 		Usage: "Delete interface",
 		Flags: []cli.Flag{},
 		Action: func(c *cli.Context) {
-			deleteImageCommandFunc(c)
+			deleteInterfaceCommandFunc(c)
 		},
 	}
 }
@@ -37,7 +37,7 @@ func deleteInterfaceCommandFunc(c *cli.Context) {
 		os.Exit(1)
 	}
 
-	s, err := clnt.Image.Delete(id)
+	s, err := clnt.Interface.Delete(id)
 	if err != nil {
 		log.Fatal(err.Error())
 	}

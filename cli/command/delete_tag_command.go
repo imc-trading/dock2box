@@ -37,7 +37,7 @@ func deleteTagCommandFunc(c *cli.Context) {
 		os.Exit(1)
 	}
 
-	s, err := clnt.Image.Delete(id)
+	s, err := clnt.Tag.Delete(id)
 	if err != nil {
 		log.Fatal(err.Error())
 	}

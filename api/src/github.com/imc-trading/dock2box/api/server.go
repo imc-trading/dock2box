@@ -223,7 +223,7 @@ func main() {
 	r.HandleFunc("/"+version.APIVersion+"/tenants/{id}", tenant.Get).Methods("GET")
 	r.HandleFunc("/"+version.APIVersion+"/tenants", tenant.Create).Methods("POST")
 	r.HandleFunc("/"+version.APIVersion+"/tenants/{id}", tenant.Update).Methods("PUT")
-	r.HandleFunc("/"+version.APIVersion+"/tenants/{name}", tenant.Delete).Methods("DELETE")
+	r.HandleFunc("/"+version.APIVersion+"/tenants/{id}", tenant.Delete).Methods("DELETE")
 
 	// PXE Menu
 	// Get Controller instance

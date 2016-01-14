@@ -338,6 +338,15 @@ func (c *ImageController) Delete(w http.ResponseWriter, r *http.Request) {
 	// Get object id
 	oid := bson.ObjectIdHex(id)
 
+	// Initialize empty struct
+	s := models.Image{}
+
+	// Get entry
+	if err := c.session.DB(c.database).C("images").FindId(oid).One(&s); err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
 	// Remove entry
 	if err := c.session.DB(c.database).C("images").RemoveId(oid); err != nil {
 		w.WriteHeader(http.StatusNotFound)
@@ -345,5 +354,5 @@ func (c *ImageController) Delete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Write status
-	jsonWriter(w, r, nil, http.StatusOK, c.envelope)
+	jsonWriter(w, r, s, http.StatusOK, c.envelope)
 }

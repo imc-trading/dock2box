@@ -334,6 +334,15 @@ func (c *SubnetController) Delete(w http.ResponseWriter, r *http.Request) {
 	// Get object id
 	oid := bson.ObjectIdHex(id)
 
+	// Initialize empty struct
+	s := models.Subnet{}
+
+	// Get entry
+	if err := c.session.DB(c.database).C("subnets").FindId(oid).One(&s); err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
 	// Remove entry
 	if err := c.session.DB(c.database).C("subnets").RemoveId(oid); err != nil {
 		w.WriteHeader(http.StatusNotFound)
@@ -341,5 +350,5 @@ func (c *SubnetController) Delete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Write status
-	jsonWriter(w, r, nil, http.StatusOK, c.envelope)
+	jsonWriter(w, r, s, http.StatusOK, c.envelope)
 }

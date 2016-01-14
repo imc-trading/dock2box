@@ -23,7 +23,6 @@ func NewDeleteSiteCommand() cli.Command {
 }
 
 func deleteSiteCommandFunc(c *cli.Context) {
-	var site string
 	if len(c.Args()) == 0 {
 		log.Fatal("You need to specify a site id")
 	}
@@ -38,7 +37,7 @@ func deleteSiteCommandFunc(c *cli.Context) {
 		os.Exit(1)
 	}
 
-	s, err := clnt.Site.Delete(site)
+	s, err := clnt.Site.Delete(id)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
