@@ -1,7 +1,9 @@
 package command
 
 import (
+	"fmt"
 	"log"
+	"os"
 
 	"github.com/codegangsta/cli"
 
@@ -40,6 +42,12 @@ func createSubnetCommandFunc(c *cli.Context) {
 		// Default to .254 for subnet
 		Gw:     prompt.String("Gateway", prompt.Prompt{NoDefault: true, FuncPtr: validateIPv4, FuncInp: ""}),
 		SiteID: *chooseSite(clnt, ""),
+	}
+
+	// Is this correct?
+	fmt.Println(string(s.JSON()))
+	if !prompt.Bool("Is this correct", true) {
+		os.Exit(1)
 	}
 
 	// Create subnet

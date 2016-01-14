@@ -1,7 +1,9 @@
 package command
 
 import (
+	"fmt"
 	"log"
+	"os"
 	"strings"
 
 	"github.com/codegangsta/cli"
@@ -42,6 +44,12 @@ func createSiteCommandFunc(c *cli.Context) {
 		ArtifactRepository: prompt.String("Artifact Repository", prompt.Prompt{NoDefault: true, FuncPtr: prompt.Regex, FuncInp: ""}),
 		NamingScheme:       prompt.String("Naming Scheme", prompt.Prompt{Default: "hardware-address", FuncPtr: prompt.Enum, FuncInp: "serial-number,hardware-address,external"}),
 		PXETheme:           prompt.String("PXE Theme", prompt.Prompt{Default: "night", FuncPtr: prompt.Regex, FuncInp: ""}),
+	}
+
+	// Is this correct?
+	fmt.Println(string(s.JSON()))
+	if !prompt.Bool("Is this correct", true) {
+		os.Exit(1)
 	}
 
 	// Create site

@@ -41,7 +41,5 @@ func updateTenantCommandFunc(c *cli.Context) {
 		Tenant: prompt.String("Tenant", prompt.Prompt{Default: v.Tenant, FuncPtr: prompt.Regex, FuncInp: ""}),
 	}
 
-	// Create tenant
 	clnt.Tenant.Update(tenant, &s)
-	return
 }

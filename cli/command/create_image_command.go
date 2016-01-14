@@ -1,7 +1,9 @@
 package command
 
 import (
+	"fmt"
 	"log"
+	"os"
 
 	"github.com/codegangsta/cli"
 
@@ -37,6 +39,12 @@ func createImageCommandFunc(c *cli.Context) {
 		Image:     image,
 		Type:      prompt.String("Type", prompt.Prompt{Default: "docker", FuncPtr: prompt.Enum, FuncInp: "file,docker"}),
 		BootTagID: *chooseTag(clnt, ""),
+	}
+
+	// Is this correct?
+	fmt.Println(string(s.JSON()))
+	if !prompt.Bool("Is this correct", true) {
+		os.Exit(1)
 	}
 
 	// Create image

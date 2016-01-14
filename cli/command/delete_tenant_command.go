@@ -3,9 +3,11 @@ package command
 import (
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/codegangsta/cli"
 
+	"github.com/imc-trading/dock2box/cli/prompt"
 	"github.com/imc-trading/dock2box/client"
 )
 
@@ -31,6 +33,10 @@ func deleteTenantCommandFunc(c *cli.Context) {
 	clnt := client.New(c.GlobalString("server"))
 	if c.GlobalBool("debug") {
 		clnt.SetDebug()
+	}
+
+	if !prompt.Bool("Are you sure you wan't to remove "+tenant, true) {
+		os.Exit(1)
 	}
 
 	t, err := clnt.Tenant.Delete(tenant)

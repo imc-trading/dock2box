@@ -1,10 +1,13 @@
 package command
 
 import (
+	"fmt"
 	"log"
+	"os"
 
 	"github.com/codegangsta/cli"
 
+	"github.com/imc-trading/dock2box/cli/prompt"
 	"github.com/imc-trading/dock2box/client"
 )
 
@@ -34,6 +37,12 @@ func createTenantCommandFunc(c *cli.Context) {
 
 	s := client.Tenant{
 		Tenant: tenant,
+	}
+
+	// Is this correct?
+	fmt.Println(string(s.JSON()))
+	if !prompt.Bool("Is this correct", true) {
+		os.Exit(1)
 	}
 
 	// Create tenant

@@ -204,7 +204,6 @@ cat << EOF > $TMPFILE
   "debug": false,
   "gpt": false,
   "tagId": "${tag1_id}",
-  "kOpts": "None",
   "tenantId": "${tenant_id}",
   "labels": [
     "web-server"

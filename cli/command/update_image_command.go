@@ -13,11 +13,7 @@ func NewUpdateImageCommand() cli.Command {
 	return cli.Command{
 		Name:  "image",
 		Usage: "Update image",
-		Flags: []cli.Flag{
-			cli.BoolFlag{Name: "prompt, p", Usage: "Prompt for resource input"},
-			cli.StringFlag{Name: "type, t", Usage: "Type (file, docker)"},
-			cli.StringFlag{Name: "boot-image, b", Usage: "Boot image"},
-		},
+		Flags: []cli.Flag{},
 		Action: func(c *cli.Context) {
 			updateImageCommandFunc(c)
 		},
@@ -40,16 +36,13 @@ func updateImageCommandFunc(c *cli.Context) {
 		log.Fatal(err.Error())
 	}
 
-	if c.Bool("prompt") {
-		s := client.Image{
-			ID:        v.ID,
-			Image:     prompt.String("Image", prompt.Prompt{Default: v.Image, FuncPtr: prompt.Regex, FuncInp: ""}),
-			Type:      prompt.String("Type", prompt.Prompt{Default: v.Type, FuncPtr: prompt.Enum, FuncInp: "file,docker"}),
-			BootTagID: *chooseTag(clnt, v.BootTagID),
-		}
-
-		// Update image
-		clnt.Image.Update(image, &s)
-		return
+	s := client.Image{
+		ID:        v.ID,
+		Image:     prompt.String("Image", prompt.Prompt{Default: v.Image, FuncPtr: prompt.Regex, FuncInp: ""}),
+		Type:      prompt.String("Type", prompt.Prompt{Default: v.Type, FuncPtr: prompt.Enum, FuncInp: "file,docker"}),
+		BootTagID: *chooseTag(clnt, v.BootTagID),
 	}
+
+	// Update image
+	clnt.Image.Update(image, &s)
 }

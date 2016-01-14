@@ -1,7 +1,9 @@
 package command
 
 import (
+	"fmt"
 	"log"
+	"os"
 	"time"
 
 	"github.com/codegangsta/cli"
@@ -38,6 +40,12 @@ func createTagCommandFunc(c *cli.Context) {
 		Created: prompt.String("Created", prompt.Prompt{Default: strftime.Format("%Y-%m-%dT%H:%M:%SZ", time.Now()), FuncPtr: prompt.Regex, FuncInp: ""}),
 		SHA256:  prompt.String("SHA256", prompt.Prompt{NoDefault: true, FuncPtr: prompt.Regex, FuncInp: "^[0-9a-f]+$"}),
 		ImageID: *chooseImage(clnt, ""),
+	}
+
+	// Is this correct?
+	fmt.Println(string(s.JSON()))
+	if !prompt.Bool("Is this correct", true) {
+		os.Exit(1)
 	}
 
 	// Create image
