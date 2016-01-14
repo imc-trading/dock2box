@@ -11,20 +11,20 @@ import (
 	"github.com/imc-trading/dock2box/client"
 )
 
-func NewDeleteTenantCommand() cli.Command {
+func NewDeleteInterfaceCommand() cli.Command {
 	return cli.Command{
-		Name:  "tenant",
-		Usage: "Delete tenant",
+		Name:  "interface",
+		Usage: "Delete interface",
 		Flags: []cli.Flag{},
 		Action: func(c *cli.Context) {
-			deleteTenantCommandFunc(c)
+			deleteImageCommandFunc(c)
 		},
 	}
 }
 
-func deleteTenantCommandFunc(c *cli.Context) {
+func deleteInterfaceCommandFunc(c *cli.Context) {
 	if len(c.Args()) == 0 {
-		log.Fatal("You need to specify a tenant id")
+		log.Fatal("You need to specify an interface id")
 	}
 	id := c.Args()[0]
 
@@ -33,11 +33,11 @@ func deleteTenantCommandFunc(c *cli.Context) {
 		clnt.SetDebug()
 	}
 
-	if !prompt.Bool("Are you sure you wan't to remove tenant id: "+id, true) {
+	if !prompt.Bool("Are you sure you wan't to remove interface id: "+id, true) {
 		os.Exit(1)
 	}
 
-	s, err := clnt.Tenant.Delete(id)
+	s, err := clnt.Image.Delete(id)
 	if err != nil {
 		log.Fatal(err.Error())
 	}

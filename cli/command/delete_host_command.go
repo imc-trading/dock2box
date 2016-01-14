@@ -23,25 +23,23 @@ func NewDeleteHostCommand() cli.Command {
 }
 
 func deleteHostCommandFunc(c *cli.Context) {
-	var hostname string
 	if len(c.Args()) == 0 {
-		log.Fatal("You need to specify a hostname")
-	} else {
-		hostname = c.Args()[0]
+		log.Fatal("You need to specify a host id")
 	}
+	id := c.Args()[0]
 
 	clnt := client.New(c.GlobalString("server"))
 	if c.GlobalBool("debug") {
 		clnt.SetDebug()
 	}
 
-	if !prompt.Bool("Are you sure you wan't to remove "+hostname, true) {
+	if !prompt.Bool("Are you sure you wan't to remove host id: "+id, true) {
 		os.Exit(1)
 	}
 
-	h, err := clnt.Host.Delete(hostname)
+	s, err := clnt.Host.Delete(id)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
-	fmt.Printf("%v\n", string(h.JSON()))
+	fmt.Printf("%v\n", string(s.JSON()))
 }

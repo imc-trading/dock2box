@@ -23,25 +23,23 @@ func NewDeleteSubnetCommand() cli.Command {
 }
 
 func deleteSubnetCommandFunc(c *cli.Context) {
-	var subnet string
 	if len(c.Args()) == 0 {
-		log.Fatal("You need to specify a subnet")
-	} else {
-		subnet = c.Args()[0]
+		log.Fatal("You need to specify a subnet id")
 	}
+	id := c.Args()[0]
 
 	clnt := client.New(c.GlobalString("server"))
 	if c.GlobalBool("debug") {
 		clnt.SetDebug()
 	}
 
-	if !prompt.Bool("Are you sure you wan't to remove "+subnet, true) {
+	if !prompt.Bool("Are you sure you wan't to remove subnet id: "+id, true) {
 		os.Exit(1)
 	}
 
-	h, err := clnt.Subnet.Delete(subnet)
+	s, err := clnt.Subnet.Delete(id)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
-	fmt.Printf("%v\n", string(h.JSON()))
+	fmt.Printf("%v\n", string(s.JSON()))
 }

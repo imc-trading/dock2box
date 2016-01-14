@@ -24,22 +24,22 @@ func NewDeleteTagCommand() cli.Command {
 
 func deleteTagCommandFunc(c *cli.Context) {
 	if len(c.Args()) == 0 {
-		log.Fatal("You need to specify a tag")
+		log.Fatal("You need to specify a tag id")
 	}
-	tag := c.Args()[0]
+	id := c.Args()[0]
 
 	clnt := client.New(c.GlobalString("server"))
 	if c.GlobalBool("debug") {
 		clnt.SetDebug()
 	}
 
-	if !prompt.Bool("Are you sure you wan't to remove "+tag, true) {
+	if !prompt.Bool("Are you sure you wan't to remove tag id: "+id, true) {
 		os.Exit(1)
 	}
 
-	h, err := clnt.Image.Delete(tag)
+	s, err := clnt.Image.Delete(id)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
-	fmt.Printf("%v\n", string(h.JSON()))
+	fmt.Printf("%v\n", string(s.JSON()))
 }

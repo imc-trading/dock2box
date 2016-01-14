@@ -25,23 +25,22 @@ func NewDeleteSiteCommand() cli.Command {
 func deleteSiteCommandFunc(c *cli.Context) {
 	var site string
 	if len(c.Args()) == 0 {
-		log.Fatal("You need to specify a site")
-	} else {
-		site = c.Args()[0]
+		log.Fatal("You need to specify a site id")
 	}
+	id := c.Args()[0]
 
 	clnt := client.New(c.GlobalString("server"))
 	if c.GlobalBool("debug") {
 		clnt.SetDebug()
 	}
 
-	if !prompt.Bool("Are you sure you wan't to remove "+site, true) {
+	if !prompt.Bool("Are you sure you wan't to remove site id: "+id, true) {
 		os.Exit(1)
 	}
 
-	h, err := clnt.Site.Delete(site)
+	s, err := clnt.Site.Delete(site)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
-	fmt.Printf("%v\n", string(h.JSON()))
+	fmt.Printf("%v\n", string(s.JSON()))
 }
