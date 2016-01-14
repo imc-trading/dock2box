@@ -9,14 +9,14 @@ type SiteResource struct {
 
 // Site structure.
 type Site struct {
-	ID                 string   `json:"id"`
-	Site               string   `json:"site"`
-	Domain             string   `json:"domain"`
-	DNS                []string `json:"dns"`
-	DockerRegistry     string   `json:"dockerRegistry"`
-	ArtifactRepository string   `json:"artifactRepository"`
-	NamingScheme       string   `json:"namingScheme"`
-	PXETheme           string   `json:"pxeTheme"`
+	ID                 string   `json:"id,omitempty"`
+	Site               string   `json:"site,omitempty"`
+	Domain             string   `json:"domain,omitempty"`
+	DNS                []string `json:"dns,omitempty"`
+	DockerRegistry     string   `json:"dockerRegistry,omitempty"`
+	ArtifactRepository string   `json:"artifactRepository,omitempty"`
+	NamingScheme       string   `json:"namingScheme,omitempty"`
+	PXETheme           string   `json:"pxeTheme,omitempty"`
 }
 
 // JSON output for a site.

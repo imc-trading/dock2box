@@ -9,8 +9,8 @@ type TenantResource struct {
 
 // Tenant structure.
 type Tenant struct {
-	ID     string `json:"id"`
-	Tenant string `json:"tenant"`
+	ID     string `json:"id,omitempty"`
+	Tenant string `json:"tenant,omitempty"`
 }
 
 // JSON output for a tenant.

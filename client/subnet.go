@@ -9,11 +9,11 @@ type SubnetResource struct {
 
 // Subnet structure.
 type Subnet struct {
-	ID     string `json:"id"`
-	Subnet string `json:"subnet"`
-	Mask   string `json:"mask"`
-	Gw     string `json:"gw"`
-	SiteID string `json:"siteId"`
+	ID     string `json:"id,omitempty"`
+	Subnet string `json:"subnet,omitempty"`
+	Mask   string `json:"mask,omitempty"`
+	Gw     string `json:"gw,omitempty"`
+	SiteID string `json:"siteId,omitempty"`
 }
 
 // JSON output for a subnet.

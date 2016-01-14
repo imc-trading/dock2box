@@ -9,9 +9,9 @@ type ImageResource struct {
 
 // Image structure.
 type Image struct {
-	ID        string `json:"id"`
-	Image     string `json:"image"`
-	Type      string `json:"type"`
+	ID        string `json:"id,omitempty"`
+	Image     string `json:"image,omitempty"`
+	Type      string `json:"type,omitempty"`
 	KOpts     string `json:"kOpts,omitempty"`
 	BootTagID string `json:"bootTagId,omitempty"`
 }

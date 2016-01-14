@@ -9,13 +9,13 @@ type InterfaceResource struct {
 
 // Interface structure.
 type Interface struct {
-	ID        string `json:"id"`
-	Interface string `json:"interface"`
+	ID        string `json:"id,omitempty"`
+	Interface string `json:"interface,omitempty"`
 	DHCP      bool   `json:"dhcp"`
 	IPv4      string `json:"ipv4,omitempty"`
-	HwAddr    string `json:"hwAddr"`
+	HwAddr    string `json:"hwAddr,omitempty"`
 	SubnetID  string `json:"subnetId,omitempty"`
-	HostID    string `json:"hostId"`
+	HostID    string `json:"hostId,omitempty"`
 }
 
 // JSON output for a interface.

@@ -9,11 +9,11 @@ type TagResource struct {
 
 // Tag structure.
 type Tag struct {
-	ID      string `json:"id"`
-	Tag     string `json:"tag"`
-	Created string `json:"created"`
-	SHA256  string `json:"sha256"`
-	ImageID string `json:"imageId"`
+	ID      string `json:"id,omitempty"`
+	Tag     string `json:"tag,omitempty"`
+	Created string `json:"created,omitempty"`
+	SHA256  string `json:"sha256,omitempty"`
+	ImageID string `json:"imageId,omitempty"`
 }
 
 // JSON output for a tag.

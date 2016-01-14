@@ -9,16 +9,16 @@ type HostResource struct {
 
 // Host structure.
 type Host struct {
-	ID       string   `json:"id"`
-	Host     string   `json:"host"`
+	ID       string   `json:"id,omitempty"`
+	Host     string   `json:"host,omitempty"`
 	Build    bool     `json:"build"`
 	Debug    bool     `json:"debug"`
 	GPT      bool     `json:"gpt"`
-	TagID    string   `json:"tagId"`
-	KOpts    string   `json:"kOpts"`
-	TenantID string   `json:"tenantId"`
-	Labels   []string `json:"labels"`
-	SiteID   string   `json:"siteId"`
+	TagID    string   `json:"tagId,omitempty"`
+	KOpts    string   `json:"kOpts,omitempty"`
+	TenantID string   `json:"tenantId,omitempty"`
+	Labels   []string `json:"labels,omitempty"`
+	SiteID   string   `json:"siteId,omitempty"`
 }
 
 // JSON output for a host.
