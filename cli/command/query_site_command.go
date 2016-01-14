@@ -13,7 +13,7 @@ import (
 
 func NewQuerySiteCommand() cli.Command {
 	return cli.Command{
-		Name:  "site",
+		Name:  "sites",
 		Usage: "Query sites",
 		Flags: []cli.Flag{},
 		Action: func(c *cli.Context) {

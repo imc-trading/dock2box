@@ -13,7 +13,7 @@ import (
 
 func NewQueryInterfaceCommand() cli.Command {
 	return cli.Command{
-		Name:  "interface",
+		Name:  "interfaces",
 		Usage: "Query interfaces",
 		Flags: []cli.Flag{},
 		Action: func(c *cli.Context) {

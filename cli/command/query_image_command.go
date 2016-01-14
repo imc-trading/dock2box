@@ -13,7 +13,7 @@ import (
 
 func NewQueryImageCommand() cli.Command {
 	return cli.Command{
-		Name:  "image",
+		Name:  "images",
 		Usage: "Query images",
 		Flags: []cli.Flag{},
 		Action: func(c *cli.Context) {

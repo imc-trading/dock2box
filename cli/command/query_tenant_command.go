@@ -13,7 +13,7 @@ import (
 
 func NewQueryTenantCommand() cli.Command {
 	return cli.Command{
-		Name:  "tenant",
+		Name:  "tenants",
 		Usage: "Query tenants",
 		Flags: []cli.Flag{},
 		Action: func(c *cli.Context) {

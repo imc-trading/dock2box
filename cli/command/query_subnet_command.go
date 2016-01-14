@@ -13,7 +13,7 @@ import (
 
 func NewQuerySubnetCommand() cli.Command {
 	return cli.Command{
-		Name:  "subnet",
+		Name:  "subnets",
 		Usage: "Query subnets",
 		Flags: []cli.Flag{},
 		Action: func(c *cli.Context) {

@@ -13,7 +13,7 @@ import (
 
 func NewQueryTagCommand() cli.Command {
 	return cli.Command{
-		Name:  "tag",
+		Name:  "tags",
 		Usage: "Query tags",
 		Flags: []cli.Flag{},
 		Action: func(c *cli.Context) {
