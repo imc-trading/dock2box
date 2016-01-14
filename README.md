@@ -44,7 +44,7 @@ already do with Docker. Now it's just a matter of changing your Base Image "FROM
 
 # Workflow
 
-![Host Provisioning](img/host_provisioning.png?raw=true)
+![Workflow](img/workflow.png?raw=true)
 
 # Tools
 
