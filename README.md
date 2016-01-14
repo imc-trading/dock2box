@@ -55,3 +55,7 @@ There is a client library for Go and one in development for Python.
 # Overview
 
 ![Overview](img/overview.png?raw=true)
+
+# PXE menu
+
+![PXE menu](img/pxe_menu.png?raw=true)
