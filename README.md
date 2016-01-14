@@ -42,6 +42,16 @@ In using Docker for Host provisioning you can use the same toolchain for Softwar
 There are situations when you want to run software on Bare-Metal, but keep the deployment process close to what you
 already do with Docker. Now it's just a matter of changing your Base Image "FROM ..." in your Dockerfile and rebuild.
 
+# Workflow
+
+![Host Provisioning](img/host_provisioning.png?raw=true)
+
+# Tools
+
+The backend and cli is written in Go, the frontend will be written in AngularJS. Most of the provisioning scripts are for obv. reasons written in Bash.
+
+There is a client library for Go and one in development for Python.
+
 # Overview
 
-![Host Provisioning Overview](img/host_provisioning.png?raw=true)
+![Overview](img/overview.png?raw=true)
