@@ -31,13 +31,16 @@ One of the main issues with Configuration Management is testability, it's very h
 
 With images they are basically immutable i.e. easier to test.
 
-## Apply same tools for host provisioning as used for software deployment, breach the gap between Ops and Dev
+## DevOps
 
-Since we can build images with either Docker or Packer we can use the same tool-chain Developers use for their software making the cross-over easier.
+DevOps is all about breaking the barriers in-between Dev. and Ops., this start's by adopting the same toolchain.
 
-## Docker image on Bare-Metal
+In using Docker for Host provisioning you can use the same toolchain for Software deployment and Host provisioning.
 
-There are situations when you want to run a software (Docker image) on Bare-Metal, now it's just a matter of changing your Base Image "FROM ..." in your Dockerfile and rebuild.
+## Running software on Bare-Metal
+
+There are situations when you want to run software on Bare-Metal, but keep the deployment process close to what you
+already do with Docker. Now it's just a matter of changing your Base Image "FROM ..." in your Dockerfile and rebuild.
 
 # Overview
 
