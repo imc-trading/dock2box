@@ -47,10 +47,9 @@ func chooseImage(clnt *client.Client, imageID string) *string {
 }
 
 func chooseTag(clnt *client.Client, tagID string) *string {
-	chooseImage(clnt, "")
-	// imageID := chooseImage(clnt, "")
-	// r, err := clnt.Tag.Match("imageId", imageID)
-	r, err := clnt.Tag.All()
+	imageID := chooseImage(clnt, "")
+
+	r, err := clnt.Tag.Query(map[string]string{"imageId": *imageID})
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
@@ -65,6 +64,26 @@ func chooseTag(clnt *client.Client, tagID string) *string {
 		list = append(list, v.SHA256[0:7]+" "+v.Tag+" ("+v.Created+")")
 	}
 	return &tags[prompt.Choice("Choose tag", def, list)].ID
+}
+
+func chooseBootTag(clnt *client.Client, tagID string) *string {
+	imageID := chooseBootImage(clnt, "")
+
+	r, err := clnt.Tag.Query(map[string]string{"imageId": *imageID})
+	if err != nil {
+		log.Fatalf(err.Error())
+	}
+
+	tags := *r
+	var list []string
+	def := -1
+	for i, v := range tags {
+		if v.ID == tagID {
+			def = i
+		}
+		list = append(list, v.SHA256[0:7]+" "+v.Tag+" ("+v.Created+")")
+	}
+	return &tags[prompt.Choice("Choose boot tag", def, list)].ID
 }
 
 func chooseTenants(clnt *client.Client, tenantID string) *string {
