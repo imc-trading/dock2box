@@ -29,6 +29,9 @@ func deleteSiteCommandFunc(c *cli.Context) {
 	}
 
 	clnt := client.New(c.GlobalString("server"))
+	if c.GlobalBool("debug") {
+		clnt.SetDebug()
+	}
 
 	h, err := clnt.Site.Delete(site)
 	if err != nil {

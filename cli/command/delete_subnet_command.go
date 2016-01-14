@@ -29,6 +29,9 @@ func deleteSubnetCommandFunc(c *cli.Context) {
 	}
 
 	clnt := client.New(c.GlobalString("server"))
+	if c.GlobalBool("debug") {
+		clnt.SetDebug()
+	}
 
 	h, err := clnt.Subnet.Delete(subnet)
 	if err != nil {

@@ -9,9 +9,7 @@
     "debug",
     "gpt",
     "tagId",
-    "kOpts",
     "tenantId",
-    "labels",
     "siteId"
   ],
   "properties": {

@@ -23,6 +23,9 @@ func NewGetSubnetsCommand() cli.Command {
 
 func getSubnetsCommandFunc(c *cli.Context) {
 	clnt := client.New(c.GlobalString("server"))
+	if c.GlobalBool("debug") {
+		clnt.SetDebug()
+	}
 
 	s, err := clnt.Subnet.All()
 	if err != nil {

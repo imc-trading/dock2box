@@ -6,23 +6,15 @@ import (
 
 	"github.com/codegangsta/cli"
 
-	"github.com/imc-trading/dock2box/client"
 	"github.com/imc-trading/dock2box/cli/prompt"
+	"github.com/imc-trading/dock2box/client"
 )
 
 func NewCreateSiteCommand() cli.Command {
 	return cli.Command{
 		Name:  "site",
 		Usage: "Create site",
-		Flags: []cli.Flag{
-			cli.BoolFlag{Name: "prompt, p", Usage: "Prompt for resource input"},
-			cli.StringFlag{Name: "domain, d", Usage: "Domain"},
-			cli.StringFlag{Name: "dns, D", Usage: "Comma-separated list of dns servers"},
-			cli.StringFlag{Name: "docker-registry, r", Value: "registry", Usage: "Docker Registry for site"},
-			cli.StringFlag{Name: "artifact-repository, a", Value: "repository", Usage: "Artifact repository for site"},
-			cli.StringFlag{Name: "naming-scheme, n", Value: "repository", Usage: "Naming scheme (serial-number, hardware-address, external)"},
-			cli.StringFlag{Name: "pxe-theme, t", Value: "repository", Usage: "PXE Theme"},
-		},
+		Flags: []cli.Flag{},
 		Action: func(c *cli.Context) {
 			createSiteCommandFunc(c)
 		},
@@ -42,19 +34,16 @@ func createSiteCommandFunc(c *cli.Context) {
 		clnt.SetDebug()
 	}
 
-	if c.Bool("prompt") {
-		s := client.Site{
-			Site:               site,
-			Domain:             prompt.String("Domain", prompt.Prompt{NoDefault: true, FuncPtr: prompt.Regex, FuncInp: ""}),
-			DNS:                strings.Split(prompt.String("DNS", prompt.Prompt{NoDefault: true, FuncPtr: validateIPv4List, FuncInp: ""}), ","),
-			DockerRegistry:     prompt.String("Docker Registry", prompt.Prompt{NoDefault: true, FuncPtr: prompt.Regex, FuncInp: ""}),
-			ArtifactRepository: prompt.String("Artifact Repository", prompt.Prompt{NoDefault: true, FuncPtr: prompt.Regex, FuncInp: ""}),
-			NamingScheme:       prompt.String("Naming Scheme", prompt.Prompt{Default: "hardware-address", FuncPtr: prompt.Enum, FuncInp: "serial-number,hardware-address,external"}),
-			PXETheme:           prompt.String("PXE Theme", prompt.Prompt{Default: "night", FuncPtr: prompt.Regex, FuncInp: ""}),
-		}
-
-		// Create site
-		clnt.Site.Create(&s)
-		return
+	s := client.Site{
+		Site:               site,
+		Domain:             prompt.String("Domain", prompt.Prompt{NoDefault: true, FuncPtr: prompt.Regex, FuncInp: ""}),
+		DNS:                strings.Split(prompt.String("DNS", prompt.Prompt{NoDefault: true, FuncPtr: validateIPv4List, FuncInp: ""}), ","),
+		DockerRegistry:     prompt.String("Docker Registry", prompt.Prompt{NoDefault: true, FuncPtr: prompt.Regex, FuncInp: ""}),
+		ArtifactRepository: prompt.String("Artifact Repository", prompt.Prompt{NoDefault: true, FuncPtr: prompt.Regex, FuncInp: ""}),
+		NamingScheme:       prompt.String("Naming Scheme", prompt.Prompt{Default: "hardware-address", FuncPtr: prompt.Enum, FuncInp: "serial-number,hardware-address,external"}),
+		PXETheme:           prompt.String("PXE Theme", prompt.Prompt{Default: "night", FuncPtr: prompt.Regex, FuncInp: ""}),
 	}
+
+	// Create site
+	clnt.Site.Create(&s)
 }

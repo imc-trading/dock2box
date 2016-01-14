@@ -27,6 +27,9 @@ func deleteTagCommandFunc(c *cli.Context) {
 	tag := c.Args()[0]
 
 	clnt := client.New(c.GlobalString("server"))
+	if c.GlobalBool("debug") {
+		clnt.SetDebug()
+	}
 
 	h, err := clnt.Image.Delete(tag)
 	if err != nil {

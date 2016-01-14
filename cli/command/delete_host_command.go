@@ -29,6 +29,9 @@ func deleteHostCommandFunc(c *cli.Context) {
 	}
 
 	clnt := client.New(c.GlobalString("server"))
+	if c.GlobalBool("debug") {
+		clnt.SetDebug()
+	}
 
 	h, err := clnt.Host.Delete(hostname)
 	if err != nil {

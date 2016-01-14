@@ -29,6 +29,9 @@ func deleteTenantCommandFunc(c *cli.Context) {
 	}
 
 	clnt := client.New(c.GlobalString("server"))
+	if c.GlobalBool("debug") {
+		clnt.SetDebug()
+	}
 
 	t, err := clnt.Tenant.Delete(tenant)
 	if err != nil {

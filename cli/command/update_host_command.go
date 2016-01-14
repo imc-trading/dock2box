@@ -8,8 +8,8 @@ import (
 
 	"github.com/codegangsta/cli"
 
-	"github.com/imc-trading/dock2box/client"
 	"github.com/imc-trading/dock2box/cli/prompt"
+	"github.com/imc-trading/dock2box/client"
 )
 
 func NewUpdateHostCommand() cli.Command {

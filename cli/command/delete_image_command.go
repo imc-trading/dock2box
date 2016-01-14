@@ -29,6 +29,9 @@ func deleteImageCommandFunc(c *cli.Context) {
 	}
 
 	clnt := client.New(c.GlobalString("server"))
+	if c.GlobalBool("debug") {
+		clnt.SetDebug()
+	}
 
 	h, err := clnt.Image.Delete(image)
 	if err != nil {
