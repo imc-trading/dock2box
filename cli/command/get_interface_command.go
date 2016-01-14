@@ -27,6 +27,9 @@ func getInterfaceCommandFunc(c *cli.Context) {
 	intf := c.Args()[0]
 
 	clnt := client.New(c.GlobalString("server"))
+	if c.GlobalBool("debug") {
+		clnt.SetDebug()
+	}
 
 	i, err := clnt.Interface.Get(intf)
 	if err != nil {

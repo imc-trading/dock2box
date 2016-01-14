@@ -27,6 +27,9 @@ func getTenantCommandFunc(c *cli.Context) {
 	tenant := c.Args()[0]
 
 	clnt := client.New(c.GlobalString("server"))
+	if c.GlobalBool("debug") {
+		clnt.SetDebug()
+	}
 
 	t, err := clnt.Tenant.Get(tenant)
 	if err != nil {

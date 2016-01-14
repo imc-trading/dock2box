@@ -23,6 +23,9 @@ func NewGetHostsCommand() cli.Command {
 
 func getHostsCommandFunc(c *cli.Context) {
 	clnt := client.New(c.GlobalString("server"))
+	if c.GlobalBool("debug") {
+		clnt.SetDebug()
+	}
 
 	h, err := clnt.Host.All()
 	if err != nil {

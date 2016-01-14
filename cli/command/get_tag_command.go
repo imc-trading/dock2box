@@ -27,6 +27,9 @@ func getTagCommandFunc(c *cli.Context) {
 	tag := c.Args()[0]
 
 	clnt := client.New(c.GlobalString("server"))
+	if c.GlobalBool("debug") {
+		clnt.SetDebug()
+	}
 
 	i, err := clnt.Tag.Get(tag)
 	if err != nil {

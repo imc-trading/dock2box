@@ -27,6 +27,9 @@ func getSiteCommandFunc(c *cli.Context) {
 	site := c.Args()[0]
 
 	clnt := client.New(c.GlobalString("server"))
+	if c.GlobalBool("debug") {
+		clnt.SetDebug()
+	}
 
 	s, err := clnt.Site.Get(site)
 	if err != nil {

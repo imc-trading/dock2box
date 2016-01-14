@@ -23,6 +23,9 @@ func NewGetInterfacesCommand() cli.Command {
 
 func getInterfacesCommandFunc(c *cli.Context) {
 	clnt := client.New(c.GlobalString("server"))
+	if c.GlobalBool("debug") {
+		clnt.SetDebug()
+	}
 
 	i, err := clnt.Interface.All()
 	if err != nil {

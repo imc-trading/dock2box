@@ -23,6 +23,9 @@ func NewGetTagsCommand() cli.Command {
 
 func getTagsCommandFunc(c *cli.Context) {
 	clnt := client.New(c.GlobalString("server"))
+	if c.GlobalBool("debug") {
+		clnt.SetDebug()
+	}
 
 	i, err := clnt.Tag.All()
 	if err != nil {

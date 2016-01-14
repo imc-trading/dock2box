@@ -27,6 +27,9 @@ func getImageCommandFunc(c *cli.Context) {
 	image := c.Args()[0]
 
 	clnt := client.New(c.GlobalString("server"))
+	if c.GlobalBool("debug") {
+		clnt.SetDebug()
+	}
 
 	i, err := clnt.Image.Get(image)
 	if err != nil {
