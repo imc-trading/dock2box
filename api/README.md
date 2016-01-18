@@ -144,7 +144,7 @@ This enables/disables embedding related data in the result. This will affect per
 Field | Type | Description
 --- | --- | ---
 id | Unique id | Unique Id for host
-host | String | Hostname
+hostname | String | Hostname
 build | Boolean | If host should be provisioned when PXE booting
 debug | Boolean | Debug info and no reboot after provisioning finishes
 gpt | Boolean | Use GUID Partition Table

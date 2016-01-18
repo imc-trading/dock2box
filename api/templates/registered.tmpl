@@ -13,7 +13,7 @@ set boot-kopts {{.Host.BootImage.KOpts}}
 :start
 imgfree
 
-menu Dock2Box, hostname: {{.Host.Host}}
+menu Dock2Box, hostname: {{.Host.Hostname}}
 item --gap -- ------------------------- Info -------------------------
 item --gap -- build: {{.Host.Build}}, debug: {{.Host.Debug}}, site: {{.Host.Site.Site}}
 item --gap -- subnet: {{.Network}}/{{.Prefix}}, registry: {{.Host.Site.DockerRegistry}}
