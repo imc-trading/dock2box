@@ -4,7 +4,7 @@
   "type": "object",
   "required": [
     "id",
-    "host",
+    "hostname",
     "build",
     "debug",
     "gpt",
@@ -16,7 +16,7 @@
     "id": {
       "$ref": "types.json#definitions/id"
     },
-    "host": {
+    "hostname": {
       "$ref": "types.json#definitions/hostname"
     },
     "build": {

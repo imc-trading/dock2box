@@ -199,7 +199,7 @@ get "tags" $tag2_id
 #
 cat << EOF > $TMPFILE
 {
-  "host": "test1.example.com",
+  "hostname": "test1.example.com",
   "build": true,
   "debug": false,
   "gpt": false,

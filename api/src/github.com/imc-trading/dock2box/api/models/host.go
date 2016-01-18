@@ -4,7 +4,7 @@ import "gopkg.in/mgo.v2/bson"
 
 type Host struct {
 	ID         bson.ObjectId `field:"id" json:"id,omitempty" bson:"_id"`
-	Host       string        `field:"host" json:"host,omitempty" bson:"host"`
+	Hostname   string        `field:"hostname" json:"hostname,omitempty" bson:"hostname"`
 	Build      bool          `field:"build" json:"build" bson:"build"`
 	Debug      bool          `field:"debug" json:"debug" bson:"debug"`
 	GPT        bool          `field:"gpt" json:"gpt" bson:"gpt"`
