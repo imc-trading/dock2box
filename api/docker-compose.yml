@@ -1,5 +1,5 @@
 cfg:
-  image: mickep76/etcdrest-example:latest
+  image: imctrading/etcdrest-config:latest
   command: tail -f /dev/null
   volumes:
   - /app/schemas
