@@ -24,6 +24,11 @@
       "endpoint": "/pxe/{name}",
       "type": "template",
       "template": "host"
+    },
+    {
+      "endpoint": "/schemas",
+      "type": "static",
+      "path": "schemas"
     }
   ]
 }
