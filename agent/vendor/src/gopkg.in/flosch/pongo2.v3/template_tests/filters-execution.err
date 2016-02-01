@@ -1,3 +1,0 @@
-{{ -(true || false) }}
-{{ simple.func_add("test", 5) }}
-{{ simple.func_variadic_sum_int("foo") }}
