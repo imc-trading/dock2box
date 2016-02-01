@@ -5,11 +5,23 @@
     {
       "endpoint": "/hosts",
       "type": "api",
-      "path": "/hosts",
+      "path": "/host",
       "schema": "host.json"
     },
     {
-      "endpoint": "/templ/{name}",
+      "endpoint": "/images",
+      "type": "api",
+      "path": "/image",
+      "schema": "image.json"
+    },
+    {
+      "endpoint": "/hwaddr",
+      "type": "api",
+      "path": "/hwaddr",
+      "schema": "hwaddr.json"
+    },
+    {
+      "endpoint": "/pxe/{name}",
       "type": "template",
       "template": "host"
     }
