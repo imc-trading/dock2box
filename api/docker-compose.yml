@@ -1,0 +1,21 @@
+cfg:
+  image: mickep76/etcdrest-example:latest
+  command: tail -f /dev/null
+  volumes:
+  - /app/schemas
+  - /app/templates
+  - /app/etc
+api:
+  image: mickep76/etcdrest:latest
+  command: --debug --peers http://etcd:2379
+  ports:
+  - 8080:8080
+  links:
+  - etcd
+  volumes_from:
+  - cfg
+etcd:
+  image: quay.io/coreos/etcd:latest
+  command: >
+    -advertise-client-urls=http://0.0.0.0:2379
+    -listen-client-urls=http://0.0.0.0:2379

@@ -1,7 +1,5 @@
 # In development
 
-Currently we're focusing on migrating to a new backend. Once this is finished we should have a more complete version of this project.
-
 # What?
 
 Dock2Box is a tool that allows you to apply Docker or File images to bare-metal hardware using PXE boot.
@@ -45,12 +43,6 @@ already do with Docker. Now it's just a matter of changing your Base Image "FROM
 # Workflow
 
 ![Workflow](img/workflow.png?raw=true)
-
-# Tools
-
-The backend and CLI is written in Go, the frontend will be written in AngularJS. Most of the provisioning scripts are for obvious reasons written in Bash.
-
-There is a client library for Go and one in development for Python.
 
 # Overview
 

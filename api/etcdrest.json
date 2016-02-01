@@ -1,0 +1,17 @@
+{
+  "templDir": "/app/templates",
+  "schemaURI": "file:///app/schemas",
+  "routes": [
+    {
+      "endpoint": "/hosts",
+      "type": "api",
+      "path": "/hosts",
+      "schema": "host.json"
+    },
+    {
+      "endpoint": "/templ/{name}",
+      "type": "template",
+      "template": "host"
+    }
+  ]
+}
