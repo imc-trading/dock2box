@@ -1,25 +1,18 @@
 {
-	"$schema": "http://json-schema.org/draft-04/schema#",
-	"title": "HWAddr Schema",
-	"definitions": {
-		"hostname": {
-			"type": "string",
-			"pattern": "^[a-z][a-z0-9-]+\\.trading\\.imc\\.intra$"
-		},
-		"interface": {
-			"type": "string",
-			"pattern": "^[a-z][a-z0-9]+$"
-		}
-	},
-    "type": "object",
-    "required": [ "hostname", "interface" ],
-    "additionalProperties": false,
-	"properties": {
-		"hostname": {
-			"$ref": "#/definitions/hostname"
-		},
-		"interface": {
-			"$ref": "#/definitions/interface"
-		}
-	}
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "HWAddr Schema",
+  "type": "object",
+  "required": [
+    "hostname",
+    "interface"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "hostname": {
+      "$ref": "types.json#/definitions/hostname"
+    },
+    "interface": {
+      "$ref": "types.json#/definitions/interface"
+    }
+  }
 }

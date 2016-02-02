@@ -4,7 +4,7 @@ USER=imctrading
 
 all: docker
 
-clean: clean
+clean:
 	docker rmi ${NAME} &>/dev/null || true
 
 docker: clean

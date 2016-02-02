@@ -3,21 +3,43 @@
   "schemaURI": "file:///app/schemas",
   "routes": [
     {
-      "endpoint": "/hosts",
+      "collection": "/api/v1/hosts",
+      "collectionPath": "/host",
+      "resource": "/api/v1/hosts/{host}",
+      "resourcePath": "/hosts/{{.host}}",
       "type": "api",
-      "path": "/host",
       "schema": "host.json"
     },
     {
-      "endpoint": "/images",
+      "collection": "/api/v1/hosts/{host}/interfaces",
+      "collectionPath": "/host/{{.host}}/interface",
+      "resource": "/api/v1/hosts/{host}/interfaces/{interface}",
+      "resourcePath": "/host/{{.host}}/interface/{{.interface}}",
       "type": "api",
-      "path": "/image",
+      "schema": "interface.json"
+    },
+    {
+      "collection": "/api/v1/images",
+      "collectionPath": "/image",
+      "resource": "/api/v1/images/{image}",
+      "resourcePath": "/image/{{.image}}",
+      "type": "api",
       "schema": "image.json"
     },
     {
-      "endpoint": "/hwaddr",
+      "collection": "/api/v1/images/{image}/versions",
+      "collectionPath": "/image/{{.image}}/versions",
+      "resource": "/api/v1/images/{image}/versions/{version}",
+      "resourcePath": "/image/{{.image}}/versions/{{.version}}",
       "type": "api",
-      "path": "/hwaddr",
+      "schema": "image_version.json"
+    },
+    {
+      "collection": "/api/v1/hwaddr",
+      "collectionPath": "/hwaddr",
+      "resource": "/api/v1/hwaddr/{hwaddr}",
+      "resourcePath": "/hosts/{{.hwaddr}}",
+      "type": "api",
       "schema": "hwaddr.json"
     },
     {
@@ -28,7 +50,7 @@
     {
       "endpoint": "/schemas",
       "type": "static",
-      "path": "schemas"
+      "path": "/app/schemas"
     }
   ]
 }

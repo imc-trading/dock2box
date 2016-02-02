@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Host Schema",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "gw": {
+      "type": "string",
+      "format": "ipv4"
+    },
+    "hwaddr": {
+      "$ref": "types.json#/definitions/hwaddr"
+    },
+    "ip": {
+      "type": "string",
+      "format": "ipv4"
+    },
+    "netmask": {
+      "type": "string",
+      "format": "ipv4"
+    }
+  }
+}

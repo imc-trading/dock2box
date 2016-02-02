@@ -1,81 +1,52 @@
 {
-	"$schema": "http://json-schema.org/draft-04/schema#",
-	"title": "Host Schema",
-	"definitions": {
-		"boolean": {
-			"type": "string",
-			"enum": [
-				"true",
-				"false"
-			]
-		},
-		"hwaddr": {
-			"type": "string",
-			"pattern": "^([0-9a-f]{2}:){5}[0-9a-f]{2}$"
-		},
-		"ipv4": {
-			"type": "string",
-			"pattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}$"
-		},
-		"interface": {
-			"type": "object",
-			"additionalProperties": false,
-			"properties": {
-				"gw": {
-					"$ref": "#/definitions/ipv4"
-				},
-				"hwaddr": {
-					"$ref": "#/definitions/hwaddr"
-				},
-				"ip": {
-					"type": "string",
-					"pattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}$"
-				},
-				"netmask": {
-					"$ref": "#/definitions/ipv4"
-				}
-			}
-		}
-	},
-    "type": "object",
-    "required": [ "debug", "gpt", "image", "kexec", "kopts", "site", "version", "interface" ],
-    "additionalProperties": false,
-	"properties": {
-		"build": {
-			"$ref": "#/definitions/boolean"
-		},
-		"debug": {
-			"$ref": "#/definitions/boolean"
-		},
-		"gpt": {
-			"$ref": "#/definitions/boolean"
-		},
-		"image": {
-			"pattern": "^.+$",
-			"type": "string"
-		},
-		"interface": {
-			"type": "object",
-			"additionalProperties": false,
-			"patternProperties": {
-				"^[a-z][a-z0-9]+$": {
-					"$ref": "#/definitions/interface"
-				}
-			}
-		},
-		"kexec": {
-			"$ref": "#/definitions/boolean"
-		},
-		"kopts": {
-			"type": "string"
-		},
-		"site": {
-			"pattern": "^[a-z][a-z0-9]+$",
-			"type": "string"
-		},
-		"version": {
-			"pattern": "^([a-z0-9]{7}|latest)$",
-			"type": "string"
-		}
-	}
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Host Schema",
+  "type": "object",
+  "required": [
+    "debug",
+    "gpt",
+    "image",
+    "kexec",
+    "kopts",
+    "site",
+    "version",
+    "interface"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "build": {
+      "$ref": "types.json#/definitions/boolean"
+    },
+    "debug": {
+      "$ref": "types.json#/definitions/boolean"
+    },
+    "gpt": {
+      "$ref": "types.json#/definitions/boolean"
+    },
+    "image": {
+      "pattern": "^.+$",
+      "type": "string"
+    },
+    "interface": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        "^[a-z][a-z0-9]+$": {
+          "$ref": "interface.json#"
+        }
+      }
+    },
+    "kexec": {
+      "$ref": "types.json#/definitions/boolean"
+    },
+    "kopts": {
+      "type": "string"
+    },
+    "site": {
+      "$ref": "types.json#/definitions/site"
+    },
+    "version": {
+      "$ref": "types.json#/definitions/version"
+    }
+  }
 }
