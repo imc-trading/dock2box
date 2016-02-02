@@ -6,7 +6,7 @@
       "collection": "/api/v1/hosts",
       "collectionPath": "/host",
       "resource": "/api/v1/hosts/{host}",
-      "resourcePath": "/hosts/{{.host}}",
+      "resourcePath": "/host/{{.host}}",
       "type": "api",
       "schema": "host.json"
     },
@@ -38,7 +38,7 @@
       "collection": "/api/v1/hwaddr",
       "collectionPath": "/hwaddr",
       "resource": "/api/v1/hwaddr/{hwaddr}",
-      "resourcePath": "/hosts/{{.hwaddr}}",
+      "resourcePath": "/hwaddr/{{.hwaddr}}",
       "type": "api",
       "schema": "hwaddr.json"
     },
