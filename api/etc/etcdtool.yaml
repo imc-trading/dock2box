@@ -1,0 +1,18 @@
+# Routes
+routes:
+
+# Hosts
+- regexp: ^/host$
+  schema: file://schemas/all_hosts.json
+
+# Host
+- regexp: ^/host/[a-z]([a-z0-9-]+\.)+[a-z]+$
+  schema: file://schemas/host.json
+
+# Host Interfaces
+- regexp: ^/host/[a-z]([a-z0-9-]+\.)+[a-z]+/interface$
+  schema: file://schemas/all_interfaces.json
+
+# Host Interface
+- regexp: ^/host/[a-z]([a-z0-9-]+\.)+[a-z]+/interface/.+$
+  schema: file://schemas/interface.json

@@ -1,0 +1,55 @@
+templDir: /app/templates
+schemaURI: file:///app/schemas
+
+# Routes
+routes:
+
+# Hosts
+- collection: /api/v1/hosts
+  collectionpath: /host
+  resource: /api/v1/hosts/{host}
+  resourcepath: /host/{{.host}}
+  type: api
+  schema: host.json
+
+# Host Interfaces
+- collection: /api/v1/hosts/{host}/interfaces
+  collectionpath: /host/{{.host}}/interface
+  resource: /api/v1/hosts/{host}/interfaces/{interface}
+  resourcepath: /host/{{.host}}/interface/{{.interface}}
+  type: api
+  schema: interface.json
+
+# Images
+- collection: /api/v1/images
+  collectionpath: /image
+  resource: /api/v1/images/{image}
+  resourcepath: /image/{{.image}}
+  type: api
+  schema: image.json
+
+# Image Versions
+- collection: /api/v1/images/{image}/versions
+  collectionpath: /image/{{.image}}/versions
+  resource: /api/v1/images/{image}/versions/{version}
+  resourcepath: /image/{{.image}}/versions/{{.version}}
+  type: api
+  schema: image_version.json
+
+# Hardware Addresses
+- collection: /api/v1/hwaddr
+  collectionpath: /hwaddr
+  resource: /api/v1/hwaddr/{hwaddr}
+  resourcepath: /hwaddr/{{.hwaddr}}
+  type: api
+  schema: hwaddr.json
+
+# PXE Menu
+- endpoint: /pxe/{name}
+  type: template
+  template: host
+
+# JSON Schemas
+- endpoint: /schemas
+  type: static
+  path: /app/schemas

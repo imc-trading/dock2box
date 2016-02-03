@@ -1,52 +1,75 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "Host Schema",
-  "type": "object",
-  "required": [
-    "debug",
-    "gpt",
-    "image",
-    "kexec",
-    "kopts",
-    "site",
-    "version",
-    "interface"
+  "oneOf": [
+    {
+      "$ref": "#/definitions/host"
+    },
+    {
+      "$ref": "#/definitions/onlyBuild"
+    }
   ],
-  "additionalProperties": false,
-  "properties": {
-    "build": {
-      "$ref": "types.json#/definitions/boolean"
-    },
-    "debug": {
-      "$ref": "types.json#/definitions/boolean"
-    },
-    "gpt": {
-      "$ref": "types.json#/definitions/boolean"
-    },
-    "image": {
-      "pattern": "^.+$",
-      "type": "string"
-    },
-    "interface": {
+  "definitions": {
+    "host": {
       "type": "object",
+      "required": [
+        "debug",
+        "gpt",
+        "image",
+        "kexec",
+        "kopts",
+        "site",
+        "version",
+        "interface"
+      ],
       "additionalProperties": false,
-      "patternProperties": {
-        "^[a-z][a-z0-9]+$": {
-          "$ref": "interface.json#"
+      "properties": {
+        "build": {
+          "$ref": "types.json#/definitions/boolean"
+        },
+        "debug": {
+          "$ref": "types.json#/definitions/boolean"
+        },
+        "gpt": {
+          "$ref": "types.json#/definitions/boolean"
+        },
+        "image": {
+          "pattern": "^.+$",
+          "type": "string"
+        },
+        "interface": {
+          "type": "object",
+          "additionalProperties": false,
+          "patternProperties": {
+            "^[a-z][a-z0-9]+$": {
+              "$ref": "interface.json#"
+            }
+          }
+        },
+        "kexec": {
+          "$ref": "types.json#/definitions/boolean"
+        },
+        "kopts": {
+          "type": "string"
+        },
+        "site": {
+          "$ref": "types.json#/definitions/site"
+        },
+        "version": {
+          "$ref": "types.json#/definitions/version"
         }
       }
     },
-    "kexec": {
-      "$ref": "types.json#/definitions/boolean"
-    },
-    "kopts": {
-      "type": "string"
-    },
-    "site": {
-      "$ref": "types.json#/definitions/site"
-    },
-    "version": {
-      "$ref": "types.json#/definitions/version"
+    "onlyBuild": {
+      "required": [
+        "build"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "build": {
+          "$ref": "types.json#/definitions/boolean"
+        }
+      }
     }
   }
 }
