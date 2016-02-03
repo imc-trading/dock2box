@@ -19,13 +19,22 @@ Delete | DELETE | Delete resource
 
 > POST is not supported since we're not using unique ID's but rather each operation is idempotent
 
-## Return Code
+## Return Codes
 
 Method | Code | Description
 --- | --- | ---
 GET | 200 | OK
 GET | 404 | Not Found
 GET | 500 | Internal Server Error, something failed in the database get request
+PUT | 200 | OK
+PUT | 400 | Bad Request, something was incorrectly formatted in your request
+PUT | 500 | Internal Server Error, something failed getting document or writing it to the database
+PATCH | 200 | OK
+PATCH | 400 | Bad Request, something was incorrectly formatted in your requ
+PATCH | 500 | Internal Server Error, something failed getting document or w
+riting it to the database
+DELETE | 200 | OK
+DELETE | 404 | Not Found
 
 ## Options
 
@@ -75,7 +84,7 @@ gpt | boolean | Use GUID Partition Table
 volmgt | enum | Which volume manager to use (lvm or btrfs)
 image | string | Name of host image
 version | string | Version of host image
-interface | Directory with embeded data
+interface | dir | Directory with embeded data
 kexec | string | KExec into kernel without a reboot, this is not as fool-proof as a reboot but faster
 kopts | string | Kernel options
 site | string | Name of site like a datacenter or location
