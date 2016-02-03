@@ -73,17 +73,26 @@ This enabled/disables embedding data in an envelope with additional info that no
 
 ### Host
 
+Field | Require | Type | Description
+--- | --- | --- | ---
+build | - | boolean | If host should be provisioned when PXE booting
+dhcp | - | dir | Directory with embeded data
+legacynet | - | boolean |
+debug | x | boolean | Debug output during provisioning and doesn't reboot after provisioning is done
+gpt | x | boolean | Use GUID Partition Table
+volmgt | - | enum | Which volume manager to use (lvm or btrfs)
+image | x | string | Name of host image
+version | x | string | Version of host image
+interface | x | dir | Directory with embeded data
+kexec | x | string | KExec into kernel without a reboot, this is not as fool-proof as a reboot but faster
+kopts | x | string | Kernel options
+site | x | string | Name of site like a datacenter or location
+
+#### Host / DHCP
+
 Field | Type | Description
 --- | --- | ---
-build | boolean | If host should be provisioned when PXE booting
-dhcp | dir | Directory with embeded data
-legacynet | boolean |
-debug | boolean | Debug output during provisioning and doesn't reboot after provisioning is done
-gpt | boolean | Use GUID Partition Table
-volmgt | enum | Which volume manager to use (lvm or btrfs)
-image | string | Name of host image
-version | string | Version of host image
-interface | dir | Directory with embeded data
-kexec | string | KExec into kernel without a reboot, this is not as fool-proof as a reboot but faster
-kopts | string | Kernel options
-site | string | Name of site like a datacenter or location
+hwaddr | string | Hardware address of primary interface
+ipv4 | string | DHCP IPv4 address of primary interface
+
+
