@@ -12,10 +12,10 @@
 
 Action | Method | Description
 --- | --- | ---
-Create | PUT | Create new entry
-Update | PUT | Update existing entry
-Patch | PATCH | JSON Schema
-Delete | DELETE | 
+Create | PUT | Create new resource
+Update | PUT | Update existing resource
+Patch | PATCH | Patch resource using [JSON Patch](http://jsonpatch.com)
+Delete | DELETE | Delete resource
 
 > POST is not supported since we're not using unique ID's but rather each operation is idempotent
 
@@ -24,13 +24,14 @@ Delete | DELETE |
 Method | Code | Description
 --- | --- | ---
 GET | 200 | OK
-GET | 404 | Doesn't exist
+GET | 404 | Not Found
+GET | 500 | Internal Server Error, something failed in the database get request
 
 ## Options
 
 ### indent
 
-This enables/disables pretty print which is the default.
+This enables/disables pretty print which is enabled by default.
 
 **Example:**
 ```
