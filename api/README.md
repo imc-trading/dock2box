@@ -77,8 +77,8 @@ Field | Require | Type | Description
 --- | --- | --- | ---
 build | | boolean | If host should be provisioned when PXE booting
 dhcp | | dir | Directory with embeded data
-legacynet | [ ] | boolean |
-debug | :white_check_mark: | boolean | Debug output during provisioning and doesn't reboot after provisioning is done
+legacynet | | boolean |
+debug | :heavy_check_mark: | boolean | Debug output during provisioning and doesn't reboot after provisioning is done
 gpt | :white_check_mark: | boolean | Use GUID Partition Table
 volmgt | | enum | Which volume manager to use (lvm or btrfs)
 image | :white_check_mark: | string | Name of host image
