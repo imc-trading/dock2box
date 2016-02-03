@@ -13,7 +13,7 @@ routes:
 - regexp: ^/host/[a-z]([a-z0-9-]+\.)+[a-z]+$
   schema: file://schemas/host.json
 
-# Host Interfaces
+# All Host Interfaces
 - regexp: ^/host/[a-z]([a-z0-9-]+\.)+[a-z]+/interface$
   schema: file://schemas/all_interfaces.json
 
@@ -28,6 +28,14 @@ routes:
 # Image
 - regexp: ^/image/[a-zA-Z0-9-_]+$
   schema: file://schemas/image.json
+
+# All Image Versions
+- regexp: ^/image/[a-zA-Z0-9-_]+/versions$
+  schema: file://schemas/all_image_versions.json
+
+# Image Version
+- regexp: ^/image/[a-zA-Z0-9-_]+/versions/[a-zA-Z0-9-_]+$
+  schema: file://schemas/image_version.json
 
 # All HWAddr
 - regexp: ^/hwaddr$
