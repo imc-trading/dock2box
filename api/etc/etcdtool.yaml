@@ -1,7 +1,11 @@
 # Routes
 routes:
 
-# Hosts
+# Root
+- regexp: ^/$
+  schema: file://schemas/root.json
+
+# All Hosts
 - regexp: ^/host$
   schema: file://schemas/all_hosts.json
 
@@ -16,3 +20,19 @@ routes:
 # Host Interface
 - regexp: ^/host/[a-z]([a-z0-9-]+\.)+[a-z]+/interface/.+$
   schema: file://schemas/interface.json
+
+# All Images
+- regexp: ^/image$
+  schema: file://schemas/all_images.json
+
+# Image
+- regexp: ^/image/[a-z]([a-z0-9-]+\.)+[a-z]+$
+  schema: file://schemas/host.json
+
+# All HWAddr
+- regexp: ^/hwaddr$
+  schema: file://schemas/all_hwaddr.json
+
+# HWaddr
+- regexp: ^/hwaddr/[a-z]([a-z0-9-]+\.)+[a-z]+$
+  schema: file://schemas/hwaddr.json

@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Root Schema",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "host": {
+      "$ref": "all_hosts.json#"
+    },
+    "image": {
+      "$ref": "all_hosts.json#"
+    },
+    "hwaddr": {
+      "$ref": "all_hosts.json#"
+    },
+    "global": {
+      "$ref": "global.json#"
+    }
+  }
+}
