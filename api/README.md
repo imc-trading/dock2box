@@ -75,18 +75,18 @@ This enabled/disables embedding data in an envelope with additional info that no
 
 Field | Require | Type | Description
 --- | --- | --- | ---
-build | - | boolean | If host should be provisioned when PXE booting
-dhcp | - | dir | Directory with embeded data
-legacynet | - | boolean |
-debug | x | boolean | Debug output during provisioning and doesn't reboot after provisioning is done
-gpt | x | boolean | Use GUID Partition Table
-volmgt | - | enum | Which volume manager to use (lvm or btrfs)
-image | x | string | Name of host image
-version | x | string | Version of host image
-interface | x | dir | Directory with embeded data
-kexec | x | string | KExec into kernel without a reboot, this is not as fool-proof as a reboot but faster
-kopts | x | string | Kernel options
-site | x | string | Name of site like a datacenter or location
+build | [ ] | boolean | If host should be provisioned when PXE booting
+dhcp | [ ] | dir | Directory with embeded data
+legacynet | [ ] | boolean |
+debug | [x] | boolean | Debug output during provisioning and doesn't reboot after provisioning is done
+gpt | [x] | boolean | Use GUID Partition Table
+volmgt | [ ] | enum | Which volume manager to use (lvm or btrfs)
+image | [x] | string | Name of host image
+version | [x] | string | Version of host image
+interface | [x] | dir | Directory with embeded data
+kexec | [x] | string | KExec into kernel without a reboot, this is not as fool-proof as a reboot but faster
+kopts | [x] | string | Kernel options
+site | [x] | string | Name of site like a datacenter or location
 
 #### Host / DHCP
 
