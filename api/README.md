@@ -31,8 +31,7 @@ PUT | 400 | Bad Request, something was incorrectly formatted in your request
 PUT | 500 | Internal Server Error, something failed getting document or writing it to the database
 PATCH | 200 | OK
 PATCH | 400 | Bad Request, something was incorrectly formatted in your requ
-PATCH | 500 | Internal Server Error, something failed getting document or w
-riting it to the database
+PATCH | 500 | Internal Server Error, something failed getting document or writing it to the database
 DELETE | 200 | OK
 DELETE | 404 | Not Found
 
