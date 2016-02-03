@@ -88,11 +88,18 @@ kexec | :heavy_check_mark: | string | KExec into kernel without a reboot, this i
 kopts | :heavy_check_mark: | string | Kernel options
 site | :heavy_check_mark: | string | Name of site like a datacenter or location
 
-#### Host / DHCP
+#### DHCP
 
 Field | Required | Type | Description
---- | --- | ---
+--- | --- | --- | ---
 hwaddr | :heavy_check_mark: | string | Hardware address of primary interface
 ipv4 | :heavy_check_mark: | string | DHCP IPv4 address of primary interface
 
+#### Interface
 
+Field | Required | Type | Description
+--- | --- | --- | ---
+gw | :heavy_check_mark: | string | Default gateway
+hwaddr | :heavy_check_mark: | string | Hardware address
+ip | :heavy_check_mark: | string | IP address
+netmask | :heavy_check_mark: | string | Netmask
