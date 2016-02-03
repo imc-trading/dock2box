@@ -48,7 +48,7 @@ cpt "Delete host 1" "DELETE" "${url}"
 curl -s -i -H "Content-Type: application/json" -X DELETE "${url}"
 
 url="${APIURL}/hosts"
-cpt "Get hosts" "DELETE" "${url}"
+cpt "Get hosts" "GET" "${url}"
 curl -s -i -H "Content-Type: application/json" "${url}"
 
 echo
