@@ -33,6 +33,13 @@
         "gpt": {
           "$ref": "types.json#/definitions/boolean"
         },
+        "volmgt": {
+          "type": "string",
+          "enum": [
+            "btrfs",
+            "lvm"
+          ]
+        },
         "image": {
           "pattern": "^.+$",
           "type": "string"

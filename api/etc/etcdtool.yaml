@@ -36,3 +36,7 @@ routes:
 # HWaddr
 - regexp: ^/hwaddr/.+$
   schema: file://schemas/hwaddr.json
+
+# Global
+- regexp: ^/global$
+  schema: file://schemas/global.json

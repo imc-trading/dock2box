@@ -42,7 +42,8 @@
     "volmgt": {
       "type": "string",
       "enum": [
-        "btrfs"
+        "btrfs",
+        "lvm"
       ]
     },
     "uefi": {

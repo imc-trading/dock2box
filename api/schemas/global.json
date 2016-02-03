@@ -20,9 +20,13 @@
   },
   "type": "object",
   "required": [
+    "display",
+    "nuke",
     "docker_mirrorlist",
     "domain",
     "gpt",
+    "volmgt",
+    "uefi",
     "image",
     "install_image",
     "install_script",
@@ -34,6 +38,13 @@
   ],
   "additionalProperties": false,
   "properties": {
+    "display": {
+      "type": "string",
+      "enum": [ "nvidia" ]
+    },
+    "nuke": {
+      "$ref": "#/definitions/boolean"
+    },
     "docker_mirrorlist": {
       "type": "string"
     },
@@ -42,6 +53,19 @@
       "pattern": "^[a-z]([a-z0-9-]+\\.)+[a-z]+$"
     },
     "gpt": {
+      "$ref": "#/definitions/boolean"
+    },
+    "volmgt": {
+      "type": "string",
+      "enum": [
+        "btrfs",
+        "lvm"
+      ]
+    },
+    "uefi": {
+      "$ref": "#/definitions/boolean"
+    },
+    "legacynet": {
       "$ref": "#/definitions/boolean"
     },
     "image": {
