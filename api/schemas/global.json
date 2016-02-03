@@ -40,7 +40,9 @@
   "properties": {
     "display": {
       "type": "string",
-      "enum": [ "nvidia" ]
+      "enum": [
+        "nvidia"
+      ]
     },
     "nuke": {
       "$ref": "#/definitions/boolean"

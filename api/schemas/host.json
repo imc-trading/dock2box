@@ -27,6 +27,12 @@
         "build": {
           "$ref": "types.json#/definitions/boolean"
         },
+        "dhcp": {
+          "$ref": "#/definitions/dhcp"
+        },
+        "legacynet": {
+          "$ref": "types.json#/definitions/boolean"
+        },
         "debug": {
           "$ref": "types.json#/definitions/boolean"
         },
@@ -75,6 +81,25 @@
       "properties": {
         "build": {
           "$ref": "types.json#/definitions/boolean"
+        },
+        "dhcp": {
+          "$ref": "#/definitions/dhcp"
+        }
+      }
+    },
+    "dhcp": {
+      "required": [
+        "hwaddr",
+        "ipv4"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "hwaddr": {
+          "$ref": "types.json#/definitions/hwaddr"
+        },
+        "ipv4": {
+          "type": "string",
+          "format": "ipv4"
         }
       }
     }
