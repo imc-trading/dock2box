@@ -8,10 +8,10 @@
       "$ref": "all_hosts.json#"
     },
     "image": {
-      "$ref": "all_hosts.json#"
+      "$ref": "all_images.json#"
     },
     "hwaddr": {
-      "$ref": "all_hosts.json#"
+      "$ref": "all_hwaddr.json#"
     },
     "global": {
       "$ref": "global.json#"
