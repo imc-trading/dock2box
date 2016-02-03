@@ -17,12 +17,48 @@ Update | PUT | Update existing entry
 Patch | PATCH | JSON Schema
 Delete | DELETE | 
 
+> POST is not supported since we're not using unique ID's but rather each operation is idempotent
+
 ## Return Code
 
 Method | Code | Description
 --- | --- | ---
+GET | 200 | OK
+GET | 404 | Doesn't exist
 
 ## Options
+
+### indent
+
+This enables/disables pretty print which is the default.
+
+**Example:**
+```
+/v1/tags?indent=false
+```
+**Example output:**
+```
+{ "code": 200, "data": [ ... ]}
+```
+
+### envelope
+
+This enabled/disables embedding data in an envelope with additional info that normally is available as HTTP status code.
+
+**Example:**
+```
+/v1/tags?envelope=true
+```
+
+**Example output:**
+```
+{
+  "code": 200,
+  "data": [
+    ...
+  ]
+}
+```
 
 ## Data Model
 
