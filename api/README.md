@@ -73,26 +73,26 @@ This enabled/disables embedding data in an envelope with additional info that no
 
 ### Host
 
-Field | Require | Type | Description
+Field | Required | Type | Description
 --- | --- | --- | ---
 build | | boolean | If host should be provisioned when PXE booting
 dhcp | | dir | Directory with embeded data
 legacynet | | boolean |
 debug | :heavy_check_mark: | boolean | Debug output during provisioning and doesn't reboot after provisioning is done
-gpt | :white_check_mark: | boolean | Use GUID Partition Table
+gpt | :heavy_check_mark: | boolean | Use GUID Partition Table
 volmgt | | enum | Which volume manager to use (lvm or btrfs)
-image | :white_check_mark: | string | Name of host image
-version | :white_check_mark: | string | Version of host image
-interface | :white_check_mark: | dir | Directory with embeded data
-kexec | :white_check_mark: | string | KExec into kernel without a reboot, this is not as fool-proof as a reboot but faster
-kopts | :white_check_mark: | string | Kernel options
-site | :white_check_mark: | string | Name of site like a datacenter or location
+image | :heavy_check_mark: | string | Name of host image
+version | :heavy_check_mark: | string | Version of host image
+interface | :heavy_check_mark: | dir | Directory with embeded data
+kexec | :heavy_check_mark: | string | KExec into kernel without a reboot, this is not as fool-proof as a reboot but faster
+kopts | :heavy_check_mark: | string | Kernel options
+site | :heavy_check_mark: | string | Name of site like a datacenter or location
 
 #### Host / DHCP
 
-Field | Type | Description
+Field | Required | Type | Description
 --- | --- | ---
-hwaddr | string | Hardware address of primary interface
-ipv4 | string | DHCP IPv4 address of primary interface
+hwaddr | :heavy_check_mark: | string | Hardware address of primary interface
+ipv4 | :heavy_check_mark: | string | DHCP IPv4 address of primary interface
 
 
