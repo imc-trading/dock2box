@@ -19,7 +19,7 @@
     },
     "version": {
       "type": "string",
-      "pattern": "^([a-z0-9]{7}|latest)$"
+      "pattern": "^[a-zA-Z0-9-_]+$"
     },
     "interface": {
       "type": "string",

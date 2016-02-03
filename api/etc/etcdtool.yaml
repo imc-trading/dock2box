@@ -26,7 +26,7 @@ routes:
   schema: file://schemas/all_images.json
 
 # Image
-- regexp: ^/image/[a-z0-9-_]+$
+- regexp: ^/image/[a-zA-Z0-9-_]+$
   schema: file://schemas/image.json
 
 # All HWAddr

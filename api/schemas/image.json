@@ -39,6 +39,15 @@
     "kopts": {
       "type": "string"
     },
+    "volmgt": {
+      "type": "string",
+      "enum": [
+        "btrfs"
+      ]
+    },
+    "uefi": {
+      "$ref": "types.json#/definitions/boolean"
+    },
     "main_script": {
       "type": "string"
     },
@@ -58,7 +67,7 @@
       "type": "object",
       "additionalProperties": false,
       "patternProperties": {
-        "^([a-f0-9]{7}|latest)$": {
+        "^[a-zA-Z0-9-_]+$": {
           "$ref": "image_version.json#"
         }
       }
