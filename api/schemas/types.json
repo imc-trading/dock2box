@@ -6,7 +6,9 @@
       "type": "string",
       "enum": [
         "true",
-        "false"
+        "false",
+        "True",
+        "False"
       ]
     },
     "hostname": {
