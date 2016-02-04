@@ -75,7 +75,7 @@ DELETE | 404 | Not Found
 
 ### table
 
-This enables/disables presentation using a table view.
+This enables/disables presentation using a table view (only supported for collections).
 
 **Example:**
 ```
