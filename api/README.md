@@ -107,7 +107,7 @@ This enabled/disables embedding data in an envelope with additional info that no
 
 ## Data Model
 
-The current data model is somewhat messy and grew as a result of features being added. A v2 of the API is in development that should make this it more consistent.
+The current data model is somewhat messy and grew as a result of features being added. A v2 of the API is in development that should make it more consistent and clear.
 
 Some values appear in multiple resources and are substituted in order, to derive the result.
 
@@ -171,3 +171,32 @@ Field | Required | Type | Description
 main_script | :heavy_check_mark: | string | Main provisioning script
 timestamp | :heavy_check_mark: | string | Timestamp
 
+### HWAddr
+
+Reverse lookup for hwaddr to host.
+
+Field | Required | Type | Description
+--- | --- | --- | ---
+hostname | :heavy_check_mark: | string | Hostname
+interface | :heavy_check_mark: | string | Interface
+
+### Global
+
+Field | Required | Type | Description
+--- | --- | --- | ---
+display | :heavy_check_mark: | string | Display driver
+nuke | :heavy_check_mark: | string |
+docker_mirrorlist | :heavy_check_mark: | string | Docker registry mirror list
+domain | :heavy_check_mark: | string | Domain name
+gpt | :heavy_check_mark: | string | Use GUID Partition Table
+volmgt | :heavy_check_mark: | enum | Volume manager (lvm or btrfs)
+uefi | :heavy_check_mark: | string | UEFI bios
+legacynet | | string |
+image | :heavy_check_mark: | string | Default image
+install_image | :heavy_check_mark: | string |
+install_script | :heavy_check_mark: | string |
+kexec | :heavy_check_mark: | string | KExec into kernel without a reboot
+main_script | :heavy_check_mark: | string | Main provisioning script
+naming_scheme | :heavy_check_mark: | string | Naming scheme
+post_script | :heavy_check_mark: | string | Post provisioning script
+version | :heavy_check_mark: | string | Default image version
