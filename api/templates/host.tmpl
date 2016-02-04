@@ -1,46 +1,47 @@
-{{define "registered"}}
+{{define "host"}}
+{{$h := get (print "/host/" .vars.hostname)}}
 set menu-timeout 10000
 set submenu-timeout 10000
-{{if eq .Host.Build true}}set menu-default {{.Host.Image.Image}}
-set submenu-default {{.Host.Tag.Tag}}{{else}}
+{{if eq $h.build "true"}}set menu-default {{$h.image}}
+set submenu-default {{$h.version}}{{else}}
 set menu-default localdisk
 set submenu-default localdisk{{end}}
 set server localhost
-set boot-image {{.Host.BootImage.Image}}
-set boot-version {{.Host.BootTag.Tag}}
-set boot-kopts {{.Host.BootImage.KOpts}}
+set boot-image 
+set boot-version latest
+set boot-kopts
 
 :start
 imgfree
 
-menu Dock2Box, hostname: {{.Host.Hostname}}
+menu Dock2Box, hostname: {{.vars.hostname}}
 item --gap -- ------------------------- Info -------------------------
-item --gap -- build: {{.Host.Build}}, debug: {{.Host.Debug}}, site: {{.Host.Site.Site}}
-item --gap -- subnet: {{.Network}}/{{.Prefix}}, registry: {{.Host.Site.DockerRegistry}}
-item --gap -- hwaddr: {{.HWAddr}}, ipv4: {{.IPv4}}
+item --gap -- build: {{$h.build}} debug: {{$h.debug}} site: {{$h.site}}
+item --gap -- ipv4: {{$h.interface.default.ip}} netmask: {{$h.interface.default.netmask}}
+item --gap -- hwaddr: {{$h.interface.default.hwaddr}}
 item --gap -- ----------------------- Dock2Box -----------------------
 item localdisk Boot from local disk
-item register Register host
 item --gap -- ------------------------ Images ------------------------
-{{range .Images}}item {{.Image}} {{.Image}}
+{{$images := get "/image"}}
+{{range $image, $e := $images}}item {{$image}} {{$image}}
 {{end}}choose --default ${menu-default} --timeout ${menu-timeout} selected
 goto ${selected}
 
-{{range $k, $e := .Images}}:{{$e.Image}}
-menu Dock2Box, image: {{$e.Image}}
+:localdisk
+localboot
+
+{{range $image, $e := $images}}:{{$image}}
+menu Dock2Box, image: {{$image}}
 item --gap -- ----------------------- Tags -----------------------
 item --key 0x08 back .. (top menu)
-{{range .Tags}}item {{$e.Image}}-{{.Tag}} {{substr .SHA256 0 7}} {{.Tag}} ({{.Created}})
+{{range $version, $e2 := $e.versions}}item {{$image}}-{{$version}} {{$version}} ({{$e2.timestamp}})
 {{end}}choose --default ${menu-default}-${submenu-default} --timeout ${menu-timeout} selected
 goto ${selected}
 :back
 goto start
 
-:localdisk
-localboot
-
-{{range .Tags}}:{{$e.Image}}-{{.Tag}}
-kernel http://${server}/boot/${boot-image}/${boot-version}/kernel BOOTIF={{$.HWAddr}} IP={{$.IPv4}} NETMASK={{$.Netmask}} GATEWAY={{$.Gateway}} IMAGE={{$e.Image}} IMAGE_VERSION={{.Tag}} ${boot-kopts}
+{{range $version, $e2 := $e.versions}}:{{$image}}-{{$version}}
+kernel http://${server}/boot/${boot-image}/${boot-version}/kernel BOOTIF={{$h.interface.default.hwaddr}} IP={{$h.interface.default.ip}} NETMASK={{$h.interface.default.netmask}} GATEWAY={{$h.interface.default.gw}} IMAGE={{$image}} IMAGE_VERSION={{$version}} ${boot-kopts}
 initrd http://${server}/boot/${boot-image}/${boot-version}/initrd
 boot
 
