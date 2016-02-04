@@ -18,5 +18,5 @@ Add the following to crontab.
 
 ```
 # Daily backup of Dock2Box API
-0 0 * * * /usr/local/bin/dock2box-daily.sh &>/var/log/dock2box-api-daily.log
+0 0 * * * /usr/local/bin/dock2box-api-daily.sh &>/var/log/dock2box-api-daily.log
 ```

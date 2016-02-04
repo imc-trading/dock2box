@@ -114,24 +114,24 @@ Field | Required | Type | Description
 build | | boolean | If host should be provisioned when PXE booting
 dhcp | | dir | Directory with embeded data
 legacynet | | boolean |
-debug | :heavy_check_mark: | boolean | Debug output during provisioning and doesn't reboot after provisioning is done
+debug | :heavy_check_mark: | boolean | Debug, no reboot after provisioning is done
 gpt | :heavy_check_mark: | boolean | Use GUID Partition Table
-volmgt | | enum | Which volume manager to use (lvm or btrfs)
+volmgt | | enum | Volume manager (lvm or btrfs)
 image | :heavy_check_mark: | string | Name of host image
 version | :heavy_check_mark: | string | Version of host image
 interface | :heavy_check_mark: | dir | Directory with embeded data
-kexec | :heavy_check_mark: | string | KExec into kernel without a reboot, this is not as fool-proof as a reboot but faster
+kexec | :heavy_check_mark: | string | KExec into kernel without a reboot
 kopts | :heavy_check_mark: | string | Kernel options
 site | :heavy_check_mark: | string | Name of site like a datacenter or location
 
-#### DHCP
+#### Host/DHCP
 
 Field | Required | Type | Description
 --- | --- | --- | ---
 hwaddr | :heavy_check_mark: | string | Hardware address of primary interface
 ipv4 | :heavy_check_mark: | string | DHCP IPv4 address of primary interface
 
-#### Interface
+#### Host/Interface
 
 Field | Required | Type | Description
 --- | --- | --- | ---
@@ -139,3 +139,23 @@ gw | :heavy_check_mark: | string | Default gateway
 hwaddr | :heavy_check_mark: | string | Hardware address
 ip | :heavy_check_mark: | string | IP address
 netmask | :heavy_check_mark: | string | Netmask
+
+### Image
+
+Field | Required | Type | Description
+--- | --- | --- | ---
+bootstrap_image | :heavy_check_mark: | string | Bootstrap image
+debug | :heavy_check_mark: | bool | Debug, no reboot after provisioning is done
+docker_registry | :heavy_check_mark: | string | Docker registry
+file_registry | :heavy_check_mark: | string | File registry
+gpt | :heavy_check_mark: | bool | Use GUID Partition Table
+kexec | :heavy_check_mark: | bool | KExec into kernel without a reboot
+kopts | :heavy_check_mark: | string | Kernel options
+volmgt | | enum | Volume manager (lvm or btrfs)
+uefi | | bool | UEFI bios
+main_script | :heavy_check_mark: | string | Main provisioning script
+post_script | | string | Post provisioning script
+naming_scheme | :heavy_check_mark: | string | Naming scheme
+type | :heavy_check_mark: | string | Type of image
+version | :heavy_check_mark: | string | Version
+versions | :heavy_check_mark: | dir | Directory with embeded data
