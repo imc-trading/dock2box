@@ -73,6 +73,10 @@ DELETE | 404 | Not Found
 
 ## Options
 
+### table
+
+This enables/disables presentation using a table view.
+
 ### indent
 
 This enables/disables pretty print which is enabled by default.
