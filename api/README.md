@@ -77,6 +77,25 @@ DELETE | 404 | Not Found
 
 This enables/disables presentation using a table view.
 
+**Example:**
+```
+/v1/tags?table=false
+```
+
+**Example output:**
+```
+[
+  {
+    "hostname": "test1.example.com,
+    ...
+  },
+  {
+    "hostname": "test2.example.com",
+    ...
+  }
+]
+```
+
 ### indent
 
 This enables/disables pretty print which is enabled by default.
@@ -85,6 +104,7 @@ This enables/disables pretty print which is enabled by default.
 ```
 /v1/tags?indent=false
 ```
+
 **Example output:**
 ```
 { "code": 200, "data": [ ... ]}
