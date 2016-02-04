@@ -9,6 +9,7 @@ routes:
   collectionpath: /host
   resource: /api/v1/hosts/{host}
   resourcepath: /host/{{.host}}
+  dirname: hostname
   type: api
   schema: host.json
 
@@ -17,6 +18,7 @@ routes:
   collectionpath: /host/{{.host}}/interface
   resource: /api/v1/hosts/{host}/interfaces/{interface}
   resourcepath: /host/{{.host}}/interface/{{.interface}}
+  dirname: interface
   type: api
   schema: interface.json
 
@@ -25,6 +27,7 @@ routes:
   collectionpath: /image
   resource: /api/v1/images/{image}
   resourcepath: /image/{{.image}}
+  dirname: image
   type: api
   schema: image.json
 
@@ -33,6 +36,7 @@ routes:
   collectionpath: /image/{{.image}}/versions
   resource: /api/v1/images/{image}/versions/{version}
   resourcepath: /image/{{.image}}/versions/{{.version}}
+  dirname: version
   type: api
   schema: image_version.json
 
@@ -41,6 +45,7 @@ routes:
   collectionpath: /hwaddr
   resource: /api/v1/hwaddr/{hwaddr}
   resourcepath: /hwaddr/{{.hwaddr}}
+  dirname: hwaddr
   type: api
   schema: hwaddr.json
 
