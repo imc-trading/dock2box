@@ -6,46 +6,46 @@ routes:
 
 # Hosts
 - collection: /api/v1/hosts
-  collectionpath: /host
+  collectionPath: /host
   resource: /api/v1/hosts/{host}
-  resourcepath: /host/{{.host}}
-  dirname: hostname
+  resourcePath: /host/{{.host}}
+  dirName: hostname
   type: api
   schema: host.json
 
 # Host Interfaces
 - collection: /api/v1/hosts/{host}/interfaces
-  collectionpath: /host/{{.host}}/interface
+  collectionPath: /host/{{.host}}/interface
   resource: /api/v1/hosts/{host}/interfaces/{interface}
-  resourcepath: /host/{{.host}}/interface/{{.interface}}
-  dirname: interface
+  resourcePath: /host/{{.host}}/interface/{{.interface}}
+  dirName: interface
   type: api
   schema: interface.json
 
 # Images
 - collection: /api/v1/images
-  collectionpath: /image
+  collectionPath: /image
   resource: /api/v1/images/{image}
-  resourcepath: /image/{{.image}}
-  dirname: image
+  resourcePath: /image/{{.image}}
+  dirName: image
   type: api
   schema: image.json
 
 # Image Versions
 - collection: /api/v1/images/{image}/versions
-  collectionpath: /image/{{.image}}/versions
+  collectionPath: /image/{{.image}}/versions
   resource: /api/v1/images/{image}/versions/{version}
-  resourcepath: /image/{{.image}}/versions/{{.version}}
-  dirname: version
+  resourcePath: /image/{{.image}}/versions/{{.version}}
+  dirName: version
   type: api
   schema: image_version.json
 
 # Hardware Addresses
 - collection: /api/v1/hwaddr
-  collectionpath: /hwaddr
+  collectionPath: /hwaddr
   resource: /api/v1/hwaddr/{hwaddr}
-  resourcepath: /hwaddr/{{.hwaddr}}
-  dirname: hwaddr
+  resourcePath: /hwaddr/{{.hwaddr}}
+  dirName: hwaddr
   type: api
   schema: hwaddr.json
 
