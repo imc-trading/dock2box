@@ -107,15 +107,19 @@ This enabled/disables embedding data in an envelope with additional info that no
 
 ## Data Model
 
+The current data model is somewhat messy and grew as a result of features being added. A v2 of the API is in development that should make this it more consistent.
+
+Some values appear in multiple resources and are substituted in order, to derive the result.
+
 ### Host
 
 Field | Required | Type | Description
 --- | --- | --- | ---
-build | | boolean | If host should be provisioned when PXE booting
+build | | bool | If host should be provisioned when PXE booting
 dhcp | | dir | Directory with embeded data
-legacynet | | boolean |
-debug | :heavy_check_mark: | boolean | Debug, no reboot after provisioning is done
-gpt | :heavy_check_mark: | boolean | Use GUID Partition Table
+legacynet | | bool |
+debug | :heavy_check_mark: | bool | Debug, no reboot after provisioning is done
+gpt | :heavy_check_mark: | bool | Use GUID Partition Table
 volmgt | | enum | Volume manager (lvm or btrfs)
 image | :heavy_check_mark: | string | Name of host image
 version | :heavy_check_mark: | string | Version of host image
@@ -159,3 +163,11 @@ naming_scheme | :heavy_check_mark: | string | Naming scheme
 type | :heavy_check_mark: | string | Type of image
 version | :heavy_check_mark: | string | Version
 versions | :heavy_check_mark: | dir | Directory with embeded data
+
+#### Image/Versions
+
+Field | Required | Type | Description
+--- | --- | --- | ---
+main_script | :heavy_check_mark: | string | Main provisioning script
+timestamp | :heavy_check_mark: | string | Timestamp
+
