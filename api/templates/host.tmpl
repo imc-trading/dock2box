@@ -53,19 +53,18 @@ boot
 {{end}}{{end}}{{end}}
 
 {{define "registered"}}
+{{$g := get (print "/global")}}
+{{$b := get (print "/image/" $g.bootstrap_image)}}
 {{$hw := get (print "/hwaddr/" .vars.hwaddr)}}
 {{$h := get (print "/host/" $hw.hostname)}}
-{{$i := get (print "/image/" $h.image)}}
 set menu-timeout 10000
 set submenu-timeout 10000
-{{if eq $h.build "true"}}set menu-default {{$h.image}}
-set submenu-default {{$h.version}}{{else}}
-set menu-default localdisk
-set submenu-default localdisk{{end}}
+set menu-default {{$g.image}}
+set submenu-default {{$g.version}}
 set server localhost
-set boot-image {{$i.bootstrap_image}}
-set boot-version latest
-set boot-kopts {{lastvaln $i.kopts $h.kopts}}
+set boot-image {{$g.bootstrap_image}}
+set boot-version {{$g.bootstrap_version}}
+set boot-kopts {{$b.kopts}}
 
 :start
 imgfree
