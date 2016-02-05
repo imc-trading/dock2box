@@ -1,24 +1,23 @@
-{{define "host"}}{{template "docker"}}
+{{define "host"}}{{template "night" .}}
 {{if get (print "/hwaddr/" .vars.hwaddr)}}{{template "registered" .}}{{else}}{{template "unregistered" .}}{{end}}
 {{end}}
 
 {{define "unregistered"}}
 {{$g := get (print "/global")}}
-{{$i := get (print "/image/" $g.image)}}
+{{$b := get (print "/image/" $g.bootstrap_image)}}
 set menu-timeout 10000
 set submenu-timeout 10000
 set menu-default {{$g.image}}
 set submenu-default {{$g.version}}
 set server localhost
-set boot-image {{$i.bootstrap_image}}
-set boot-version latest
-set boot-kopts {{$i.kopts}}
+set boot-image {{$g.bootstrap_image}}
+set boot-version {{$g.bootstrap_version}}
+set boot-kopts {{$b.kopts}}
 
 :start
 imgfree
 
-#menu dock2box
-menu
+menu dock2box
 item --gap -- {{center 65 "-" " Unregistered "}}
 item --gap -- hostname: {{replace ":" "" .vars.hwaddr}}.{{$g.domain}}
 item --gap -- {{center 65 "-" " Info "}}
@@ -37,9 +36,8 @@ goto ${selected}
 sanboot --no-describe --drive 0x80
 
 {{range $image, $e := $images}}:{{$image}}
-#menu Dock2Box
-menu
-item --gap -- Image: {{ $image }}
+menu dock2box
+item --gap -- Image: {{$image}}
 item --gap -- {{center 65 "-" " Versions "}}
 item --key 0x08 back .. (top menu)
 {{range $version, $e2 := $e.versions}}item {{$image}}-{{$version}} {{$version}} ({{$e2.timestamp}})
@@ -49,8 +47,8 @@ goto ${selected}
 goto start
 
 {{range $version, $e2 := $e.versions}}:{{$image}}-{{$version}}
-kernel http://${server}/boot/${boot-image}/${boot-version}/kernel BOOTIF= IP= NETMASK= GATEWAY= IMAGE={{$image}} IMAGE_VERSION={{$version}} ${boot-kopts}
-initrd http://${server}/boot/${boot-image}/${boot-version}/initrd
+kernel {{$e.file_registry}}/${boot-image}-${boot-version}/kernel BOOTIF={{$.vars.hwaddr}} IP=None NETMASK={{index $.params.netmask 0}} GATEWAY={{index $.params.gateway 0}} ${boot-kopts} image_type={{$e.type}} image_name={{$image}} image_version={{$version}}
+initrd {{$e.file_registry}}/${boot-image}-${boot-version}/initrd
 boot
 {{end}}{{end}}{{end}}
 
@@ -104,7 +102,7 @@ goto ${selected}
 goto start
 
 {{range $version, $e2 := $e.versions}}:{{$image}}-{{$version}}
-kernel http://${server}/boot/${boot-image}/${boot-version}/kernel BOOTIF={{$h.interface.default.hwaddr}} IP={{$h.interface.default.ip}} NETMASK={{$h.interface.default.netmask}} GATEWAY={{$h.interface.default.gw}} IMAGE={{$image}} IMAGE_VERSION={{$version}} ${boot-kopts}
-initrd http://${server}/boot/${boot-image}/${boot-version}/initrd
+kernel {{$e.file_registry}}/${boot-image}-${boot-version}/kernel BOOTIF={{$.vars.hwaddr}} IP=None NETMASK={{index $.params.netmask 0}} GATEWAY={{index $.params.gateway 0}} ${boot-kopts} image_type={{$e.type}} image_name={{$image}} image_version={{$version}}
+initrd {{$e.file_registry}}/${boot-image}-${boot-version}/initrd
 boot
 {{end}}{{end}}{{end}}
