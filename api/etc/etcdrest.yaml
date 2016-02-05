@@ -50,7 +50,7 @@ routes:
   schema: hwaddr.json
 
 # PXE Menu
-- endpoint: /pxe/{hostname}
+- endpoint: /pxe/{hwaddr}
   type: template
   template: host
 

@@ -1,27 +1,32 @@
-{{define "host"}}
-{{$h := get (print "/host/" .vars.hostname)}}
+{{define "host"}}{{template "night"}}
+{{if get (print "/hwaddr/" .vars.hwaddr)}}{{template "registered" .}}{{else}}{{template "unregistered" .}}{{end}}
+{{end}}
+
+{{define "unregistered"}}
+{{$g := get (print "/global")}}
+{{$i := get (print "/image/" $g.image)}}
 set menu-timeout 10000
 set submenu-timeout 10000
-{{if eq $h.build "true"}}set menu-default {{$h.image}}
-set submenu-default {{$h.version}}{{else}}
-set menu-default localdisk
-set submenu-default localdisk{{end}}
+set menu-default {{$g.image}}
+set submenu-default {{$g.version}}
 set server localhost
-set boot-image 
+set boot-image {{$i.bootstrap_image}}
 set boot-version latest
-set boot-kopts
+set boot-kopts {{$i.kopts}}
 
 :start
 imgfree
 
-menu Dock2Box, hostname: {{.vars.hostname}}
-item --gap -- ------------------------- Info -------------------------
-item --gap -- build: {{$h.build}} debug: {{$h.debug}} site: {{$h.site}}
-item --gap -- ipv4: {{$h.interface.default.ip}} netmask: {{$h.interface.default.netmask}}
-item --gap -- hwaddr: {{$h.interface.default.hwaddr}}
-item --gap -- ----------------------- Dock2Box -----------------------
+menu Dock2Box
+item --gap -- {{center 65 "-" " Unregistered "}}
+item --gap -- hostname: {{replace ":" "" .vars.hwaddr}}.{{$g.domain}}
+item --gap -- {{center 65 "-" " Info "}}
+item --gap -- ipv4: {{index .params.ipv4 0}} netmask: {{index .params.netmask 0}}
+item --gap -- gateway: {{index .params.gateway 0}} hwaddr: {{.vars.hwaddr}}
+item --gap -- {{center 65 "-" " Menu "}}
 item localdisk Boot from local disk
-item --gap -- ------------------------ Images ------------------------
+item --gap -- {{center 65 "-" " Images "}}
+
 {{$images := get "/image"}}
 {{range $image, $e := $images}}item {{$image}} {{$image}}
 {{end}}choose --default ${menu-default} --timeout ${menu-timeout} selected
@@ -32,7 +37,60 @@ localboot
 
 {{range $image, $e := $images}}:{{$image}}
 menu Dock2Box, image: {{$image}}
-item --gap -- ----------------------- Tags -----------------------
+item --gap -- {{center 65 "-" " Versions "}}
+item --key 0x08 back .. (top menu)
+{{range $version, $e2 := $e.versions}}item {{$image}}-{{$version}} {{$version}} ({{$e2.timestamp}})
+{{end}}choose --default ${menu-default}-${submenu-default} --timeout ${menu-timeout} selected
+goto ${selected}
+:back
+goto start
+
+{{range $version, $e2 := $e.versions}}:{{$image}}-{{$version}}
+kernel http://${server}/boot/${boot-image}/${boot-version}/kernel BOOTIF= IP= NETMASK= GATEWAY= IMAGE={{$image}} IMAGE_VERSION={{$version}} ${boot-kopts}
+initrd http://${server}/boot/${boot-image}/${boot-version}/initrd
+boot
+{{end}}{{end}}{{end}}
+
+{{define "registered"}}
+{{$hw := get (print "/hwaddr/" .vars.hwaddr)}}
+{{$h := get (print "/host/" $hw.hostname)}}
+{{$i := get (print "/image/" $h.image)}}
+set menu-timeout 10000
+set submenu-timeout 10000
+{{if eq $h.build "true"}}set menu-default {{$h.image}}
+set submenu-default {{$h.version}}{{else}}
+set menu-default localdisk
+set submenu-default localdisk{{end}}
+set server localhost
+set boot-image {{$i.bootstrap_image}}
+set boot-version latest
+set boot-kopts {{lastvaln $i.kopts $h.kopts}}
+
+:start
+imgfree
+
+menu Dock2Box, hostname: {{$hw.hostname}}
+item --gap -- {{center 65 "-" " Registered "}}
+item --gap -- build: {{$h.build}} debug: {{$h.debug}} site: {{$h.site}}
+item --gap -- ipv4: {{$h.interface.default.ip}} netmask: {{$h.interface.default.netmask}}
+item --gap -- gateway: {{$h.interface.default.gw}} hwaddr: {{$h.interface.default.hwaddr}}
+item --gap -- {{center 65 "-" " Info "}}
+item --gap -- ipv4: {{index .params.ipv4 0}} netmask: {{index .params.netmask 0}}
+item --gap -- gateway: {{index .params.gateway 0}} hwaddr: {{.vars.hwaddr}}
+item --gap -- {{center 65 "-" " Menu "}}
+item localdisk Boot from local disk
+item --gap -- {{center 65 "-" " Images "}}
+{{$images := get "/image"}}
+{{range $image, $e := $images}}item {{$image}} {{$image}}
+{{end}}choose --default ${menu-default} --timeout ${menu-timeout} selected
+goto ${selected}
+
+:localdisk
+localboot
+
+{{range $image, $e := $images}}:{{$image}}
+menu Dock2Box, image: {{$image}}
+item --gap -- {{center 65 "-" " Versions "}}
 item --key 0x08 back .. (top menu)
 {{range $version, $e2 := $e.versions}}item {{$image}}-{{$version}} {{$version}} ({{$e2.timestamp}})
 {{end}}choose --default ${menu-default}-${submenu-default} --timeout ${menu-timeout} selected

@@ -1,0 +1,17 @@
+{{define "matrix"}}#!ipxe
+console --picture http://dock2box:8080/images/matrix.png
+
+colour --rgb 0x888888 0
+colour --rgb 0xdddddd 1
+colour --rgb 0x4f674d 2
+colour --rgb 0x739470 3
+
+# Normal user interface
+cpair --foreground 0 1
+
+# Highlighted text
+cpair --foreground 1 --background 2 2
+
+# Separator
+cpair --foreground 3 3
+{{end}}
