@@ -1,5 +1,6 @@
 templDir: /app/templates
 schemaURI: file:///app/schemas
+serverURI: http://dock2box:8080
 
 # Routes
 routes:

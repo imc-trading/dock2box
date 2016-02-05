@@ -1,4 +1,4 @@
-{{define "host"}}{{template "night" .}}
+{{define "host"}}{{template "docker" .}}
 {{if get (print "/hwaddr/" .vars.hwaddr)}}{{template "registered" .}}{{else}}{{template "unregistered" .}}{{end}}
 {{end}}
 
@@ -36,7 +36,8 @@ goto ${selected}
 sanboot --no-describe --drive 0x80
 
 {{range $image, $e := $images}}:{{$image}}
-menu dock2box
+menu
+#menu dock2box
 item --gap -- Image: {{$image}}
 item --gap -- {{center 65 "-" " Versions "}}
 item --key 0x08 back .. (top menu)
@@ -69,7 +70,8 @@ set boot-kopts {{$b.kopts}}
 :start
 imgfree
 
-menu dock2box
+menu
+#menu dock2box
 item --gap -- {{center 65 "-" " Registered "}}
 item --gap -- hostname: {{$hw.hostname}}
 item --gap -- build: {{$h.build}} debug: {{$h.debug}} site: {{$h.site}}
