@@ -1,4 +1,4 @@
-{{define "host"}}{{template "night"}}
+{{define "host"}}{{template "docker"}}
 {{if get (print "/hwaddr/" .vars.hwaddr)}}{{template "registered" .}}{{else}}{{template "unregistered" .}}{{end}}
 {{end}}
 
