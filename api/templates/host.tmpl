@@ -33,10 +33,11 @@ item --gap -- {{center 65 "-" " Images "}}
 goto ${selected}
 
 :localdisk
-localboot
+sanboot --no-describe --drive 0x80
 
 {{range $image, $e := $images}}:{{$image}}
-menu Dock2Box, image: {{$image}}
+menu Dock2Box
+item --gap -- Image: {{ $image }}
 item --gap -- {{center 65 "-" " Versions "}}
 item --key 0x08 back .. (top menu)
 {{range $version, $e2 := $e.versions}}item {{$image}}-{{$version}} {{$version}} ({{$e2.timestamp}})
@@ -69,8 +70,9 @@ set boot-kopts {{lastvaln $i.kopts $h.kopts}}
 :start
 imgfree
 
-menu Dock2Box, hostname: {{$hw.hostname}}
+menu Dock2Box
 item --gap -- {{center 65 "-" " Registered "}}
+item --gap -- hostname: {{$hw.hostname}}
 item --gap -- build: {{$h.build}} debug: {{$h.debug}} site: {{$h.site}}
 item --gap -- ipv4: {{$h.interface.default.ip}} netmask: {{$h.interface.default.netmask}}
 item --gap -- gateway: {{$h.interface.default.gw}} hwaddr: {{$h.interface.default.hwaddr}}
@@ -86,10 +88,11 @@ item --gap -- {{center 65 "-" " Images "}}
 goto ${selected}
 
 :localdisk
-localboot
+sanboot --no-describe --drive 0x80
 
 {{range $image, $e := $images}}:{{$image}}
-menu Dock2Box, image: {{$image}}
+menu Dock2Box
+item --gap -- Image: {{ $image }}
 item --gap -- {{center 65 "-" " Versions "}}
 item --key 0x08 back .. (top menu)
 {{range $version, $e2 := $e.versions}}item {{$image}}-{{$version}} {{$version}} ({{$e2.timestamp}})
@@ -102,5 +105,4 @@ goto start
 kernel http://${server}/boot/${boot-image}/${boot-version}/kernel BOOTIF={{$h.interface.default.hwaddr}} IP={{$h.interface.default.ip}} NETMASK={{$h.interface.default.netmask}} GATEWAY={{$h.interface.default.gw}} IMAGE={{$image}} IMAGE_VERSION={{$version}} ${boot-kopts}
 initrd http://${server}/boot/${boot-image}/${boot-version}/initrd
 boot
-
 {{end}}{{end}}{{end}}
