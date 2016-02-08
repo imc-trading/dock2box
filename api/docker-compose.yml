@@ -19,6 +19,7 @@ etcd:
   image: quay.io/coreos/etcd:latest
   ports:
   - 5001:2379
+  - 2379:2379
   command: >
     -advertise-client-urls=http://0.0.0.0:2379
     -listen-client-urls=http://0.0.0.0:2379
