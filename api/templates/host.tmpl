@@ -5,6 +5,7 @@
 {{define "unregistered"}}
 {{$g := get (print "/global")}}
 {{$b := get (print "/image/" $g.bootstrap_image)}}
+{{$subnet := getsubnet (index .params.ipv4 0) (index .params.netmask 0)}}
 set menu-timeout 10000
 set submenu-timeout 10000
 set menu-default {{$g.image}}
@@ -14,6 +15,18 @@ set boot-image {{$g.bootstrap_image}}
 set boot-version {{$g.bootstrap_version}}
 set boot-kopts {{$b.kopts}}
 
+{{$site := "none"}}
+{{$file_uri := $g.file_uri}}
+{{$registry := $g.registry}}
+
+{{$s := get (print "/subnets/" (replace "/" "-" $subnet))}}
+{{if $s}}
+{{$si := get (print "/sites/" $s.site)}}
+{{$site := $s.site}}
+{{$file_uri := $si.file_uri}}
+{{$registry := $si.registry}}
+{{end}}
+
 :start
 imgfree
 
@@ -21,6 +34,9 @@ imgfree
 menu
 item --gap -- {{center 65 "-" " Unregistered "}}
 item --gap -- hostname: {{replace ":" "" .vars.hwaddr}}.{{$g.domain}}
+item --gap -- subnet: {{$subnet}} site: {{$site}}
+item --gap -- file_uri: {{$file_uri}}
+item --gap -- registry: {{$registry}}
 item --gap -- {{center 65 "-" " Info "}}
 item --gap -- ipv4: {{index .params.ipv4 0}} netmask: {{index .params.netmask 0}}
 item --gap -- gateway: {{index .params.gateway 0}} hwaddr: {{.vars.hwaddr}}
@@ -59,6 +75,7 @@ boot
 {{$b := get (print "/image/" $g.bootstrap_image)}}
 {{$hw := get (print "/hwaddr/" .vars.hwaddr)}}
 {{$h := get (print "/host/" $hw.hostname)}}
+{{$subnet := getsubnet (index .params.ipv4 0) (index .params.netmask 0)}}
 set menu-timeout 10000
 set submenu-timeout 10000
 set menu-default {{$g.image}}
@@ -68,6 +85,18 @@ set boot-image {{$g.bootstrap_image}}
 set boot-version {{$g.bootstrap_version}}
 set boot-kopts {{$b.kopts}}
 
+{{$site := "none"}}
+{{$file_uri := $g.file_uri}}
+{{$registry := $g.registry}}
+
+{{$s := get (print "/subnets/" (replace "/" "-" $subnet))}}
+{{if $s}}
+{{$si := get (print "/sites/" $s.site)}}
+{{$site := $s.site}}
+{{$file_uri := $si.file_uri}}
+{{$registry := $si.registry}}
+{{end}}
+
 :start
 imgfree
 
@@ -75,12 +104,16 @@ imgfree
 menu
 item --gap -- {{center 65 "-" " Registered "}}
 item --gap -- hostname: {{$hw.hostname}}
-item --gap -- build: {{$h.build}} debug: {{$h.debug}} site: {{$h.site}}
+item --gap -- build: {{$h.build}} debug: {{$h.debug}}
 item --gap -- ipv4: {{$h.interface.default.ip}} netmask: {{$h.interface.default.netmask}}
 item --gap -- gateway: {{$h.interface.default.gw}} hwaddr: {{$h.interface.default.hwaddr}}
+item --gap -- subnet: {{$subnet}} site: {{$site}}
+item --gap -- file_uri: {{$file_uri}}
+item --gap -- registry: {{$registry}}
 item --gap -- {{center 65 "-" " Info "}}
 item --gap -- ipv4: {{index .params.ipv4 0}} netmask: {{index .params.netmask 0}}
 item --gap -- gateway: {{index .params.gateway 0}} hwaddr: {{.vars.hwaddr}}
+item --gap -- subnet: {{$subnet}}
 item --gap -- {{center 65 "-" " Menu "}}
 item localdisk Boot from local disk
 item --gap -- {{center 65 "-" " Images "}}

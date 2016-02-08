@@ -50,6 +50,24 @@ routes:
   type: api
   schema: hwaddr.json
 
+# Subnets
+- collection: /api/v1/subnets
+  collectionPath: /subnets
+  resource: /api/v1/subnets/{subnet}
+  resourcePath: /subnets/{{.subnet}}
+  dirName: subnet
+  type: api
+  schema: subnet.json
+
+# Sites
+- collection: /api/v1/sites
+  collectionPath: /sites
+  resource: /api/v1/sites/{site}
+  resourcePath: /sites/{{.site}}
+  dirName: site
+  type: api
+  schema: site.json
+
 # PXE Menu
 - endpoint: /pxe/{hwaddr}
   type: template

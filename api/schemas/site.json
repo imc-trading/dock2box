@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Site Schema",
+  "type": "object",
+  "required": [
+    "file_server",
+    "docker_registry"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "file_server": {
+      "type": "string"
+    },
+    "docker_registry": {
+      "type": "string"
+    }
+  }
+}
