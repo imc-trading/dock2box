@@ -2,6 +2,7 @@ cfg:
   image: imctrading/etcdrest-config:latest
   command: tail -f /dev/null
   volumes:
+  - /app/images
   - /app/schemas
   - /app/templates
   - /app/etc

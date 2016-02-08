@@ -17,7 +17,8 @@ set boot-kopts {{$b.kopts}}
 :start
 imgfree
 
-menu dock2box
+#menu dock2box
+menu
 item --gap -- {{center 65 "-" " Unregistered "}}
 item --gap -- hostname: {{replace ":" "" .vars.hwaddr}}.{{$g.domain}}
 item --gap -- {{center 65 "-" " Info "}}
@@ -36,8 +37,8 @@ goto ${selected}
 sanboot --no-describe --drive 0x80
 
 {{range $image, $e := $images}}:{{$image}}
-menu
 #menu dock2box
+menu
 item --gap -- Image: {{$image}}
 item --gap -- {{center 65 "-" " Versions "}}
 item --key 0x08 back .. (top menu)
@@ -70,8 +71,8 @@ set boot-kopts {{$b.kopts}}
 :start
 imgfree
 
-menu
 #menu dock2box
+menu
 item --gap -- {{center 65 "-" " Registered "}}
 item --gap -- hostname: {{$hw.hostname}}
 item --gap -- build: {{$h.build}} debug: {{$h.debug}} site: {{$h.site}}
@@ -92,7 +93,8 @@ goto ${selected}
 sanboot --no-describe --drive 0x80
 
 {{range $image, $e := $images}}:{{$image}}
-menu Dock2Box
+#menu dock2box
+menu
 item --gap -- Image: {{ $image }}
 item --gap -- {{center 65 "-" " Versions "}}
 item --key 0x08 back .. (top menu)
