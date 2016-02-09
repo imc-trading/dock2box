@@ -8,8 +8,10 @@
 {{$subnet := getsubnet (index .params.ipv4 0) (index .params.netmask 0)}}
 set menu-timeout 10000
 set submenu-timeout 10000
-set menu-default {{$g.image}}
-set submenu-default {{$g.version}}
+#set menu-default {{$g.image}}
+#set submenu-default {{$g.version}}
+set menu-default localdisk
+set submenu-default latest
 set server localhost
 set boot-image {{$g.bootstrap_image}}
 set boot-version {{$g.bootstrap_version}}
