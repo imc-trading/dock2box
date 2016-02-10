@@ -1,12 +1,12 @@
 USER=imctrading
-NAME=dock2box-ipxe-build
+NAME=dock2box-tftp
 
 all: build
 
 clean:
 	docker rmi ${NAME} &>/dev/null || true
 
-build: clean
+build: clean                                                                                   
 	docker build --pull=true --no-cache -t ${USER}/${NAME}:latest .
 
 push: build
