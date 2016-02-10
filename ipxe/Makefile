@@ -9,8 +9,8 @@ clean:
 	docker rmi ${NAME} &>/dev/null || true
 	rm -rf ipxe.tar.gz ipxe-${IPXE_VERS} undionly.kpxe
                                                                                                
-build: #clean                                                                                   
-#	docker run --rm=true -it -v "$$PWD":/build -w /build ${USER}/${NAME}-build:latest ipxe-build
+build: clean                                                                                   
+	docker run --rm=true -it -v "$$PWD":/build -w /build ${USER}/${NAME}-build:latest ipxe-build
 	docker build --pull=true --no-cache -t ${USER}/${NAME}:latest .
 
 push: build
