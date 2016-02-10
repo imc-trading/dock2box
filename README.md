@@ -1,5 +1,35 @@
 # In development
 
+# Start API
+
+First start Docker and then run:
+
+```bash
+docker-compose up
+```
+
+## Update API or configuration
+
+```bash
+docker-compose stop
+docker-compose pull
+docker-compose up
+```
+
+## Export data from etcd
+
+First install [etcdtool](https://github.com/mickep76/etcdtool).
+
+```bash
+etcdtool -p http://<docker host>:5001 export / >~/d2b.json
+```
+
+## Import data into etcd
+
+```bash
+etcdtool -p http://<docker host>:5001 import / ~/d2b.json
+```
+
 # What?
 
 Dock2Box is a tool that allows you to apply Docker or File images to bare-metal hardware using PXE boot.
