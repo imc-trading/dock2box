@@ -6,16 +6,24 @@
 {{$g := get (print "/global")}}
 {{$b := get (print "/image/" $g.bootstrap_image)}}
 {{$subnet := getsubnet (index .params.ipv4 0) (index .params.netmask 0)}}
-set menu-timeout 10000
+set menu-timeout 50000
 set submenu-timeout 10000
 #set menu-default {{$g.image}}
 #set submenu-default {{$g.version}}
-set menu-default localdisk
+#set menu-default localdisk
+set menu-default cobbler
 set submenu-default latest
 set server localhost
 set boot-image {{$g.bootstrap_image}}
 set boot-version {{$g.bootstrap_version}}
 set boot-kopts {{$b.kopts}}
+
+{{$shortname := replace ":" "" .vars.hwaddr}}
+{{$hostname := print $shortname "." $g.domain}}
+{{$ipv4 := index .params.ipv4 0}}
+{{$netmask := index .params.netmask 0}}
+{{$gateway := index .params.gateway 0}}
+{{$hwaddr := .vars.hwaddr}}
 
 {{$site := "none"}}
 {{$file_uri := $g.file_uri}}
@@ -35,15 +43,16 @@ imgfree
 #menu dock2box
 menu
 item --gap -- {{center 65 "-" " Unregistered "}}
-item --gap -- hostname: {{replace ":" "" .vars.hwaddr}}.{{$g.domain}}
+item --gap -- hostname: {{$hostname}}
 item --gap -- subnet: {{$subnet}} site: {{$site}}
 item --gap -- file_uri: {{$file_uri}}
 item --gap -- registry: {{$registry}}
 item --gap -- {{center 65 "-" " Info "}}
-item --gap -- ipv4: {{index .params.ipv4 0}} netmask: {{index .params.netmask 0}}
-item --gap -- gateway: {{index .params.gateway 0}} hwaddr: {{.vars.hwaddr}}
+item --gap -- ipv4: {{$ipv4}} netmask: {{$netmask}}
+item --gap -- gateway: {{$gateway}} hwaddr: {{$hwaddr}}
 item --gap -- {{center 65 "-" " Menu "}}
 item localdisk Boot from local disk
+item cobbler Cobbler
 item --gap -- {{center 65 "-" " Images "}}
 
 {{$images := get "/image"}}
@@ -53,6 +62,9 @@ goto ${selected}
 
 :localdisk
 sanboot --no-describe --drive 0x80
+
+:cobbler
+chain tftp://cobbler/undionly.kpxe
 
 {{range $image, $e := $images}}:{{$image}}
 #menu dock2box
@@ -67,7 +79,7 @@ goto ${selected}
 goto start
 
 {{range $version, $e2 := $e.versions}}:{{$image}}-{{$version}}
-kernel {{$e.file_registry}}/${boot-image}-${boot-version}/kernel BOOTIF={{$.vars.hwaddr}} IP=None NETMASK={{index $.params.netmask 0}} GATEWAY={{index $.params.gateway 0}} ${boot-kopts} image_type={{$e.type}} image_name={{$image}} image_version={{$version}}
+kernel {{$e.file_registry}}/${boot-image}-${boot-version}/kernel BOOTIF={{$.vars.hwaddr}} IP=None NETMASK={{index $.params.netmask 0}} GATEWAY={{index $.params.gateway 0}} ${boot-kopts} image_type={{$e.type}} image_name={{$image}} image_version={{$version}} hostname={{$hostname}} file_uri={{$file_uri}} registry={{$registry}}
 initrd {{$e.file_registry}}/${boot-image}-${boot-version}/initrd
 boot
 {{end}}{{end}}{{end}}
@@ -118,6 +130,7 @@ item --gap -- gateway: {{index .params.gateway 0}} hwaddr: {{.vars.hwaddr}}
 item --gap -- subnet: {{$subnet}}
 item --gap -- {{center 65 "-" " Menu "}}
 item localdisk Boot from local disk
+item cobbler Cobbler
 item --gap -- {{center 65 "-" " Images "}}
 {{$images := get "/image"}}
 {{range $image, $e := $images}}item {{$image}} {{$image}}
@@ -126,6 +139,9 @@ goto ${selected}
 
 :localdisk
 sanboot --no-describe --drive 0x80
+
+:cobbler
+chain tftp://cobbler/undionly.kpxe
 
 {{range $image, $e := $images}}:{{$image}}
 #menu dock2box
