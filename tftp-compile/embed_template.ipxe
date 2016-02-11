@@ -7,4 +7,4 @@ exit
 
 :dock2box
 dhcp || goto begin
-chain http://%%server-name%%:8080/pxe/${netX/mac}?ipv4=${netX/ip}&netmask=${netX/netmask}&gateway=${netX/gateway}&serial=${serial:uristring} || goto dock2box
+chain http://%%server_name%%:8080/pxe/${netX/mac}?ipv4=${netX/ip}&netmask=${netX/netmask}&gateway=${netX/gateway}&serial=${serial:uristring} || goto dock2box

@@ -1,5 +1,5 @@
 USER=imctrading
-NAME=dock2box-tftp-dev
+NAME=dock2box-tftp
 
 all: build
 

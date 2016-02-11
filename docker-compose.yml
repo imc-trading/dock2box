@@ -25,5 +25,6 @@ etcd:
     -listen-client-urls=http://0.0.0.0:2379
 tftp:
   image: imctrading/dock2box-tftp:latest
+  command: dock2box
   ports:
   - 69:69/udp
