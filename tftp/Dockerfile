@@ -9,17 +9,19 @@ RUN set -ex ;\
     adduser -D tftp
 
 # Compile kpxe and the purge build env.
-COPY mapfile ipxelinux.ipxe /var/tftpboot/
+COPY mapfile /var/tftpboot/
+COPY patch.txt ipxelinux.ipxe /
 RUN set -ex ;\
     apk add --no-cache --virtual build curl gcc make perl musl-dev xz-dev ;\
     curl -o ipxe.tar.gz ${IPXE_URL} ;\
     tar zxf ipxe.tar.gz ;\
-    ( cd ipxe-${IPXE_VERS}/src && make CFLAGS_config="-DIMAGE_COMBOOT=on -DCONSOLE_CMD=on" EMBED=/var/tftpboot/ipxelinux.ipxe bin/undionly.kpxe ) ;\
+    cd /ipxe-${IPXE_VERS} && patch -p1 < /patch.txt ;\
+    cd /ipxe-${IPXE_VERS}/src && make CFLAGS_config="-DIMAGE_COMBOOT=on" EMBED=/ipxelinux.ipxe bin/undionly.kpxe ;\
     cp /ipxe-${IPXE_VERS}/src/bin/undionly.kpxe /var/tftpboot/undionly.kpxe ;\
+    chmod 0444 /var/tftpboot/* ;\
     rm -rf /ipxe-${IPXE_VERS} ;\
-    apk del build
-
-RUN chmod 0444 /var/tftpboot/*
+    apk del build ;\
+    rm -f /patch.txt /ipxelinux.ipxe /ipxe.tar.gz
 
 VOLUME /var/tftpboot
 EXPOSE 69/udp

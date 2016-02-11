@@ -7,4 +7,4 @@ exit
 
 :no_shell
 dhcp || goto begin
-chain http://dock2box:8080/pxe/${netX/mac}?ip=${netX/ip}&netmask=${netX/netmask}&gateway=${netX/gateway}&serial=${serial:uristring} || goto no_shell
+chain http://dock2box:8080/pxe/${netX/mac}?ipv4=${netX/ip}&netmask=${netX/netmask}&gateway=${netX/gateway}&serial=${serial:uristring} || goto no_shell

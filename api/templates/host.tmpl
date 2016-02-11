@@ -53,6 +53,7 @@ item --gap -- gateway: {{$gateway}} hwaddr: {{$hwaddr}}
 item --gap -- {{center 65 "-" " Menu "}}
 item localdisk Boot from local disk
 item cobbler Cobbler
+item dock2box dock2box
 item --gap -- {{center 65 "-" " Images "}}
 
 {{$images := get "/image"}}
@@ -65,6 +66,9 @@ sanboot --no-describe --drive 0x80
 
 :cobbler
 chain tftp://cobbler/undionly.kpxe
+
+:dock2box
+chain tftp://dock2box/undionly.kpxe
 
 {{range $image, $e := $images}}:{{$image}}
 #menu dock2box
