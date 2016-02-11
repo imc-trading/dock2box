@@ -54,6 +54,7 @@ item --gap -- {{center 65 "-" " Menu "}}
 item localdisk Boot from local disk
 item cobbler Cobbler
 item dock2box dock2box
+item dock2box-dev dock2box-dev
 item --gap -- {{center 65 "-" " Images "}}
 
 {{$images := get "/image"}}
@@ -69,6 +70,9 @@ chain tftp://cobbler/undionly.kpxe
 
 :dock2box
 chain tftp://dock2box/undionly.kpxe
+
+:dock2box-dev
+chain tftp://dock2box-dev/undionly.kpxe
 
 {{range $image, $e := $images}}:{{$image}}
 #menu dock2box

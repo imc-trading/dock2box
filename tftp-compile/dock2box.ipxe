@@ -1,0 +1,4 @@
+#!ipxe
+
+:dock2box
+chain http://dock2box:8080/pxe/${netX/mac}?ipv4=${netX/ip}&netmask=${netX/netmask}&gateway=${netX/gateway}&serial=${serial:uristring} || goto dock2box
