@@ -1,12 +1,12 @@
 [Unit]
-Description=Dock2Box API
+Description=Dock2Box
 Requires=docker.service
 After=docker.service
 
 [Service]
 Restart=on-failure
 RestartSec=10
-WorkingDirectory=/etc/dock2box-api
+WorkingDirectory=/etc/dock2box
 ExecStart=/usr/bin/docker-compose up --no-color
 ExecStop=/usr/bin/docker-compose stop
 

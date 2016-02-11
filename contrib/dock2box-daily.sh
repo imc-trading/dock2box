@@ -2,7 +2,7 @@
 
 set -eu
 
-DIR="/var/lib/dock2box-api/daily"
+DIR="/var/lib/dock2box/daily"
 
 log() {
     logger -s -t $(basename $0) $1
@@ -13,6 +13,6 @@ log() {
 log "Started"
 
 DAY=$(date +'%d')
-etcdtool -p http://localhost:5001 export / >/var/lib/dock2box-api/daily/${DAY}.json
+etcdtool -p http://localhost:5001 export / >/var/lib/dock2box/daily/${DAY}.json
 
 log "Done"

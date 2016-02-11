@@ -19,7 +19,6 @@ COPY patch-${IPXE_VERS}.txt /patch.txt
 COPY embed_template.ipxe /
 RUN set -ex ;\
     sed s!__SERVER_URI__!${SERVER_URI}!g /embed_template.ipxe >/embed.ipxe ;\
-    cat /embed.ipxe ;\
     apk add --no-cache --virtual build curl gcc make perl musl-dev xz-dev ;\
     curl -o ipxe.tar.gz ${IPXE_URL} ;\
     tar zxf ipxe.tar.gz ;\
