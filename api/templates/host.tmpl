@@ -41,18 +41,19 @@ set gateway {{index .params.gateway 0}}
 set subnet {{$subnet_name}}
 
 # Site
-{{$site := get (print "/sites/default")}}
 {{if $subnet}}
 set site {{$subnet.site}}
 {{$site := get (print "/sites/" $subnet.site)}}
-{{else}}
-set site default
-{{end}}
-
-# Site specific values
 set fqdn {{print $hostname "." $site.domain}}
 set file_uri {{$site.file_uri}}
 set registry {{$site.registry}}
+{{else}}
+set site default
+{{$site := get (print "/sites/default")}}
+set fqdn {{print $hostname "." $site.domain}}
+set file_uri {{$site.file_uri}}
+set registry {{$site.registry}}
+{{end}}
 
 :start
 imgfree
