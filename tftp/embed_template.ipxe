@@ -7,4 +7,4 @@ exit
 
 :no_shell
 dhcp || goto begin
-chain __SERVER_URI__/pxe/${netX/mac}?ipv4=${netX/ip}&netmask=${netX/netmask}&gateway=${netX/gateway}&serial=${serial:uristring} || goto no_shell
+chain {{server_uri}}/pxe/${netX/mac}?ipv4=${netX/ip}&netmask=${netX/netmask}&gateway=${netX/gateway}&serial=${serial:uristring} || goto no_shell

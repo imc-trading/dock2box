@@ -5,3 +5,6 @@ Requires=dock2box.service
 [Service]
 Type=simple
 ExecStart=/usr/local/bin/dock2box-backup.sh
+
+[Install]
+WantedBy=multi-user.target

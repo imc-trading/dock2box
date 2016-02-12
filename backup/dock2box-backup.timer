@@ -5,3 +5,6 @@ Description=Backup Dock2Box every hour
 OnBootSec=10min
 OnUnitActiveSec=1h
 Unit=dock2box-backup.service
+
+[Install]
+WantedBy=multi-user.target
