@@ -8,7 +8,7 @@ cfg:
   - /app/etc
 api:
   image: mickep76/etcdrest:latest
-  command: --debug --peers http://etcd:2379
+  command: --debug --peers http://etcd:2379 --server-uri http://dock2box:8080
   ports:
   - 8080:8080
   links:
@@ -20,11 +20,13 @@ etcd:
   ports:
   - 5001:2379
   - 2379:2379
+  volumes:
+  - /var/lib/dock2box/data:/data
   command: >
-    -advertise-client-urls=http://0.0.0.0:2379
+    -advertise-client-urls http://dock2box:2379
     -listen-client-urls=http://0.0.0.0:2379
+    -data-dir=/data
 tftp:
-  image: imctrading/dock2box-tftp:latest
-  command: dock2box
+  image: imctrading/dock2box-tftp-dev:latest
   ports:
   - 69:69/udp

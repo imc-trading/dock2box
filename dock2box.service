@@ -9,6 +9,7 @@ RestartSec=10
 WorkingDirectory=/etc/dock2box
 ExecStart=/usr/bin/docker-compose up --no-color
 ExecStop=/usr/bin/docker-compose stop
+ExecStop=/usr/bin/docker-compose rm -f
 
 [Install]
 WantedBy=multi-user.target
