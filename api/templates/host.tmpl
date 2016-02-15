@@ -1,33 +1,41 @@
-# 
-# Host template
-# 
-{{define "host"}}{{template "docker" .}}
-{{if get (print "/hwaddr/" .vars.hwaddr)}}{{template "registered" .}}{{else}}{{template "unregistered" .}}{{end}}
-{{end}}
+{{define "host"}}#!ipxe
 
-# 
-# Unregistered template
-# 
-{{define "unregistered"}}
+# Menu theme
+{{template "docker" .}}
 
-# Default values
+# Get default
 {{$default := get (print "/default")}}
 
-# Menu defaults
+# Get host
+{{$hwaddr := get (print "/hwaddr/" .vars.hwaddr)}}
+{{$host := get (print "/host/" $hwaddr.hostname)}}
+
+# Set menu defaults
 set menu_timeout {{$default.menu_timeout}}
 set submenu_timeout {{$default.submenu_timeout}}
+set menu_name {{$default.menu_name}}
+set submenu_name {{$default.submenu_name}}
+
+{{if $host}}
+set menu_default {{$host.image}}
+set submenu_default {{$host.version}}
+{{else}}
 set menu_default {{$default.menu_default}}
 set submenu_default {{$default.submenu_default}}
+{{end}}
 
-# Bootstrap image
+# Set bootstrap image
 {{$bootstrap := get (print "/image/" $default.bootstrap_image)}}
 set bootstrap_image {{$default.bootstrap_image}}
 set bootstrap_version {{$default.bootstrap_version}}
 set bootstrap_kopts {{$bootstrap.kopts}}
 
 # Hostname
-{{$hostname := replace ":" "" .vars.hwaddr}}
-set hostname {{$hostname}}
+{{if $host}}
+set hostname {{$hwaddr.hostname}}
+{{else}}
+set hostname {{replace ":" "" .vars.hwaddr}}
+{{end}}
 
 # Network
 set hwaddr {{.vars.hwaddr}}
@@ -35,47 +43,64 @@ set ipv4 {{index .params.ipv4 0}}
 set netmask {{index .params.ipv4 0}}
 set gateway {{index .params.gateway 0}}
 
-# Subnet
+# Set subnet
 {{$subnet_name := getsubnet (index .params.ipv4 0) (index .params.netmask 0)}}
-{{$subnet := get (print "/subnets/" (replace "/" "-" $subnet_name))}}
 set subnet {{$subnet_name}}
 
-# Site
+# Get subnet
+{{$subnet := get (print "/subnets/" (replace "/" "-" $subnet_name))}}
+
+# Get site
 {{if $subnet}}
 set site {{$subnet.site}}
 {{$site := get (print "/sites/" $subnet.site)}}
-set fqdn {{print $hostname "." $site.domain}}
+set domain {{$site.domain}}
 set file_uri {{$site.file_uri}}
 set registry {{$site.registry}}
 {{else}}
 set site default
 {{$site := get (print "/sites/default")}}
-set fqdn {{print $hostname "." $site.domain}}
+set domain {{$site.domain}}
 set file_uri {{$site.file_uri}}
 set registry {{$site.registry}}
 {{end}}
 
+set fqdn ${hostname}.${domain}
+
 :start
 imgfree
 
-#menu dock2box
-menu
+menu ${menu_name}
+
+{{if $host}}
+item --gap -- {{center 65 "-" " Registered "}}
+{{else}}
 item --gap -- {{center 65 "-" " Unregistered "}}
+{{end}}
+
 item --gap -- hostname: ${fqdn}
+
+{{if $host}}
+item --gap -- build: {{$host.build}} debug: {{$host.debug}}
+item --gap -- ipv4: {{$host.interface.default.ip}} netmask: {{$host.interface.default.netmask}}
+item --gap -- gateway: {{$host.interface.default.gw}} hwaddr: {{$host.interface.default.hwaddr}}
+{{end}}
+
 item --gap -- subnet: ${subnet} site: ${site}
 item --gap -- file_uri: ${file_uri}
 item --gap -- registry: ${registry}
 item --gap -- {{center 65 "-" " Info "}}
 item --gap -- ipv4: ${ipv4} netmask: ${netmask}
 item --gap -- gateway: ${gateway} hwaddr: ${hwaddr}
+
+# Menu items
 item --gap -- {{center 65 "-" " Menu "}}
-item localdisk Boot from local disk
-item cobbler Cobbler
-item dock2box dock2box
-item dock2box-dev dock2box-dev
-item --gap -- {{center 65 "-" " Images "}}
+{{$menu_items := get "/default/menu_items"}}
+{{range $item, $e := $menu_items}}item {{$item}} {{$e.name}}
+{{end}}
 
 # Images
+item --gap -- {{center 65 "-" " Images "}}
 {{$images := get "/image"}}
 {{range $image, $e := $images}}item {{$image}} {{$image}}
 {{end}}
@@ -83,25 +108,15 @@ item --gap -- {{center 65 "-" " Images "}}
 choose --default ${menu_default} --timeout ${menu_timeout} selected
 goto ${selected}
 
-# Store menu items in etcd
-# Name / Label / Command
-
-:localdisk
-sanboot --no-describe --drive 0x80
-
-:cobbler
-chain tftp://cobbler/undionly.kpxe
-
-:dock2box
-chain tftp://dock2box/undionly.kpxe
-
-:dock2box-dev
-chain tftp://dock2box-dev/undionly.kpxe
+# Menu commands
+{{range $item, $e := $menu_items}}
+:{{$item}}
+{{$e.command}}
+{{end}}
 
 # Image Versions
 {{range $image, $e := $images}}:{{$image}}
-#menu dock2box
-menu
+menu ${submenu_name}
 item --gap -- Image: {{$image}}
 item --gap -- {{center 65 "-" " Versions "}}
 item --key 0x08 back .. (top menu)
@@ -114,85 +129,5 @@ goto start
 {{range $version, $e2 := $e.versions}}:{{$image}}-{{$version}}
 kernel ${file_uri}/${bootstrap_image}-${bootstrap_version}/kernel BOOTIF=${hwaddr} IP=None NETMASK=${netmask} GATEWAY=${gateway} ${bootstrap_kopts} image_type={{$e.type}} image_name={{$image}} image_version={{$version}} hostname=${hostname} file_uri=${file_uri} registry=${registry}
 initrd ${file_uri}/${bootstrap_image}-${bootstrap_version}/initrd
-boot
-{{end}}{{end}}{{end}}
-
-# 
-# Registered template
-# 
-
-{{define "registered"}}
-{{$g := get (print "/global")}}
-{{$b := get (print "/image/" $g.bootstrap_image)}}
-{{$hw := get (print "/hwaddr/" .vars.hwaddr)}}
-{{$h := get (print "/host/" $hw.hostname)}}
-{{$subnet := getsubnet (index .params.ipv4 0) (index .params.netmask 0)}}
-set menu_timeout 10000
-set submenu_timeout 10000
-set menu_default {{$g.image}}
-set submenu_default {{$g.version}}
-set bootstrap_image {{$g.bootstrap_image}}
-set bootstrap_version {{$g.bootstrap_version}}
-set bootstrap_kopts {{$b.kopts}}
-
-{{$site := "none"}}
-{{$file_uri := $g.file_uri}}
-{{$registry := $g.registry}}
-
-{{$s := get (print "/subnets/" (replace "/" "-" $subnet))}}
-{{if $s}}
-{{$si := get (print "/sites/" $s.site)}}
-{{$site := $s.site}}
-{{$file_uri := $si.file_uri}}
-{{$registry := $si.registry}}
-{{end}}
-
-:start
-imgfree
-
-#menu dock2box
-menu
-item --gap -- {{center 65 "-" " Registered "}}
-item --gap -- hostname: {{$hw.hostname}}
-item --gap -- build: {{$h.build}} debug: {{$h.debug}}
-item --gap -- ipv4: {{$h.interface.default.ip}} netmask: {{$h.interface.default.netmask}}
-item --gap -- gateway: {{$h.interface.default.gw}} hwaddr: {{$h.interface.default.hwaddr}}
-item --gap -- subnet: {{$subnet}} site: {{$site}}
-item --gap -- file_uri: {{$file_uri}}
-item --gap -- registry: {{$registry}}
-item --gap -- {{center 65 "-" " Info "}}
-item --gap -- ipv4: {{index .params.ipv4 0}} netmask: {{index .params.netmask 0}}
-item --gap -- gateway: {{index .params.gateway 0}} hwaddr: {{.vars.hwaddr}}
-item --gap -- subnet: {{$subnet}}
-item --gap -- {{center 65 "-" " Menu "}}
-item localdisk Boot from local disk
-item cobbler Cobbler
-item --gap -- {{center 65 "-" " Images "}}
-{{$images := get "/image"}}
-{{range $image, $e := $images}}item {{$image}} {{$image}}
-{{end}}choose --default ${menu_default} --timeout ${menu_timeout} selected
-goto ${selected}
-
-:localdisk
-sanboot --no-describe --drive 0x80
-
-:cobbler
-chain tftp://cobbler/undionly.kpxe
-
-{{range $image, $e := $images}}:{{$image}}
-#menu dock2box
-menu
-item --gap -- Image: {{ $image }}
-item --gap -- {{center 65 "-" " Versions "}}
-item --key 0x08 back .. (top menu)
-{{range $version, $e2 := $e.versions}}item {{$image}}-{{$version}} {{$version}} ({{$e2.timestamp}})
-{{end}}choose --default ${menu_default}-${submenu_default} --timeout ${menu_timeout} selected
-goto ${selected}
-:back
-goto start
-
-{{range $version, $e2 := $e.versions}}:{{$image}}-{{$version}}
-kernel {{$e.file_registry}}/${bootstrap_image}-${bootstrap_version}/kernel BOOTIF={{$.vars.hwaddr}} IP=None NETMASK={{index $.params.netmask 0}} GATEWAY={{index $.params.gateway 0}} ${bootstrap_kopts} image_type={{$e.type}} image_name={{$image}} image_version={{$version}}
-initrd {{$e.file_registry}}/${bootstrap_image}-${bootstrap_version}/initrd
 boot
 {{end}}{{end}}{{end}}
