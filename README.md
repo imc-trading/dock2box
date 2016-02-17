@@ -22,6 +22,12 @@ cp <checkout>/dock2box-update.sh /usr/local/bin/
 chmod +x /usr/local/bin/dock2box-update.sh
 ```
 
+Run update script.
+
+```bash
+dock2box-update.sh
+```
+
 ## Setup backup
 
 Backup is setup using a SystemD timer.
