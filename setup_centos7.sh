@@ -13,18 +13,18 @@ set -eu
 grep "CentOS Linux release 7" /etc/redhat-release &>/dev/null || error "This script was meant for CentOS 7"
 
 # Install docker
-if which docker &>/dev/null; then
+if ! which docker &>/dev/null; then
     yum install -y docker
 fi
 
 # Install docker-compose
-if which docker-compose &>/dev/null; then
+if ! which docker-compose &>/dev/null; then
     curl -L https://github.com/docker/compose/releases/download/1.5.2/docker-compose-`uname -s`-`uname -m` > /usr/bin/docker-compose
     chmod +x /usr/bin/docker-compose
 fi
 
 # Check Docker is running
-if docker ps &>/dev/null; then
+if ! docker ps &>/dev/null; then
     systemctl start docker
 fi
 
