@@ -7,7 +7,7 @@ error() {
 
 D2B_URL="https://raw.githubusercontent.com/imc-trading/dock2box/master"
 
-set -eu
+set -eux
 
 # Check that we're using CentOS 7.x
 grep "CentOS Linux release 7" /etc/redhat-release &>/dev/null || error "This script was meant for CentOS 7"
@@ -26,6 +26,10 @@ fi
 # Check Docker is running
 if ! docker ps &>/dev/null; then
     systemctl start docker
+fi
+
+if ! etcdtool &>/dev/null; then
+    yum install -y https://github.com/mickep76/etcdtool/releases/download/3.2/etcdtool-3.2-201602171504.x86_64.rpm
 fi
 
 # Setup dock2box
