@@ -1,23 +1,5 @@
 # In development
 
-## Docker Components
-
-### cfg (imctrading/etcdrest-config:latest)
-
-This contains the configuration, schemas and templates for etcdrest.
-
-### api (mickep76/etcdrest:latest)
-
-This contains the software etcdrest to run a REST API with etcd as a database.
-
-### etcd (quay.io/coreos/etcd:latest)
-
-This contains etcd database from CoreOS.
-
-### tftp (imctrading/dock2box-tftp-dev:latest)
-
-This contains TFTP daemon that serves "undionly.kpxe" iPXE.
-
 ## Run dock2box
 
 These are the steps in order to run dock2box.
