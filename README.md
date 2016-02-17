@@ -22,6 +22,18 @@ vagrant up
 
 First comment out or change the etcd data path.
 
+```yaml
+etcd:
+  image: quay.io/coreos/etcd:latest
+  ports:
+  - 5001:2379
+  - 2379:2379
+# Comment out the volumes if you want the data to reside inside the Docker container
+# Mostly usefull for testing
+#  volumes:
+#  - /var/lib/dock2box/data:/data
+```
+
 ```bash
 docker-compose up
 ```
