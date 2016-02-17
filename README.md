@@ -1,34 +1,76 @@
 # In development
 
-# Start API
+## Docker Components
 
-First start Docker and then run:
+### cfg (imctrading/etcdrest-config:latest)
 
-```bash
-docker-compose up
-```
+This contains the configuration, schemas and templates for etcdrest.
 
-## Update API or configuration
+### api (mickep76/etcdrest:latest)
 
-```bash
-docker-compose stop
-docker-compose pull
-docker-compose up
-```
+This contains the software etcdrest to run a REST API with etcd as a database.
 
-## Export data from etcd
+### etcd (quay.io/coreos/etcd:latest)
 
-First install [etcdtool](https://github.com/mickep76/etcdtool).
+This contains etcd database from CoreOS.
 
-```bash
-etcdtool -p http://<docker host>:5001 export / >~/d2b.json
-```
+### tftp (imctrading/dock2box-tftp-dev:latest)
 
-## Import data into etcd
+This contains TFTP daemon that serves "undionly.kpxe" iPXE.
+
+## Run dock2box
+
+These are the steps in order to run dock2box.
 
 ```bash
-etcdtool -p http://<docker host>:5001 import / ~/d2b.json
+mkdir /etc/dock2box/
+mkdir -p /var/lib/dock2box/data/
+cp <checkout>/docker-compose.yml /etc/dock2box/
+cp <checkout>/dock2box.service /etc/systemd/system/
+systemctl start dock2box
+systemctl enable dock2box
 ```
+
+## Update dock2box
+
+Setup update script.
+
+```bash
+cp <checkout>/dock2box-update.sh /usr/local/bin/
+chmod +x /usr/local/bin/dock2box-update.sh
+```
+
+## Setup backup
+
+Backup is setup using a SystemD timer.
+
+```bash
+cp <checkout>/dock2box-backup.sh /usr/loca/bin/
+cp <checkout>/dock2box-backup.service /etc/systemd/system/
+cp <checkout>/dock2box-backup.timer /etc/systemd/system/
+systemctl start dock2box-backup.service
+systemctl start dock2box-backup.timer
+systemctl enable dock2box-backup.service
+systemctl enable dock2box-backup.timer
+```
+
+# dock2box Docker Components
+
+## cfg (imctrading/etcdrest-config:latest)
+
+This contains the configuration, schemas and templates for etcdrest.
+
+## api (mickep76/etcdrest:latest)
+
+This contains the software etcdrest to run a REST API with etcd as a database.
+
+## etcd (quay.io/coreos/etcd:latest)
+
+This contains etcd database from CoreOS.
+
+## tftp (imctrading/dock2box-tftp-dev:latest)
+
+This contains TFTP daemon that serves "undionly.kpxe" iPXE.
 
 # What?
 
