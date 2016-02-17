@@ -10,28 +10,42 @@ set -eu
 # Check that we're using CentOS 7.x
 grep "CentOS Linux release 7" /etc/redhat-release &>/dev/null || error "This script was meant for CentOS 7.x"
 
-# Check Docker and Docker Compose
-which docker &>/dev/null || error "Missing dependency: docker"
-which docker-compose &>/dev/null || error "Missing dependency: docker-compose"
-which etcdtool &>/dev/null || error "Missing dependency: etcdtool"
+# Install git
+if which git &>/dev/null; then
+    yum install -y git
+fi
+
+# Install docker
+if which docker &>/dev/null; then
+    yum install -y docker
+fi
+
+# Install docker-compose
+if which docker-compose &>/dev/null; then
+    curl -L https://github.com/docker/compose/releases/download/1.6.0/docker-compose-`uname -s`-`uname -m` > /usr/bin/docker-compose
+    chmod +x /usr/bin/docker-compose
+fi
 
 # Check Docker is running
-docker ps &>/dev/null || error "Docker isn't running"
+if docker ps &>/dev/null; then
+    systemctl start docker
+fi
 
-# Setup backend
+# Setup dock2box
 mkdir /etc/dock2box/
 mkdir -p /var/lib/dock2box/data/
-cp ./docker-compose.yml /etc/dock2box/
-cp ./dock2box.service /etc/systemd/system/
+curl https://raw.githubusercontent.com/imc-trading/dock2box/master/docker-compose.yml >/etc/dock2box/docker-compose.yml
+curl https://raw.githubusercontent.com/imc-trading/dock2box/master/dock2box.service >/etc/systemd/system/dock2box.service
 systemctl enable dock2box
 
-# Setup update
-cp ./dock2box-update.sh /usr/local/bin/
+# Setup dock2box-update.sh
+curl https://raw.githubusercontent.com/imc-trading/dock2box/master/scripts/dock2box-update.sh >/usr/local/bin/dock2box-update.sh
 chmod +x /usr/local/bin/dock2box-update.sh
 
 # Setup backup
-cp ./dock2box-backup.sh /usr/local/bin/
-cp ./dock2box-backup.service /etc/systemd/system/
-cp ./dock2box-backup.timer /etc/systemd/system/
+curl https://raw.githubusercontent.com/imc-trading/dock2box/master/scripts/dock2box-backup.sh >/usr/local/bin/dock2box-backup.sh
+chmod +x /usr/local/bin/dock2box-backup.sh
+curl https://raw.githubusercontent.com/imc-trading/dock2box/master/scripts/dock2box-backup.service >/etc/systemd/system/dock2box-backup.service
+curl https://raw.githubusercontent.com/imc-trading/dock2box/master/scripts/dock2box-backup.timer > /etc/systemd/system/dock2box-backup.timer
 systemctl enable dock2box-backup.service
 systemctl enable dock2box-backup.timer
