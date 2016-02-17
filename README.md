@@ -48,7 +48,7 @@ systemctl enable dock2box-backup.timer
 
 This contains the configuration, schemas and templates for etcdrest.
 
-For more information look in the [cfg](cfg/README.md) folder.
+For more information look in the [cfg](cfg/) folder.
 
 ## api (mickep76/etcdrest:latest)
 
@@ -64,7 +64,7 @@ This contains etcd database from CoreOS.
 
 This contains TFTP daemon that serves "undionly.kpxe" iPXE.
 
-For more information look in the [tftp](tftp/README.md) folder.
+For more information look in the [tftp](tftp/) folder.
 
 # What?
 
