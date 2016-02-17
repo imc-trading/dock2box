@@ -2,6 +2,12 @@
 
 ## Run dock2box
 
+If you are running CentOS 7 there is a setup script.
+
+```bash
+curl https://raw.githubusercontent.com/imc-trading/dock2box/master/setup_centos7.sh | bash -
+```
+
 These are the steps in order to run dock2box.
 
 ```bash

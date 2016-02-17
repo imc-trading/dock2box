@@ -10,7 +10,7 @@ D2B_URL="https://raw.githubusercontent.com/imc-trading/dock2box/master"
 set -eu
 
 # Check that we're using CentOS 7.x
-grep "CentOS Linux release 7" /etc/redhat-release &>/dev/null || error "This script was meant for CentOS 7.x"
+grep "CentOS Linux release 7" /etc/redhat-release &>/dev/null || error "This script was meant for CentOS 7"
 
 # Install docker
 if which docker &>/dev/null; then
