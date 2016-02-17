@@ -2,11 +2,31 @@
 
 ## Run dock2box
 
+## Setup script
+
 If you are running CentOS 7 there is a setup script.
 
 ```bash
 curl https://raw.githubusercontent.com/imc-trading/dock2box/master/setup_centos7.sh | bash -
 ```
+
+## Vagrant
+
+You can start a VM using Vagrant, this will provision a CentOS 7 with the setup script.
+
+```bash
+vagrant up
+```
+
+## Docker Compose
+
+First comment out or change the etcd data path.
+
+```bash
+docker-compose up
+```
+
+## Manual instructions
 
 These are the steps in order to run dock2box.
 

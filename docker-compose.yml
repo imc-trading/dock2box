@@ -20,6 +20,8 @@ etcd:
   ports:
   - 5001:2379
   - 2379:2379
+# Comment out the volumes if you want the data to reside inside the Docker container
+# Mostly usefull for testing
   volumes:
   - /var/lib/dock2box/data:/data
   command: >
