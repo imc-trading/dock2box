@@ -30,7 +30,7 @@ dock2box-update.sh
 
 ## Setup backup
 
-Backup is setup using a SystemD timer.
+Backup is setup using a SystemD timer. Backup relies on [etcdtool](https://github.com/mickep76/etcdtool).
 
 ```bash
 cp <checkout>/dock2box-backup.sh /usr/loca/bin/
@@ -48,9 +48,13 @@ systemctl enable dock2box-backup.timer
 
 This contains the configuration, schemas and templates for etcdrest.
 
+For more information look in the [cfg](cfg/README.md) folder.
+
 ## api (mickep76/etcdrest:latest)
 
 This contains the software etcdrest to run a REST API with etcd as a database.
+
+For more informaton look in [etcdrest](https://github.com/mickep76/etcdrest).
 
 ## etcd (quay.io/coreos/etcd:latest)
 
@@ -59,6 +63,8 @@ This contains etcd database from CoreOS.
 ## tftp (imctrading/dock2box-tftp-dev:latest)
 
 This contains TFTP daemon that serves "undionly.kpxe" iPXE.
+
+For more information look in the [tftp](tftp/README.md) folder.
 
 # What?
 
