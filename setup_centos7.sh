@@ -34,6 +34,7 @@ mkdir -p /var/lib/dock2box/data/
 curl "${D2B_URL}/docker-compose.yml" >/etc/dock2box/docker-compose.yml
 curl "${D2B_URL}/dock2box.service" >/etc/systemd/system/dock2box.service
 systemctl enable dock2box
+systemctl start dock2box
 
 # Setup dock2box-update.sh
 curl "${D2B_URL}/scripts/dock2box-update.sh" >/usr/local/bin/dock2box-update.sh
@@ -45,4 +46,6 @@ chmod +x /usr/local/bin/dock2box-backup.sh
 curl "${D2B_URL}/scripts/dock2box-backup.service" >/etc/systemd/system/dock2box-backup.service
 curl "${D2B_URL}/scripts/dock2box-backup.timer" > /etc/systemd/system/dock2box-backup.timer
 systemctl enable dock2box-backup.service
+systemctl start dock2box-backup.timer
 systemctl enable dock2box-backup.timer
+systemctl start dock2box-backup.timer
