@@ -1,0 +1,3 @@
+- Add Docker Registry to Vagrant image
+- Add File repository to Vagrant image
+- Add dnsmasq to Vagrant image with DCHP
