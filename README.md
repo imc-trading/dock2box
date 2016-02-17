@@ -33,7 +33,7 @@ dock2box-update.sh
 Backup is setup using a SystemD timer. Backup relies on [etcdtool](https://github.com/mickep76/etcdtool).
 
 ```bash
-cp <checkout>/dock2box-backup.sh /usr/loca/bin/
+cp <checkout>/dock2box-backup.sh /usr/local/bin/
 cp <checkout>/dock2box-backup.service /etc/systemd/system/
 cp <checkout>/dock2box-backup.timer /etc/systemd/system/
 systemctl start dock2box-backup.service
@@ -42,7 +42,7 @@ systemctl enable dock2box-backup.service
 systemctl enable dock2box-backup.timer
 ```
 
-# dock2box Docker Components
+# Docker Components
 
 ## cfg (imctrading/etcdrest-config:latest)
 
