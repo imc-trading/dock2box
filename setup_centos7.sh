@@ -7,9 +7,12 @@ error() {
 
 D2B_URL="https://raw.githubusercontent.com/imc-trading/dock2box/master"
 
-set -eux
+set -eu
 
-# Check that we're using CentOS 7.x
+# Enable debug
+set -x
+
+# Check that we're using CentOS 7
 grep "CentOS Linux release 7" /etc/redhat-release &>/dev/null || error "This script was meant for CentOS 7"
 
 # Install docker
