@@ -19,6 +19,10 @@
 # D2B_IMAGE
 # D2B_IMAGE_VERSION
 # D2B_IMAGE_TYPE
+# D2B_GPT
+# D2B_RAID
+# D2B_BTRF
+# D2B_KEXEC
 
 # Set key in resource
 set_key() {
@@ -33,6 +37,8 @@ set -eu
 # Defaults
 BASE="/root"
 LOG="${BASE}/install.log"
+KOPTS_DEFAULT="vconsole.keymap=us verbose nomodeset crashkernel=auto selinux=0 pcie_aspm=off"
+DOCKER_DIR="/mnt/docker"
 
 # Source functions
 source "${BASE}/functions.sh"
@@ -120,26 +126,35 @@ if [ ${DHCP} == ${TRUE} ]; then
     fi
 fi
 
-info "DHCP: $(print_bool ${D2B_DHCP})"
+info "DHCP: $(print_bool ${DHCP})"
 
-D2B_IMAGE=$(get_kopt "D2B_IMAGE")
-[ -n "${D2B_IMAGE}" ] || fatal "Missing kernel option: D2B_IMAGE"
-info "Image: ${D2B_IMAGE}"
+IMAGE=$(get_kopt "D2B_IMAGE")
+[ -n "${IMAGE}" ] || fatal "Missing kernel option: D2B_IMAGE"
+info "Image: ${IMAGE}"
 
-D2B_IMAGE_VERSION=$(get_kopt "D2B_IMAGE_VERSION")
+IMAGE_VERSION=$(get_kopt "D2B_IMAGE_VERSION")
 [ -n "${IMAGE_VERSION}" ] || fatal "Missing kernel option: D2B_IMAGE_VERSION"
-info "Image Version: ${D2B_IMAGE_VERSION}"
+info "Image Version: ${IMAGE_VERSION}"
 
-D2B_IMAGE_TYPE=$(get_kopt "D2B_IMAGE_TYPE")
-[ -n "${D2B_IMAGE_TYPE}" ] || fatal "Missing kernel option: D2B_IMAGE_TYPE"
-info "Image Type: ${D2B_IMAGE_TYPE}"
+IMAGE_TYPE=$(get_kopt "D2B_IMAGE_TYPE")
+[ -n "${IMAGE_TYPE}" ] || fatal "Missing kernel option: D2B_IMAGE_TYPE"
+info "Image Type: ${IMAGE_TYPE}"
 
+GPT=$(get_kopt_flag "D2B_GPT")
+info "GPT: $(print_bool ${GPT})"
 
+RAID=$(get_kopt_flag "D2B_RAID")
+info "RAID: $(print_bool ${RAID})"
 
+BTRFS=$(get_kopt_flag "D2B_BTRFS")
+info "BTRFS: $(print_bool ${BTRFS})"
 
+KEXEC=$(get_kopt_flag "D2B_KEXEC")
+info "KExec: $(print_bool ${KEXEC})"
 
-# Get image configuration
-IMAGE_DATA=$(get_resource "/hosts/${IMAGE}")
+# Set hostname
+info "Set hostname: ${FQDN}"
+hostname "${FQDN}"
 
 # Set initial root password to "dock2box"
 /usr/sbin/usermod -p '$6$WyzcP9uG$64NvhY1P.W1d08CRxFjJ5QUDyZcrzyjxVPV82bAxBgf9eE2sdSZs.v47HGdWPvLxhNxAkrJten86R2Qb1vdhe/' root
@@ -156,23 +171,6 @@ if [ ${MEM_GB} -gt 6 ]; then
     echo "mount -o remount size=${TGT_SIZE}G /"
     mount -o "remount,size=${TGT_SIZE}G" /
 fi
-
-# Set hostname
-info "Set hostname: ${FQDN}"
-hostname "${FQDN}"
-
-ARGS=$*
-KOPTS_DEFAULT="vconsole.keymap=us verbose nomodeset crashkernel=auto selinux=0 pcie_aspm=off"
-DOCKER_DIR="/mnt/docker"
-
-# Download functions
-cd "${BASE}"
-download "${SCRIPT/install.sh/functions.sh}" "${BASE}/functions.sh"
-download "${SCRIPT/install.sh/functions-${D2B_DISTRO}.sh}" "${BASE}/functions-${D2B_DISTRO}.sh"
-
-# Source functions
-source "${BASE}/functions.sh"
-source "${BASE}/functions-${D2B_DISTRO}.sh"
 
 # Identify disk name(s)
 DISK1=$(get_sda_device)
@@ -193,9 +191,8 @@ wipe_disks ${DISK1} ${DISK2}
 
 # Partition disk(s)
 info 'Partition disk(s)'
-if [[ "${RAID}" =~ ^[Tt]rue$ ]]; then
-    if [[ "${GPT}" =~ ^[Tt]rue$ ]]; then
-        info "Use GPT partititions"
+if [ ${RAID} == ${TRUE} ]; then
+    if [ ${GPT} == ${TRUE} ]; then
         partition_disk_gpt ${SDA}
         partition_disk_gpt ${SDB}
     else
@@ -203,22 +200,19 @@ if [[ "${RAID}" =~ ^[Tt]rue$ ]]; then
         partition_disk_mbr ${SDB}
     fi
     sleep 5s
-    info "Create software RAID-1 mirroring"
-    if [[ "${VOLMGT}" == "btrfs" ]]; then
-        info "Use BTRFS for volume management"
+    info "Create RAID 1 mirroring"
+    if [ ${BTRFS} == ${TRUE} ]; then
         create_btrfs_fs ${SDA} ${SDB} raid1
     else
         create_mdraid ${SDA} ${SDB}
     fi
 else
-    if [[ "${GPT}" =~ ^[Tt]rue$ ]]; then
-        info "Use GPT partititions"
+    if [ ${GPT} == ${TRUE} ]; then
         partition_disk_gpt ${SDA}
     else
         partition_disk_mbr ${SDA}
     fi
-    if [[ "${VOLMGT}" == "btrfs" ]]; then
-        info "Use BTRFS for volume management"
+    if [ ${BTRFS} == ${TRUE} ]; then
         create_btrfs_fs ${SDA} ${SDB} no
     else
         create_lvm_vgs ${SDA} ${SDB}
@@ -226,7 +220,7 @@ else
 fi
 
 # Create logical volumes/sub-volumes/file-systems
-if [[ "${VOLMGT}" == "btrfs" ]]; then
+if [ "${BTRFS}" == ${TRUE} ]; then
     info'Setup sub-volumes'
     create_btrfs_subvol
     info 'Mount sub-volumes'
@@ -240,18 +234,19 @@ else
     mount_lvm_fss
 fi
 
-# Dowbload/pull host image and apply it
-if [[ "${IMAGE_TYPE}" =~ "docker" ]]; then
+# Download/pull host image and apply it
+if [ "${IMAGE_TYPE}" == "docker" ]; then
     info 'Create temporary docker directory'
     mkdir -p ${DOCKER_DIR}
     info 'Start Docker Engine'
     docker_start ${DOCKER_DIR}/docker.tmp ${DOCKER_REGISTRY}
     info 'Pull Docker image and apply it to disk(s)'
     docker_image_pull_and_apply ${IMAGE}:${IMAGE_VERSION} ${DOCKER_REGISTRY}
-elif [[ "${IMAGE_TYPE}" == "file" ]]; then
+else
     info "Download image file"
     download "${IMGSTORE}/image.tar.xz" "${FILE_REGISTRY}/${IMAGE}-${IMAGE_VERSION}/image.tar.xz"
     info "Unpack system image to disk"
+
     # Symlinks may fail, so allow things to continue
     set +e
     tar -Jxf "${IMGSTORE}/image.tar.xz" --exclude="boot/grub/grubenv" --exclude="boot/grub2/grubenv" --exclude="sys/.keep" --warning="no-timestamp" -C "${ROOT}" --checkpoint=.5000
@@ -260,13 +255,13 @@ fi
 
 info "Write network configuration"
 write_net_config_common
-if [[ "${DHCP}" =~ ^[Ff]alse$ ]]; then
+if [ ${DHCP} == ${TRUE} ]; then
     write_net_config_static
 else
     write_net_config_dhcp
 fi
 
-if [[ "${VOLMGT}" == "btrfs" ]]; then
+if [ ${BTRFS} == ${TRUE} ]; then
     info "Write BTRFS fstab"
     write_fstab_btrfs
     btrfs_fix_fs
@@ -289,29 +284,29 @@ info 'Save logs'
 save_logs
 
 # If we're using BTRFS, take a snapshot of all subvolumes of the pristine system
-if [[ "${VOLMGT}" == "btrfs" ]]; then
+if [ ${BTRFS} == ${TRUE} ]; then
     btrfs_snapshot creation
 fi
 
 # Set value to false so subsequent, accidental PXE boots don't accidentally rebuild a host
 set_key "/hosts/${FQDN}" ".build" "false"
 
-if [[ "${IMAGE_TYPE}" =~ "docker" ]]; then
+if [ ${IMAGE_TYPE} == "docker" ]; then
     docker_cleanup
 fi
 
 # dockervol is mounted regardless of image type, so cleanup
 cleanup_dockervol
 
-if [[ "${DEBUG}" == "true" ]]; then
-    msg 'Installation finished. Debug flag was set, will not reboot automatically.'
+if [ ${DEBUG} == ${TRUE} ]; then
+    info 'Installation finished. Debug flag was set, will not reboot automatically.'
 else
     if_dhcp_then_release
-    if grep -q "X[tT]rue" <<< "X${KEXEC-}"; then
-        msg 'KEXEC enabled, load and boot the new kernel'
+    if [ ${KEXEC} == ${TRUE} ]; then
+        info 'KEXEC enabled, load and boot the new kernel'
         kexec_boot "${KOPTS_ALL}"
     else
-        msg 'KEXEC disabled, unmount filesystems and reboot in 3s'
+        info 'KEXEC disabled, unmount filesystems and reboot in 3s'
         umount_fss
         sleep 3
         reboot
