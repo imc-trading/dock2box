@@ -49,8 +49,8 @@ exec &> >(tee -a ${LOG})
 
 # Source install functions
 info "Source install functions"
-source "${BASE}/functions.sh"
-source "${BASE}/functions-${DISTRO}.sh"
+source "${BASE}/install_functions.sh"
+source "${BASE}/install_functions-${DISTRO}.sh"
 
 # Get options passed by PXE menu
 BOOT_HWADDR=$(get_kopt "BOOT_HWADDR")
