@@ -1,73 +1,178 @@
 #!/bin/bash
 
+# Uses the following options passed by PXE menu
+#
+# BOOT_HWADDR
+# BOOT_IPV4
+# BOOT_NETMASK
+# BOOT_GATEWAY
+# BOOT_SUBNET
+# D2B_BUILD
+# D2B_HOSTNAME
+# D2B_SITE
+# D2B_DOMAIN
+# D2B_DNS_SERVERS
+# D2B_DHCP
+# D2B_IPV4
+# D2B_NETMASK
+# D2B_GATEWAY
+# D2B_IMAGE
+# D2B_IMAGE_VERSION
+# D2B_IMAGE_TYPE
+
+# Set key in resource
+set_key() {
+    local resource="$1" key="$2" value="$3" json
+
+    json="[ { \"op\": \"replace\", \"path\": \"${key/.//}\", \"value\": \"${value}\" } ]"
+    curl -s -H "Content-Type: application/json" -X PATCH -d "${json}" "${D2B_API_URL}${resource}${key/.//}"
+}
+
 set -eu
 
-info() {
-    local message="$1"
-
-    echo "${message}" >&2
-}
-
-fatal() {
-    local message="$1"
-
-    echo "^[[1;31m${message}^[[0m" >&2
-    sleep 60
-    exit 1
-}
-
-download() {
-    local url="$1" target="$2"
-
-    wget --quiet --dns-timeout=2 --connect-timeout=2 --read-timeout=2 --no-check-certificate --output-document "${target}" "${url}"
-}
-
-set_key() {
-    local resource="$1" key="$2" value="$3"
-
-    read -d '' json <<EOF
-[
-  {
-    "op": "replace",
-    "path": "${key/.//}",
-    "value": "${value}"
-  }
-]
-EOF
-
-    curl -s -H "Content-Type: application/json" -X PATCH -d "${json}" " "${API_URL}${resource}${key/.//}"
-}
-
-API_URL="http://dock2box:8080/api/v1"
+# Defaults
 BASE="/root"
 LOG="${BASE}/install.log"
-ARGS=$*
-KOPTS_DEFAULT="vconsole.keymap=us verbose nomodeset crashkernel=auto selinux=0 pcie_aspm=off"
-DOCKER_DIR="/mnt/docker"
 
-# Set debug
-if [[ "${DEBUG}" == "true" ]]; then
-    set -x
-fi
+# Source functions
+source "${BASE}/functions.sh"
 
 # Setup logging
 info "Logging to: ${LOG}"
 exec &> >(tee -a ${LOG})
 
-# Check that we're allowed to build this box
-[[ ! "${BUILD}" =~ ^[Tt]rue$ ]] && fatal "BUILD FLAG IS NOT SET TO TRUE, WILL NOT (RE-)BUILD THIS HOST"
+# Source install functions
+info "Source install functions"
+source "${BASE}/functions.sh"
+source "${BASE}/functions-${DISTRO}.sh"
 
-# Check options
-[[ "${IMAGE_TYPE}" =~ ^(docker|file)$ ]] && fatal "INCORRECT IMAGE TYPE: ${IMAGE_TYPE}, WILL NOT (RE-)BUILD THIS HOST"
+# Get options passed by PXE menu
+BOOT_HWADDR=$(get_kopt "BOOT_HWADDR")
+[ -n "${BOOT_HWADDR}" ] || fatal "Missing kernel option: BOOT_HWADDR"
+info "Boot Hardware Address: ${BOOT_HWADDR}"
+
+BOOT_IF=$(grep -i --with-filename ${BOOT_HWADDR} /sys/class/net/*/address | cut -d/ -f5)
+[ -n "${BOOT_IF}" ] || fatal "Can't determine boot interface"
+info "Boot Interface: ${BOOT_IF}"
+
+BOOT_IPV4=$(get_kopt "BOOT_IPV4")
+[ -n "${BOOT_IPV4}" ] || fatal "Missing kernel option: BOOT_IPV4"
+info "Boot IPv4 Address: ${BOOT_IPV4}"
+
+BOOT_NETMASK=$(get_kopt "BOOT_NETMASK")
+[ -n "${BOOT_NETMASK}" ] || fatal "Missing kernel option: BOOT_NETMASK"
+info "Boot Netmask: ${BOOT_NETMASK}"
+
+BOOT_GATEWAY=$(get_kopt "BOOT_GATEWAY")
+[ -n "${BOOT_GATEWAY}" ] || fatal "Missing kernel option: BOOT_GATEWAY"
+info "Boot Gateway: ${BOOT_GATEWAY}"
+
+BOOT_SUBNET=$(get_kopt "BOOT_SUBNET")
+[ -n "$BOOT_SUBNET}" ] || fatal "Missing kernel option: BOOT_SUBNET"
+info "Boot Subnet: ${BOOT_SUBNET}"
+
+BUILD=$(get_kopt_flag "D2B_BUILD")
+[ "${BUILD}" != "${TRUE}" ] && fatal "Build flag is not set, won't (re-)build this host"
+
+HOSTNAME=$(get_kopt "HOSTNAME")
+[ -n "${HOSTNAME}" ] || fatal "Missing kernel option: D2B_HOSTNAME"
+info "Hostname: ${D2B_HOSTNAME}"
+
+SITE=$(get_kopt "D2B_SITE")
+if [ -z "${SITE}" ]; then
+    warning "Missing kernel option: D2B_SITE"
+    info "Will determine domain and DNS servers using DHCP"
+
+    DOMAIN=$(awk '/domain/ {print $2}' /etc/resolv.conf | head -1)
+    [ -n "${DOMAIN}" ] || fatal "Can't determine DHCP domain"
+
+    DNS_SERVERS=$(awk '/nameserver/ {print $2}' /etc/resolv.conf | tr '\n' ' ')
+    [ -n "${DNS_SERVERS}" ] || fatal "Can't determine DHCP nameserver(s)"
+else
+    info "Site: ${SITE}"
+
+    DOMAIN=$(get_kopt "D2B_DOMAIN")
+    [ -n "${DOMAIN}" ] || fatal "Missing kernel option: D2B_DOMAIN"
+
+    DNS_SERVERS=$(get_kopt "D2B_DNS_SERVERS")
+    [ -n "${DNS_SERVERS}" ] || fatal "Missing kernel option: D2B_DNS_SERVERS"
+fi
+
+info "Domain: ${DOMAIN}"
+info "DNS Servers: ${DNS_SERVERS}"
+
+DHCP=$(get_kopt_flag "D2B_DHCP")
+
+if [ ${DHCP} == ${TRUE} ]; then
+    IPV4=$(get_kopt "D2B_IPV4")
+    if [ -n "${IPV4}" ]; then
+        warning "Missing kernel option: D2B_IPV4"
+        info "Defaulting to DHCP, since network configuration is missing"
+        DHCP=${TRUE}
+    else
+	info "IPv4 Address: ${IPV4}"
+
+        NETMASK=$(get_kopt "D2B_NETMASK")
+        [ -n "${NETMASK}" ] || fatal "Missing kernel option: D2B_NETMASK"
+
+        GATEWAY=$(get_kopt "D2B_GATEWAY")
+        [ -n "${GATEWAY}" ] || fatal "Missing kernel option: D2B_GATEWAY"
+    fi
+fi
+
+info "DHCP: $(print_bool ${D2B_DHCP})"
+
+D2B_IMAGE=$(get_kopt "D2B_IMAGE")
+[ -n "${D2B_IMAGE}" ] || fatal "Missing kernel option: D2B_IMAGE"
+info "Image: ${D2B_IMAGE}"
+
+D2B_IMAGE_VERSION=$(get_kopt "D2B_IMAGE_VERSION")
+[ -n "${IMAGE_VERSION}" ] || fatal "Missing kernel option: D2B_IMAGE_VERSION"
+info "Image Version: ${D2B_IMAGE_VERSION}"
+
+D2B_IMAGE_TYPE=$(get_kopt "D2B_IMAGE_TYPE")
+[ -n "${D2B_IMAGE_TYPE}" ] || fatal "Missing kernel option: D2B_IMAGE_TYPE"
+info "Image Type: ${D2B_IMAGE_TYPE}"
+
+
+
+
+
+# Get image configuration
+IMAGE_DATA=$(get_resource "/hosts/${IMAGE}")
+
+# Set initial root password to "dock2box"
+/usr/sbin/usermod -p '$6$WyzcP9uG$64NvhY1P.W1d08CRxFjJ5QUDyZcrzyjxVPV82bAxBgf9eE2sdSZs.v47HGdWPvLxhNxAkrJten86R2Qb1vdhe/' root
+
+# Maximize root filesystem size to appease docker IFF we have >8GB of RAM
+MEM_SIZE=$(free -m | grep Mem | awk '{print $2}')
+
+# Strip off last the chars (just show GB)
+MEM_GB=$(echo "${MEM_SIZE}" | sed "s/...$//")
+
+if [ ${MEM_GB} -gt 6 ]; then
+    TGT_SIZE=$((${MEM_GB} - 2))
+    echo "resize / to appropriate size"
+    echo "mount -o remount size=${TGT_SIZE}G /"
+    mount -o "remount,size=${TGT_SIZE}G" /
+fi
+
+# Set hostname
+info "Set hostname: ${FQDN}"
+hostname "${FQDN}"
+
+ARGS=$*
+KOPTS_DEFAULT="vconsole.keymap=us verbose nomodeset crashkernel=auto selinux=0 pcie_aspm=off"
+DOCKER_DIR="/mnt/docker"
 
 # Download functions
-cd ${BASE}
+cd "${BASE}"
 download "${SCRIPT/install.sh/functions.sh}" "${BASE}/functions.sh"
-download "${SCRIPT/install.sh/functions-${DISTRO}.sh}" "${BASE}/functions-${DISTRO}.sh"
+download "${SCRIPT/install.sh/functions-${D2B_DISTRO}.sh}" "${BASE}/functions-${D2B_DISTRO}.sh"
 
 # Source functions
 source "${BASE}/functions.sh"
-source "${BASE}/functions-${DISTRO}.sh"
+source "${BASE}/functions-${D2B_DISTRO}.sh"
 
 # Identify disk name(s)
 DISK1=$(get_sda_device)
