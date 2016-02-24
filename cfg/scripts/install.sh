@@ -179,7 +179,7 @@ fi
 
 # Identify disk name(s)
 DISK1=$(get_sda_device)
-if [[ "${SDA}" == '/dev/vda' ]]; then
+if [[ "${DISK1}" == '/dev/vda' ]]; then
    DISK2='/dev/vdb'
 else
    DISK2='/dev/sdb'
@@ -198,29 +198,29 @@ wipe_disks ${DISK1} ${DISK2}
 info 'Partition disk(s)'
 if [ ${RAID} == ${TRUE} ]; then
     if [ ${GPT} == ${TRUE} ]; then
-        partition_disk_gpt ${SDA}
-        partition_disk_gpt ${SDB}
+        partition_disk_gpt ${DISK1}
+        partition_disk_gpt ${DISK2}
     else
-        partition_disk_mbr ${SDA}
-        partition_disk_mbr ${SDB}
+        partition_disk_mbr ${DISK1}
+        partition_disk_mbr ${DISK2}
     fi
     sleep 5s
     info "Create RAID 1 mirroring"
     if [ ${BTRFS} == ${TRUE} ]; then
-        create_btrfs_fs ${SDA} ${SDB} raid1
+        create_btrfs_fs ${DISK1} ${DISK2} raid1
     else
-        create_mdraid ${SDA} ${SDB}
+        create_mdraid ${DISK1} ${DISK2}
     fi
 else
     if [ ${GPT} == ${TRUE} ]; then
-        partition_disk_gpt ${SDA}
+        partition_disk_gpt ${DISK1}
     else
-        partition_disk_mbr ${SDA}
+        partition_disk_mbr ${DISK1}
     fi
     if [ ${BTRFS} == ${TRUE} ]; then
-        create_btrfs_fs ${SDA} ${SDB} no
+        create_btrfs_fs ${DISK1} ${SDB} no
     else
-        create_lvm_vgs ${SDA} ${SDB}
+        create_lvm_vgs ${DISK1} ${DISK2}
     fi
 fi
 

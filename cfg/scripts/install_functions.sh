@@ -227,20 +227,8 @@ wipe_disks() {
     local disk2=$2
 
     set +e
-
-    # 1. wipe lvm logical volumes, volume groups, and physical devices
-    wipe_lvm
-    # 2. if we're using software raid, wipe those partitions and devices (and clear partition table of 2nd drive)
-    #   2a. If $MDRAID is not set, check and set
-    if [ -z "${MDRAID}" ]; then
-        check_mdraid_needed
-    fi
-    #   2b. Check to see if we require mdraid, and proceed with wipe of mdraid & 2nd disk if we do
-    if [[ ${MDRAID-} == 1 ]];then
-        wipe_mdraid $disk1 $disk2
-        clear_disk_pt $disk2
-    fi
-    # 3. clear partition table of first drive
+    wipe_mdraid $disk1 $disk2
+    clear_disk_pt $disk2
     clear_disk_pt $disk1
     set -e
 }
