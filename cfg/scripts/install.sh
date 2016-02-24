@@ -48,6 +48,11 @@ source "${BASE}/functions.sh"
 info "Logging to: ${LOG}"
 exec &> >(tee -a ${LOG})
 
+# Get options passed by PXE menu
+DEBUG=$(get_kopt_flag "D2B_DEBUG")
+info "Debug: $(print_bool ${DEBUG})"
+[ ${DEBUG} -eq ${TRUE} ] && set -x
+
 # Source install functions
 info "Source install functions"
 source "${BASE}/install_functions.sh"
@@ -83,7 +88,7 @@ BUILD=$(get_kopt_flag "D2B_BUILD")
 
 HOSTNAME=$(get_kopt "D2B_HOSTNAME")
 [ -n "${HOSTNAME}" ] || fatal "Missing kernel option: D2B_HOSTNAME"
-info "Hostname: ${D2B_HOSTNAME}"
+info "Hostname: ${HOSTNAME}"
 
 SITE=$(get_kopt "D2B_SITE")
 if [ -z "${SITE}" ]; then
@@ -151,10 +156,12 @@ BTRFS=$(get_kopt_flag "D2B_BTRFS")
 info "BTRFS: $(print_bool ${BTRFS})"
 
 # Set hostname
+FQDN="${HOSTNAME}.${DOMAIN}"
 info "Set hostname: ${FQDN}"
 hostname "${FQDN}"
 
 # Set initial root password to "dock2box"
+info "Set root password"
 /usr/sbin/usermod -p '$6$WyzcP9uG$64NvhY1P.W1d08CRxFjJ5QUDyZcrzyjxVPV82bAxBgf9eE2sdSZs.v47HGdWPvLxhNxAkrJten86R2Qb1vdhe/' root
 
 # Maximize root filesystem size to appease docker IFF we have >8GB of RAM
