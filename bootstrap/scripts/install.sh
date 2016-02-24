@@ -149,9 +149,6 @@ info "RAID: $(print_bool ${RAID})"
 BTRFS=$(get_kopt_flag "D2B_BTRFS")
 info "BTRFS: $(print_bool ${BTRFS})"
 
-KEXEC=$(get_kopt_flag "D2B_KEXEC")
-info "KExec: $(print_bool ${KEXEC})"
-
 # Set hostname
 info "Set hostname: ${FQDN}"
 hostname "${FQDN}"
@@ -302,13 +299,8 @@ if [ ${DEBUG} == ${TRUE} ]; then
     info 'Installation finished. Debug flag was set, will not reboot automatically.'
 else
     if_dhcp_then_release
-    if [ ${KEXEC} == ${TRUE} ]; then
-        info 'KEXEC enabled, load and boot the new kernel'
-        kexec_boot "${KOPTS_ALL}"
-    else
-        info 'KEXEC disabled, unmount filesystems and reboot in 3s'
-        umount_fss
-        sleep 3
-        reboot
-    fi
+    info 'KEXEC disabled, unmount filesystems and reboot in 3s'
+    umount_fss
+    sleep 3
+    reboot
 fi
