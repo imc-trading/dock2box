@@ -133,7 +133,7 @@ goto ${selected}
 goto start
 
 {{range $version, $e2 := $e.versions}}:{{$image}}-{{$version}}
-kernel ${file_uri}/${bootstrap_image}-${bootstrap_version}/kernel ${bootstrap_kopts} D2B_DEBUG={{$host.debug}} D2B_SCRIPT_URL=x D2B_DISTRO={{$e.distro}} ${boot_kopts} D2B_HOSTNAME=${hostname} ${host_kopts} ${site_kopts} D2B_IMAGE={{$image}} D2B_IMAGE_VERSION={{$version}} D2B_IMAGE_TYPE={{$e.type}} D2B_SCRIPT_URI=http://
+kernel ${file_uri}/${bootstrap_image}-${bootstrap_version}/kernel ${bootstrap_kopts} D2B_DEBUG={{$host.debug}} D2B_SCRIPT_URL=x D2B_DISTRO={{$e.distro}} ${boot_kopts} D2B_HOSTNAME=${hostname} ${host_kopts} ${site_kopts} D2B_IMAGE={{$image}} D2B_IMAGE_VERSION={{$version}} D2B_IMAGE_TYPE={{$e.type}} D2B_SCRIPT_URI={{.server_uri}}/scripts
 initrd ${file_uri}/${bootstrap_image}-${bootstrap_version}/initrd
 boot
 {{end}}{{end}}{{end}}

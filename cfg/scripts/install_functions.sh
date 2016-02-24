@@ -318,6 +318,8 @@ create_mdraid() {
 
 # helper function to mount special filesystems required for chroot to work correctly
 chroot_mounts() {
+    local btrfs=$1
+
     # Chroot dependencies
     mkdir -p ${ROOT}/{dev,proc,sys}
     mount -o bind /dev ${ROOT}/dev
@@ -325,7 +327,7 @@ chroot_mounts() {
     mount -o bind /sys ${ROOT}/sys
     # docker dirs
     mkdir -p /mnt/docker
-    if [[ "${VOLMGT}" == "btrfs" ]]; then
+    if [ ${btrfs} == ${TRUE} ]; then
         btrfs subvolume create /btrfs/${DATALABEL}/tmpdocker
         chattr -R +C /btrfs/${DATALABEL}/tmpdocker
 	mount -L ${DATALABEL} -t btrfs -o defaults,noatime,autodefrag,nodatacow,subvol=tmpdocker /mnt/docker
