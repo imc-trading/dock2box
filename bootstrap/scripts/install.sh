@@ -2,26 +2,28 @@
 
 # Uses the following options passed by PXE menu
 #
-# D2B_BOOT_HWADDR
-# D2B_BOOT_IPV4
-# D2B_BOOT_NETMASK
-# D2B_BOOT_GATEWAY
-# D2B_BOOT_SUBNET
-# D2B_BUILD
-# D2B_HOSTNAME
-# D2B_SITE
-# D2B_DOMAIN
-# D2B_DNS_SERVERS
-# D2B_DHCP
-# D2B_IPV4
-# D2B_NETMASK
-# D2B_GATEWAY
-# D2B_IMAGE
-# D2B_IMAGE_VERSION
-# D2B_IMAGE_TYPE
-# D2B_GPT
-# D2B_RAID
-# D2B_BTRF
+# D2B_DEBUG             flag
+# D2B_DISTRO            string
+# D2B_BOOT_HWADDR       string
+# D2B_BOOT_IPV4         string
+# D2B_BOOT_NETMASK      string
+# D2B_BOOT_GATEWAY      string
+# D2B_BOOT_SUBNET       string
+# D2B_BUILD             flag
+# D2B_HOSTNAME          string
+# D2B_SITE              string ?
+# D2B_DOMAIN            string
+# D2B_DNS_SERVERS       list
+# D2B_DHCP              flag
+# D2B_IPV4              string
+# D2B_NETMASK           string
+# D2B_GATEWAY           string
+# D2B_IMAGE             string
+# D2B_IMAGE_VERSION     string
+# D2B_IMAGE_TYPE        string
+# D2B_GPT               string
+# D2B_RAID              string
+# D2B_BTRF              string
 
 # Set key in resource
 set_key() {
@@ -295,12 +297,14 @@ fi
 cleanup_dockervol
 
 if [ ${DEBUG} == ${TRUE} ]; then
-    info 'Installation finished. Debug flag was set, will not reboot automatically.'
+    warning 'Installation finished. Debug flag was set, will not reboot automatically.'
     exit 0
 fi
 
+info 'Release DHCP IP address'
 if_dhcp_then_release
-info 'KEXEC disabled, unmount filesystems and reboot in 3s'
+
+info 'Un-mount file-systems and reboot in 3s'
 umount_fss
 sleep 3
 reboot

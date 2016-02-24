@@ -2,9 +2,9 @@
 
 # Uses the following options passed by PXE menu
 #
-# D2B_DEBUG
-# D2B_SCRIPT_URL
-# D2B_DISTRO
+# D2B_DEBUG             flag
+# D2B_SCRIPT_URL        string
+# D2B_DISTRO            string
 
 set -eu
 
