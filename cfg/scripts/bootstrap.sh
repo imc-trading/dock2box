@@ -37,9 +37,9 @@ export DEBUG SCRIPT_URL DISTRO
 
 # Download scripts and execute install.sh
 info "Download scripts"
-#download "${SCRIPT_URL}/install.sh" "${BASE}/install.sh"
-#download "${SCRIPT_URL}/install_functions.sh" "${BASE}/install_functions.sh"
-#download "${SCRIPT_URL}/install_functions-${DISTRO}.sh" "${BASE}/install_functions-${DISTRO}.sh"
+download "${SCRIPT_URL}/install.sh" "${BASE}/install.sh"
+download "${SCRIPT_URL}/install_functions.sh" "${BASE}/install_functions.sh"
+download "${SCRIPT_URL}/install_functions-${DISTRO}.sh" "${BASE}/install_functions-${DISTRO}.sh"
 
 info "Execute script install.sh"
 chmod +x "${BASE}/install.sh"

@@ -32,17 +32,17 @@ fatal() {
     echo
     echo -e "Will wait 60 seconds and then reboot\e[0m"
     exit 0
-#    sleep 60
-#    killall -15 tee
-#    reboot
+    sleep 60
+    killall -15 tee
+    reboot
 }
 
 # Get flag from kernel options
 get_kopt_flag() {
     local key="$1"
 
-#    grep "${key}" /proc/cmdline &>/dev/null && echo ${TRUE} && return
-    grep "${key}" /root/kopts &>/dev/null && echo ${TRUE} && return
+    grep "${key}" /proc/cmdline &>/dev/null && echo ${TRUE} && return
+#    grep "${key}" /root/kopts &>/dev/null && echo ${TRUE} && return
     echo ${FALSE}
 }
 
@@ -50,8 +50,8 @@ get_kopt_flag() {
 get_kopt() {
     local key="$1"
 
-#    grep --only-matching "${key}=[^ ]*" "/proc/cmdline" | cut -d= -f2
-    grep --only-matching "${key}=[^ ]*" "/root/kopts" | cut -d= -f2 | tr -d '\n'
+    grep --only-matching "${key}=[^ ]*" "/proc/cmdline" | cut -d= -f2
+#    grep --only-matching "${key}=[^ ]*" "/root/kopts" | cut -d= -f2 | tr -d '\n'
 }
 
 # Download file
