@@ -2,11 +2,11 @@
 
 # Uses the following options passed by PXE menu
 #
-# BOOT_HWADDR
-# BOOT_IPV4
-# BOOT_NETMASK
-# BOOT_GATEWAY
-# BOOT_SUBNET
+# D2B_BOOT_HWADDR
+# D2B_BOOT_IPV4
+# D2B_BOOT_NETMASK
+# D2B_BOOT_GATEWAY
+# D2B_BOOT_SUBNET
 # D2B_BUILD
 # D2B_HOSTNAME
 # D2B_SITE
@@ -22,7 +22,6 @@
 # D2B_GPT
 # D2B_RAID
 # D2B_BTRF
-# D2B_KEXEC
 
 # Set key in resource
 set_key() {
@@ -53,34 +52,34 @@ source "${BASE}/install_functions.sh"
 source "${BASE}/install_functions-${DISTRO}.sh"
 
 # Get options passed by PXE menu
-BOOT_HWADDR=$(get_kopt "BOOT_HWADDR")
-[ -n "${BOOT_HWADDR}" ] || fatal "Missing kernel option: BOOT_HWADDR"
+BOOT_HWADDR=$(get_kopt "D2B_BOOT_HWADDR")
+[ -n "${BOOT_HWADDR}" ] || fatal "Missing kernel option: D2B_BOOT_HWADDR"
 info "Boot Hardware Address: ${BOOT_HWADDR}"
 
 BOOT_IF=$(grep -i --with-filename ${BOOT_HWADDR} /sys/class/net/*/address | cut -d/ -f5)
 [ -n "${BOOT_IF}" ] || fatal "Can't determine boot interface"
 info "Boot Interface: ${BOOT_IF}"
 
-BOOT_IPV4=$(get_kopt "BOOT_IPV4")
-[ -n "${BOOT_IPV4}" ] || fatal "Missing kernel option: BOOT_IPV4"
+BOOT_IPV4=$(get_kopt "D2B_BOOT_IPV4")
+[ -n "${BOOT_IPV4}" ] || fatal "Missing kernel option: D2B_BOOT_IPV4"
 info "Boot IPv4 Address: ${BOOT_IPV4}"
 
-BOOT_NETMASK=$(get_kopt "BOOT_NETMASK")
-[ -n "${BOOT_NETMASK}" ] || fatal "Missing kernel option: BOOT_NETMASK"
+BOOT_NETMASK=$(get_kopt "D2B_BOOT_NETMASK")
+[ -n "${BOOT_NETMASK}" ] || fatal "Missing kernel option: D2B_BOOT_NETMASK"
 info "Boot Netmask: ${BOOT_NETMASK}"
 
-BOOT_GATEWAY=$(get_kopt "BOOT_GATEWAY")
-[ -n "${BOOT_GATEWAY}" ] || fatal "Missing kernel option: BOOT_GATEWAY"
+BOOT_GATEWAY=$(get_kopt "D2B_BOOT_GATEWAY")
+[ -n "${BOOT_GATEWAY}" ] || fatal "Missing kernel option: D2B_BOOT_GATEWAY"
 info "Boot Gateway: ${BOOT_GATEWAY}"
 
-BOOT_SUBNET=$(get_kopt "BOOT_SUBNET")
-[ -n "$BOOT_SUBNET}" ] || fatal "Missing kernel option: BOOT_SUBNET"
+BOOT_SUBNET=$(get_kopt "D2B_BOOT_SUBNET")
+[ -n "$BOOT_SUBNET}" ] || fatal "Missing kernel option: D2B_BOOT_SUBNET"
 info "Boot Subnet: ${BOOT_SUBNET}"
 
 BUILD=$(get_kopt_flag "D2B_BUILD")
 [ "${BUILD}" != "${TRUE}" ] && fatal "Build flag is not set, won't (re-)build this host"
 
-HOSTNAME=$(get_kopt "HOSTNAME")
+HOSTNAME=$(get_kopt "D2B_HOSTNAME")
 [ -n "${HOSTNAME}" ] || fatal "Missing kernel option: D2B_HOSTNAME"
 info "Hostname: ${D2B_HOSTNAME}"
 
@@ -297,10 +296,11 @@ cleanup_dockervol
 
 if [ ${DEBUG} == ${TRUE} ]; then
     info 'Installation finished. Debug flag was set, will not reboot automatically.'
-else
-    if_dhcp_then_release
-    info 'KEXEC disabled, unmount filesystems and reboot in 3s'
-    umount_fss
-    sleep 3
-    reboot
+    exit 0
 fi
+
+if_dhcp_then_release
+info 'KEXEC disabled, unmount filesystems and reboot in 3s'
+umount_fss
+sleep 3
+reboot
