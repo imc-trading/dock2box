@@ -40,7 +40,7 @@ set hostname {{replace ":" "" .vars.hwaddr}}
 # Network
 set hwaddr {{.vars.hwaddr}}
 set ipv4 {{index .params.ipv4 0}}
-set netmask {{index .params.ipv4 0}}
+set netmask {{index .params.netmask 0}}
 set gateway {{index .params.gateway 0}}
 
 # Set subnet
@@ -133,7 +133,7 @@ goto ${selected}
 goto start
 
 {{range $version, $e2 := $e.versions}}:{{$image}}-{{$version}}
-kernel ${file_uri}/${bootstrap_image}-${bootstrap_version}/kernel ${bootstrap_kopts} D2B_DEBUG={{$host.debug}} D2B_SCRIPT_URL=x D2B_DISTRO={{$e.distro}} ${boot_kopts} D2B_HOSTNAME=${hostname} ${host_kopts} ${site_kopts} D2B_IMAGE={{$image}} D2B_IMAGE_VERSION={{$version}} D2B_IMAGE_TYPE={{$e.type}} BOOTIF=${hwaddr}
+kernel ${file_uri}/${bootstrap_image}-${bootstrap_version}/kernel ${bootstrap_kopts} D2B_DEBUG={{$host.debug}} D2B_SCRIPT_URL=x D2B_DISTRO={{$e.distro}} ${boot_kopts} D2B_HOSTNAME=${hostname} ${host_kopts} ${site_kopts} D2B_IMAGE={{$image}} D2B_IMAGE_VERSION={{$version}} D2B_IMAGE_TYPE={{$e.type}} D2B_SCRIPT_URI=http://
 initrd ${file_uri}/${bootstrap_image}-${bootstrap_version}/initrd
 boot
 {{end}}{{end}}{{end}}

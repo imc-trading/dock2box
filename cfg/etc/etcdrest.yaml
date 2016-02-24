@@ -82,3 +82,8 @@ routes:
 - endpoint: /images
   type: static
   path: /app/images
+
+# Scripts
+- endpoint: /scripts
+  type: static
+  path: /app/scripts
