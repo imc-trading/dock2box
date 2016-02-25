@@ -58,6 +58,8 @@ get_kopt() {
 download() {
     local url="$1" target="$2"
 
-#    wget --quiet --dns-timeout=2 --connect-timeout=2 --read-timeout=2 --no-check-certificate --output-document "${target}" "${url}"
     wget --dns-timeout=2 --connect-timeout=2 --read-timeout=2 --no-check-certificate --output-document "${target}" "${url}"
+    wget --dns-timeout=2 --connect-timeout=2 --read-timeout=2 --no-check-certificate --output-document "${target}" "${url}"
+    wget --dns-timeout=2 --connect-timeout=2 --read-timeout=2 --no-check-certificate --output-document "${target}.sha256" "${url}.sha256"
+    shasum -c -a 256 "${target}.sha256"
 }
