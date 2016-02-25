@@ -266,6 +266,9 @@ partition_disk_gpt() {
 partition_disk_mbr() {
     local disk=$1
 
+# Temp.for testing
+set +e
+
     # MBR Partition Table
     parted --script --align optimal $disk mktable msdos
 
@@ -282,6 +285,9 @@ partition_disk_mbr() {
 
     # LVM partition
     parted --script --align optimal $disk mkpart primary 502 $(disk_size_mb $disk)
+
+# Temp. for testing
+set -e
 }
 
 # Create base layout for software RAID

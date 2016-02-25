@@ -23,7 +23,7 @@
 # D2B_IMAGE_TYPE        string
 # D2B_GPT               string
 # D2B_RAID              string
-# D2B_BTRF              string
+# D2B_BTRFS             string
 
 # Set key in resource
 set_key() {
