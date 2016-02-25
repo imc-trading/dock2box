@@ -1,4 +1,4 @@
-NAME=etcdrest-config
+NAME=dock2box-config
 VERSION=0.1
 USER=imctrading
 

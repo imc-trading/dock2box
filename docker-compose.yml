@@ -1,9 +1,10 @@
 cfg:
-  image: imctrading/etcdrest-config:latest
+  image: imctrading/dock2box-config:latest
   command: tail -f /dev/null
   volumes:
   - /app/images
   - /app/schemas
+  - /app/scripts
   - /app/templates
   - /app/etc
 api:

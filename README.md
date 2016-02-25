@@ -134,7 +134,7 @@ systemctl enable dock2box-backup.timer
 
 # Docker Components
 
-## cfg (imctrading/etcdrest-config:latest)
+## cfg (imctrading/dock2box-config:latest)
 
 This contains the configuration, schemas and templates for etcdrest.
 
@@ -150,7 +150,7 @@ For more informaton look in [etcdrest](https://github.com/mickep76/etcdrest).
 
 This contains etcd database from CoreOS.
 
-## tftp (imctrading/dock2box-tftp-dev:latest)
+## tftp (imctrading/dock2box-tftp:latest)
 
 This contains TFTP daemon that serves "undionly.kpxe" iPXE.
 
