@@ -7,7 +7,7 @@ MAINTAINER Michael Persson, Adrian Vasile, Jean-Michel Smith
 # Install SystemD
 # centos 7.0, 7.1:
 RUN yum -y swap -- remove fakesystemd -- install systemd systemd-libs
-# centos >=7.2?
+# centos >=7.2
 # RUN yum -y swap -- remove systemd-container systemd-container-libs -- install systemd systemd-libs
 
 # Dracut config, needs to be before the kernel install
@@ -64,8 +64,8 @@ RUN chmod 755 /etc/firstboot.d/*.sh
 
 # Install Peekaboo
 # Install from GitHub binary RPM file
-#RUN yum install -y peekaboo ;\
-#    systemctl enable peekaboo
+RUN yum install -y https://github.com/imc-trading/peekaboo/releases/download/0.3.2/peekaboo-0.3.2-201602260105.x86_64.rpm ;\
+    systemctl enable peekaboo
 
 # Add local IP to Console
 # Could be improved, assumes eth0 is the interface
