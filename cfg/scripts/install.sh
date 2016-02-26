@@ -160,10 +160,6 @@ FQDN="${HOSTNAME}.${DOMAIN}"
 info "Set hostname: ${FQDN}"
 hostname "${FQDN}"
 
-# Set initial root password to "dock2box"
-info "Set root password"
-/usr/sbin/usermod -p '$6$WyzcP9uG$64NvhY1P.W1d08CRxFjJ5QUDyZcrzyjxVPV82bAxBgf9eE2sdSZs.v47HGdWPvLxhNxAkrJten86R2Qb1vdhe/' root
-
 # Maximize root filesystem size to appease docker IFF we have >8GB of RAM
 MEM_SIZE=$(free -m | grep Mem | awk '{print $2}')
 
