@@ -1,6 +1,6 @@
-NAME=dock2box-config
+NAME=config
 VERSION=0.1
-USER=imctrading
+USER=dock2box
 
 all: docker
 

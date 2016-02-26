@@ -1,5 +1,5 @@
-USER=imctrading
-NAME=dock2box-tftp
+USER=dock2box
+NAME=tftp
 SERVER_URI=http://dock2box:8080
 
 all: build

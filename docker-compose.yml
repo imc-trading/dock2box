@@ -1,5 +1,5 @@
 cfg:
-  image: imctrading/dock2box-config:latest
+  image: dock2box/config:latest
   command: tail -f /dev/null
   volumes:
   - /app/images
@@ -30,6 +30,6 @@ etcd:
     -listen-client-urls=http://0.0.0.0:2379
     -data-dir=/data
 tftp:
-  image: imctrading/dock2box-tftp-dev:latest
+  image: dock2box/tftp:latest
   ports:
   - 69:69/udp
