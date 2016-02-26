@@ -1,5 +1,5 @@
 # Base image
-FROM centos:7
+FROM centos:centos7
 
 # Maintainer/author
 MAINTAINER Michael Persson, Adrian Vasile, Jean-Michel Smith
@@ -86,4 +86,4 @@ RUN yum clean all
 RUN find /var/log -type f | while read f; do echo -ne '' > $f; done;
 
 # Cleanup under tmp directory
-RUN rm -rf /tmp/* /etc/sysconfig/network-scripts/ifcfg-default
+#RUN rm -rf /tmp/* /etc/sysconfig/network-scripts/ifcfg-default
