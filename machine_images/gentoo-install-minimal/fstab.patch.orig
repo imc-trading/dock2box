@@ -1,0 +1,10 @@
+--- fstab.orig	2015-04-06 16:57:32.100006683 +0000
++++ fstab	2015-04-06 16:57:57.250006760 +0000
+@@ -2,5 +2,5 @@
+ ## ATTENTION: THIS IS THE FSTAB ON THE LIVECD	##
+ ## PLEASE EDIT THE FSTAB at /mnt/gentoo/etc/fstab ##
+ ####################################################
+-tmpfs	/					tmpfs	defaults	0 0
+-tmpfs	/usr/portage			tmpfs	defaults	0 0
++tmpfs	/					tmpfs	size=80%	0 0
++tmpfs	/usr/portage			tmpfs	size=80%	0 0

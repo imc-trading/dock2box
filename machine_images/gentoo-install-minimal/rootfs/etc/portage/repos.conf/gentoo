@@ -1,0 +1,9 @@
+[DEFAULT]
+main-repo = gentoo
+
+[gentoo]
+location = /usr/portage
+sync-type = git
+sync-uri =  https://github.com/gentoo-mirror/gentoo
+auto-sync = yes
+
