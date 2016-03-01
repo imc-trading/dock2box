@@ -7,7 +7,7 @@ include ../global-d2b-infra.mk
 
 IMGKEY=../shared/id_rsa
 
-NAME=gentoo-install-minimal-generic
+NAME=gentoo-install-minimal
 ARCH=x86_64
 GARCH=amd64
 IMAGENAME=stage3-$(GARCH)
