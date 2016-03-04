@@ -40,13 +40,12 @@ set hostname {{replace ":" "" .vars.hwaddr}}
 # Network
 set hwaddr {{.vars.hwaddr}}
 set ipv4 {{index .params.ipv4 0}}
-set netmask {{index .params.netmask 0}}
+set netmask {{index .params.ipv4 0}}
 set gateway {{index .params.gateway 0}}
 
 # Set subnet
 {{$subnet_name := getsubnet (index .params.ipv4 0) (index .params.netmask 0)}}
 set subnet {{$subnet_name}}
-set boot_kopts D2B_BOOT_HWADDR=${hwaddr} D2B_BOOT_IPV4=${ipv4} D2B_BOOT_NETMASK=${netmask} D2B_BOOT_GATEWAY=${gateway} D2B_BOOT_SUBNET=${subnet}
 
 # Get subnet
 {{$subnet := get (print "/subnets/" (replace "/" "-" $subnet_name))}}
@@ -56,16 +55,14 @@ set boot_kopts D2B_BOOT_HWADDR=${hwaddr} D2B_BOOT_IPV4=${ipv4} D2B_BOOT_NETMASK=
 set site {{$subnet.site}}
 {{$site := get (print "/sites/" $subnet.site)}}
 set domain {{$site.domain}}
-set dns_servers {{$site.dns_servers}}
 set file_uri {{$site.file_uri}}
 set registry {{$site.registry}}
-set site_kopts D2B_DOMAIN=${domain} D2B_DNS_SERVERS=${dns_servers} D2B_FILE_URI=${file_uri} D2B_REGISTRY=${registry}
 {{else}}
-set site
-set domain {{$default.domain}}
-set file_uri {{$default.file_uri}}
-set registry {{$default.registry}}
-set site_kopts D2B_DOMAIN=${domain} D2B_FILE_URI=${file_uri} D2B_REGISTRY=${registry}
+set site default
+{{$site := get (print "/sites/default")}}
+set domain {{$site.domain}}
+set file_uri {{$site.file_uri}}
+set registry {{$site.registry}}
 {{end}}
 
 set fqdn ${hostname}.${domain}
@@ -87,9 +84,6 @@ item --gap -- hostname: ${fqdn}
 item --gap -- build: {{$host.build}} debug: {{$host.debug}}
 item --gap -- ipv4: {{$host.interface.default.ip}} netmask: {{$host.interface.default.netmask}}
 item --gap -- gateway: {{$host.interface.default.gw}} hwaddr: {{$host.interface.default.hwaddr}}
-set host_kopts {{if eq $host.build "true" "True"}}D2B_BUILD{{end}} D2B_IPV4={{$host.interface.default.ip}} D2B_NETMASK={{$host.interface.default.netmask}} D2B_GATEWAY={{$host.interface.default.gw}}
-{{else}}
-set host_kopts D2B_BUILD
 {{end}}
 
 item --gap -- subnet: ${subnet} site: ${site}
@@ -133,7 +127,7 @@ goto ${selected}
 goto start
 
 {{range $version, $e2 := $e.versions}}:{{$image}}-{{$version}}
-kernel ${file_uri}/${bootstrap_image}-${bootstrap_version}/kernel ${bootstrap_kopts} D2B_DEBUG={{$host.debug}} D2B_SCRIPT_URL=x D2B_DISTRO={{$e.distro}} ${boot_kopts} D2B_HOSTNAME=${hostname} ${host_kopts} ${site_kopts} D2B_IMAGE={{$image}} D2B_IMAGE_VERSION={{$version}} D2B_IMAGE_TYPE={{$e.type}} D2B_SCRIPT_URI={{.server_uri}}/scripts
+kernel ${file_uri}/${bootstrap_image}-${bootstrap_version}/kernel BOOTIF=${hwaddr} IP=None NETMASK=${netmask} GATEWAY=${gateway} ${bootstrap_kopts} image_type={{$e.type}} image_name={{$image}} image_version={{$version}} hostname=${hostname} file_uri=${file_uri} registry=${registry}
 initrd ${file_uri}/${bootstrap_image}-${bootstrap_version}/initrd
 boot
 {{end}}{{end}}{{end}}
