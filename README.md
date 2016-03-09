@@ -1,5 +1,7 @@
 # In development
 
+![Logo](img/logo.png?raw=true)
+
 # What?
 
 Dock2Box is a tool that allows you to apply Docker or File images to bare-metal hardware using PXE boot.

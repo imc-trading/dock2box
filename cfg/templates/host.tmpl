@@ -1,7 +1,7 @@
 {{define "host"}}#!ipxe
 
 # Menu theme
-{{template "docker" .}}
+{{template "dock2box" .}}
 
 # Get default
 {{$default := get (print "/default")}}
@@ -73,9 +73,9 @@ imgfree
 menu ${menu_name}
 
 {{if $host}}
-item --gap -- {{center 65 "-" " Registered "}}
+item --gap -- {{center 82 "-" " Registered "}}
 {{else}}
-item --gap -- {{center 65 "-" " Unregistered "}}
+item --gap -- {{center 82 "-" " Unregistered "}}
 {{end}}
 
 item --gap -- hostname: ${fqdn}
@@ -89,18 +89,18 @@ item --gap -- gateway: {{$host.interface.default.gw}} hwaddr: {{$host.interface.
 item --gap -- subnet: ${subnet} site: ${site}
 item --gap -- file_uri: ${file_uri}
 item --gap -- registry: ${registry}
-item --gap -- {{center 65 "-" " Info "}}
+item --gap -- {{center 82 "-" " Info "}}
 item --gap -- ipv4: ${ipv4} netmask: ${netmask}
 item --gap -- gateway: ${gateway} hwaddr: ${hwaddr}
 
 # Menu items
-item --gap -- {{center 65 "-" " Menu "}}
+item --gap -- {{center 82 "-" " Menu "}}
 {{$menu_items := get "/default/menu_items"}}
 {{range $item, $e := $menu_items}}item {{$item}} {{$e.name}}
 {{end}}
 
 # Images
-item --gap -- {{center 65 "-" " Images "}}
+item --gap --
 {{$images := get "/image"}}
 {{range $image, $e := $images}}item {{$image}} {{$image}}
 {{end}}
@@ -118,7 +118,7 @@ goto ${selected}
 {{range $image, $e := $images}}:{{$image}}
 menu ${submenu_name}
 item --gap -- Image: {{$image}}
-item --gap -- {{center 65 "-" " Versions "}}
+item --gap -- {{center 82 "-" " Versions "}}
 item --key 0x08 back .. (top menu)
 {{range $version, $e2 := $e.versions}}item {{$image}}-{{$version}} {{$version}} ({{$e2.timestamp}})
 {{end}}choose --default ${menu_default}-${submenu_default} --timeout ${menu_timeout} selected
