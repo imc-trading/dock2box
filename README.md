@@ -140,7 +140,7 @@ systemctl enable dock2box-backup.timer
 
 This contains the configuration, schemas and templates for etcdrest.
 
-For more information look in the [cfg](cfg/) folder.
+For more information look in the [config](config/) folder.
 
 ## api (mickep76/etcdrest:latest)
 
