@@ -1,6 +1,8 @@
 # In development
 
-![Logo](img/logo.png?raw=true)
+<p align="center">
+  <img src="img/logo.png" width="50%">
+</p>
 
 # What?
 
