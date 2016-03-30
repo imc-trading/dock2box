@@ -1,4 +1,4 @@
-<div ng-controller="hostsController">
+<div class="container" ng-controller="hostsController">
 
 <table st-table="displayedHosts" st-safe-src="hosts" class="table table-striped fixed sortable">
   <thead>
@@ -39,7 +39,7 @@
   </thead>
   <tbody>
     <tr ng-repeat="host in displayedHosts">
-      <td>{{ host.hostname | replace:"\\..*":"" | lowercase }}</td>
+      <td><a href="#/hosts/edit">{{ host.hostname | replace:"\\..*":"" | lowercase }}</a></td>
       <td>{{ host.build }}</td>
       <td>{{ host.debug }}</td>
       <td>{{ host.gpt }}</td>
@@ -49,7 +49,6 @@
       <td>{{ host.site }}</td>
       <td>
         <div class="input-btn-group pull-right">
-          <a class="btn btn-primary" href="http://{{ host.hostname }}:5050"><i class="fa fa-info"></i></a>
           <button type="button" ng-click="" class="btn btn-sm btn-danger">
             <i class="fa fa-trash"></i>
           </button>

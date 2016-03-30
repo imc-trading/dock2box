@@ -1,0 +1,18 @@
+<div ng-controller="osController">
+  <uib-tabset active="activeJustified" justified="true">
+
+   <uib-tab index="0" heading="Interfaces">
+     <ng-include src="'partials/network/interfaces.html'"></ng-include>
+   </uib-tab>
+
+   <uib-tab index="1" heading="Routes">
+     <div ng-if="os.kernel == 'linux'">
+       <ng-include src="'partials/network/routes_linux.html'"></ng-include>
+      </div>
+      <div ng-if="os.kernel == 'darwin'">
+        <ng-include src="'partials/network/routes_darwin.html'"></ng-include>
+      </div>
+    </uib-tab>
+
+  </uib-tabset>
+</div>

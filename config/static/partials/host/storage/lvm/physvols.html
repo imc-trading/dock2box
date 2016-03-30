@@ -1,0 +1,34 @@
+<table ng-controller="physVolsController" st-table="displayedPhysVols" st-safe-src="physVols" class="table table-striped fixed sortable">
+  <thead>
+   <tr>
+      <td colspan="6" class="text-left">
+        <ng-include src="'partials/st_search.html'"></ng-include>
+      </td>
+    </tr>
+    <tr>
+      <th st-sort="name">Name</th>
+      <th st-sort="volGrp">Volume Group</th>
+      <th st-sort="format">Format</th>
+      <th st-sort="attr">Attributes</th>
+      <th st-sort="sizeGB">Size (GB)</th>
+      <th st-sort="freeGB">Free (GB)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="physVol in displayedPhysVols">
+      <td>{{ physVol.name }}</td>
+      <td>{{ physVol.volGrp }}</td>
+      <td>{{ physVol.format }}</td>
+      <td>{{ physVol.attr }}</td>
+      <td>{{ physVol.sizeGB | number:2 }}</td>
+      <td>{{ physVol.freeGB | number:2 }}</td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td colspan="6" class="text-center">
+        <div st-pagination="" st-items-by-page="10"></div>
+      </td>
+    </tr>
+  </tfoot>
+</table>

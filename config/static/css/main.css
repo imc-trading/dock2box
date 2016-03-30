@@ -59,3 +59,56 @@
 .fa-1-5x {
   font-size: 1.5em;
 }
+
+
+/*
+ * Sidebar
+ */
+
+@media (min-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 51px;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    display: block;
+    padding: 20px;
+    overflow-x: hidden;
+    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+    background-color: #f2f2f2;
+    border-right: 1px solid #eee;
+  }
+}
+
+/* Sidebar navigation */
+.nav-sidebar {
+  margin-right: -21px; /* 20px padding + 1px border */
+  margin-bottom: 20px;
+  margin-left: -20px;
+}
+
+.nav-sidebar > li > a {
+  padding-right: 20px;
+  padding-left: 20px;
+  color: #8b8b8b;
+}
+
+.nav-sidebar > .active > a,
+.nav-sidebar > .active > a:focus {
+  font-weight: bold;
+  color: #0e0e0e;
+  background-color: #eaeaea;
+}
+
+.nav-sidebar > .active > a:hover {
+  font-weight: bold;
+  color: #0e0e0e;
+  background-color: #cacaca;
+}
+
+.nav-sidebar > li > a:hover,
+.nav-sidebar > li > a:focus {
+  color: #6b6b6b;
+  background-color: #cacaca;
+}

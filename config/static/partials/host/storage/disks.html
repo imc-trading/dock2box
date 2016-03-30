@@ -1,0 +1,28 @@
+<table ng-controller="disksController" st-table="displayedDisks" st-safe-src="disks" class="table table-striped fixed sortable">
+  <thead>
+   <tr>
+      <td colspan="3" class="text-left">
+        <ng-include src="'partials/st_search.html'"></ng-include>
+      </td>
+    </tr>
+    <tr>
+      <th st-range="30" st-sort="device">Device</th>
+      <th st-range="30" st-sort="name">Name</th>
+      <th st-range="40" st-sort="sizeGB">Size (GB)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="disk in displayedDisks">
+      <td st-range=="30">{{ disk.device }}</td>
+      <td st-range=="30">{{ disk.name }}</td>
+      <td st-range=="40">{{ disk.sizeGB | number:2 }}</td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td colspan="3" class="text-center">
+        <div st-pagination="" st-items-by-page="10"></div>
+      </td>
+    </tr>
+  </tfoot>
+</table>

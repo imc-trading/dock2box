@@ -1,0 +1,79 @@
+      <div ng-controller="systemController">
+        <dl class="dl-horizontal">
+          <dt>Hostname</dt>
+          <dd>{{ system.hostname }}</dd>
+          <dt>Peekaboo Version</dt>
+          <dd>{{ system.peekabooVersion }}</dd>
+        </dl>
+        <fieldset>
+          <legend>System</legend>
+          <dl class="dl-horizontal">
+            <dt>Manufacturer</dt>
+            <dd>{{ system.manufacturer }}</dd>
+            <dt>Product</dt>
+            <dd>{{ system.product }}</dd>
+            <dt>Product Version</dt>
+            <dd>{{ system.productVersion }}</dd>
+            <dt>Serial Number</dt>
+            <dd>{{ system.serialNumber }}</dd>
+            <dt ng-if="system.manufacturer == 'Apple Inc.'">Boot ROM Version</dt>
+            <dd ng-if="system.manufacturer == 'Apple Inc.'">{{ system.bootROMVersion }}</dd>
+            <dt ng-if="system.manufacturer == 'Apple Inc.'">SMCVersion</dt>
+            <dd ng-if="system.manufacturer == 'Apple Inc.'">{{ system.smcVersion }}</dd>
+            <dt ng-if="system.manufacturer != 'Apple Inc.'">BIOS Vendor</dt>
+            <dd ng-if="system.manufacturer != 'Apple Inc.'">{{ system.biosVendor }}</dd>
+            <dt ng-if="system.manufacturer != 'Apple Inc.'">BIOS Date</dt>
+            <dd ng-if="system.manufacturer != 'Apple Inc.'">{{ system.biosDate }}</dd>
+            <dt ng-if="system.manufacturer != 'Apple Inc.'">BIOS Version</dt>
+            <dd ng-if="system.manufacturer != 'Apple Inc.'">{{ system.biosVersion }}</dd>
+          </dl>
+        </fieldset>
+      </div>
+
+      <div ng-controller="cpuController">
+        <fieldset>
+          <legend>CPU</legend>
+          <dl class="dl-horizontal">
+            <dt>Model</dt>
+            <dd>{{ cpu.model }}</dd>
+            <dt>Flags</dt>
+            <dd>{{ cpu.flags }}</dd>
+            <dt>Logical CPU's</dt>
+            <dd>{{ cpu.logical }}</dd>
+            <dt>Physical CPU's</dt>
+            <dd>{{ cpu.physical }}</dd>
+            <dt>Sockets</dt>
+            <dd>{{ cpu.sockets }}</dd>
+            <dt>Cores Per Socket</dt>
+            <dd>{{ cpu.coresPerSocket }}</dd>
+            <dt>Threads Per Core</dd>
+            <dd>{{ cpu.threadsPerCore }}</dd>
+          </dl>
+        </fieldset>
+      </div>
+
+      <div ng-controller="memoryController">
+        <fieldset>
+          <legend>Memory</legend>
+          <dl class="dl-horizontal">
+            <dt>Total</dt>
+            <dd>{{ memory.totalGB | number:2 }} GB</dd>
+          </dl>
+        </fieldset>
+      </div>
+
+    <div ng-controller="osController">
+      <fieldset>
+        <legend>Operating System</legend>
+        <dl class="dl-horizontal">
+          <dt>Kernel</dt>
+          <dd>{{ os.kernel }}</dd>
+          <dt>Kernel Version</dt>
+          <dd>{{ os.kernelVersion }}</dd>
+          <dt>Kernel Version</dt>
+          <dd>{{ os.product }}</dd>
+          <dt>Product Version</dt>
+          <dd>{{ os.productVersion }}</dd>
+        </dl>
+      </fieldset>
+    </div>

@@ -1,0 +1,30 @@
+<table ng-controller="mountsController" st-table="displayedMounts" st-safe-src="mounts" class="table table-striped fixed sortable">
+  <thead>
+   <tr>
+      <td colspan="4" class="text-left">
+        <ng-include src="'partials/st_search.html'"></ng-include>
+      </td>
+    </tr>
+    <tr>
+      <th st-sort="source">Source</th>
+      <th st-sort="target">Target</th>
+      <th st-sort="fsType">FS Type</th>
+      <th st-sort="options">Options</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="mount in displayedMounts">
+      <td>{{ mount.source }}</td>
+      <td>{{ mount.target }}</td>
+      <td>{{ mount.fsType }}</td>
+      <td>{{ mount.options }}</td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td colspan="4" class="text-center">
+        <div st-pagination="" st-items-by-page="10"></div>
+      </td>
+    </tr>
+  </tfoot>
+</table>
