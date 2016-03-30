@@ -36,8 +36,8 @@ app.filter('joinBy', function () {
 
 // replace
 app.filter('replace', function () {
-  return function (input,oldstr,newstr) {
-    var re = new RegExp(oldstr, "g");
+  return function (input,restr,newstr) {
+    var re = new RegExp(restr);
     return input.replace(re, newstr)
   };
 });

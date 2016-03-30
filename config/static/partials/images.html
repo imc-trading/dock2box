@@ -1,20 +1,46 @@
-<table ng-controller="imagesController" st-table="displayedImages" st-safe-src="images" class="table table-striped fixed sortable">
+<div ng-controller="imagesController">
+<table st-table="displayedImages" st-safe-src="images" class="table table-striped fixed sortable">
   <thead>
-   <tr>
-      <td colspan="3" class="text-left">
-        <ng-include src="'partials/st_search.html'"></ng-include>
+    <tr>
+      <td colspan="3" class="container">
+        <div class="form-group">
+        <div class="input-group">
+          <div class="input-group-addon"><i class="fa fa-search"></i></div>
+          <input st-search="" type="text" class="form-control" placeholder="Search...">
+        </div>
+        </div>
+        <div class="form-group">
+        <div class="input-btn-group pull-right">
+          <button type="button" ng-click="" class="btn btn-sm btn-success">
+            <i class="fa fa-plus"></i>
+          </button>
+          <button type="button" ng-click="" class="btn btn-sm btn-default">
+            <i class="fa fa-refresh"></i>
+          </button>
+          <button type="button" ng-click="" class="btn btn-sm btn-default">
+            <i class="fa fa-align-justify"></i>
+          </button>
+        </div>
+        </div>
       </td>
     </tr>
+    <tr>
       <th st-sort="image">Image</th>
       <th st-sort="type">Type</th>
-      <th st-sort="debug">Debug</th>
+      <th>&nbsp;</th>
     </tr>
   </thead>
   <tbody>
     <tr ng-repeat="image in displayedImages">
       <td>{{ image.image }}</td>
       <td>{{ image.type }}</td>
-      <td>{{ image.debug }}</td>
+      <td>
+        <div class="input-btn-group pull-right">
+          <button type="button" ng-click="" class="btn btn-sm btn-danger">
+            <i class="fa fa-trash"></i>
+          </button>
+        </div>
+      </td>
     </tr>
   </tbody>
   <tfoot>
@@ -25,3 +51,4 @@
     </tr>
   </tfoot>
 </table>
+</div>

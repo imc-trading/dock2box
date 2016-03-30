@@ -48,6 +48,14 @@
 /*
 .fixed {
   overflow: hidden;
-  table-layout:fixed;
+  table-layout: fixed;
 }
 */
+
+.fa-1-2x {
+  font-size: 1.2em;
+}
+
+.fa-1-5x {
+  font-size: 1.5em;
+}

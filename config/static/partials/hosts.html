@@ -1,9 +1,29 @@
-<table ng-controller="hostsController" st-table="displayedHosts" st-safe-src="hosts" class="table table-striped fixed sortable">
+<div ng-controller="hostsController">
+
+<table st-table="displayedHosts" st-safe-src="hosts" class="table table-striped fixed sortable">
   <thead>
-   <tr>
-      <td colspan="7" class="text-left">
-        <ng-include src="'partials/st_search.html'"></ng-include>
-      </td>
+    <tr>
+      <th colspan="9" class="container">
+        <div class="form-group">
+        <div class="input-group">
+          <div class="input-group-addon"><i class="fa fa-search"></i></div>
+          <input st-search="" type="text" class="form-control" placeholder="Search...">
+        </div>
+        </div>
+        <div class="form-group">
+        <div class="input-btn-group pull-right">
+          <button type="button" ng-click="" class="btn btn-sm btn-success">
+            <i class="fa fa-plus"></i>
+          </button>
+          <button type="button" ng-click="" class="btn btn-sm btn-default">
+            <i class="fa fa-refresh"></i>
+          </button>
+          <button type="button" ng-click="" class="btn btn-sm btn-default">
+            <i class="fa fa-align-justify"></i>
+          </button>
+        </div>
+        </div>
+      </th>
     </tr>
     <tr>
       <th st-sort="hostname">Hostname</th>
@@ -14,11 +34,12 @@
       <th st-sort="version">Image Version</th>
       <th st-sort="kopts">KOpts</th>
       <th st-sort="site">Site</th>
+      <th>&nbsp;</th>
     </tr>
   </thead>
   <tbody>
     <tr ng-repeat="host in displayedHosts">
-      <td>{{ host.hostname }}</td>
+      <td>{{ host.hostname | replace:"\\..*":"" | lowercase }}</td>
       <td>{{ host.build }}</td>
       <td>{{ host.debug }}</td>
       <td>{{ host.gpt }}</td>
@@ -26,13 +47,23 @@
       <td>{{ host.version }}</td>
       <td>{{ host.kopts }}</td>
       <td>{{ host.site }}</td>
+      <td>
+        <div class="input-btn-group pull-right">
+          <a class="btn btn-primary" href="http://{{ host.hostname }}:5050"><i class="fa fa-info"></i></a>
+          <button type="button" ng-click="" class="btn btn-sm btn-danger">
+            <i class="fa fa-trash"></i>
+          </button>
+        </div>
+      </td>
     </tr>
   </tbody>
   <tfoot>
     <tr>
-      <td colspan="7" class="text-center">
+      <td colspan="9" class="text-center">
         <div st-pagination="" st-items-by-page="10"></div>
       </td>
     </tr>
   </tfoot>
 </table>
+
+</div>
