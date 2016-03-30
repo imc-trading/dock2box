@@ -7,6 +7,7 @@ COPY schemas /app/schemas
 COPY templates /app/templates
 COPY images /app/images
 COPY scripts /app/scripts
+COPY scripts /app/static
 
 RUN set -ex ;\
     apk add --no-cache --virtual build perl-digest-sha1 ;\
@@ -15,4 +16,4 @@ RUN set -ex ;\
     done ;\
     apk del build
 
-VOLUME ["/app/etcd", "/app/schemas", "/app/templates", "/app/images", "/app/scripts"]
+VOLUME ["/app/etcd", "/app/schemas", "/app/templates", "/app/images", "/app/scripts", "/app/static"]

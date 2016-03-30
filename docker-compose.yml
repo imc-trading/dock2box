@@ -6,6 +6,7 @@ cfg:
   - /app/schemas
   - /app/scripts
   - /app/templates
+  - /app/static
   - /app/etc
 api:
   image: mickep76/etcdrest:latest

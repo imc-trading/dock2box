@@ -1,0 +1,38 @@
+<table ng-controller="hostsController" st-table="displayedHosts" st-safe-src="hosts" class="table table-striped fixed sortable">
+  <thead>
+   <tr>
+      <td colspan="7" class="text-left">
+        <ng-include src="'partials/st_search.html'"></ng-include>
+      </td>
+    </tr>
+    <tr>
+      <th st-sort="hostname">Hostname</th>
+      <th st-sort="build">Build</th>
+      <th st-sort="debug">Debug</th>
+      <th st-sort="gpt">GPT</th>
+      <th st-sort="image">Image</th>
+      <th st-sort="version">Image Version</th>
+      <th st-sort="kopts">KOpts</th>
+      <th st-sort="site">Site</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="host in displayedHosts">
+      <td>{{ host.hostname }}</td>
+      <td>{{ host.build }}</td>
+      <td>{{ host.debug }}</td>
+      <td>{{ host.gpt }}</td>
+      <td>{{ host.image }}</td>
+      <td>{{ host.version }}</td>
+      <td>{{ host.kopts }}</td>
+      <td>{{ host.site }}</td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td colspan="7" class="text-center">
+        <div st-pagination="" st-items-by-page="10"></div>
+      </td>
+    </tr>
+  </tfoot>
+</table>

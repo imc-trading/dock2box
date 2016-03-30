@@ -1,0 +1,53 @@
+/* Remove round corners on navbar */
+.navbar {
+  border-radius: 0 !important;
+  -moz-border-radius: 0 !important;
+}
+
+.list-sm { 
+  height: 200px; 
+  overflow: auto;
+}
+
+.top-margin {
+  margin-top: 30px; 
+}
+
+.navbar-brand {
+  padding: 0px;
+}
+
+.navbar-brand>img {
+  height: 50px;
+  padding: 3px 10px 3px 10px;
+  width: auto;
+}
+
+.nav-tabs {
+  margin-bottom: 15px;
+}
+
+.nav-pills {
+  margin-bottom: 15px;
+}
+
+/* Sorting arrows in Smart Table */
+.st-sort-ascent:after {
+  content: '\25B2';
+}
+
+.st-sort-descent:after {
+  content: '\25BC';
+}
+
+/* Change curtsor for sort in Smart table*/
+.sortable th {
+  cursor: pointer;
+}
+
+/*
+.fixed {
+  overflow: hidden;
+  table-layout:fixed;
+}
+*/

@@ -86,3 +86,8 @@ routes:
 - endpoint: /scripts
   type: static
   path: scripts
+
+# Static
+- endpoint: /gui
+  type: static
+  path: static
