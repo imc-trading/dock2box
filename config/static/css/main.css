@@ -1,3 +1,12 @@
+.login-bg {
+  background: url("../img/logo.jpg") no-repeat center center fixed;
+
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
 /* Remove round corners on navbar */
 .navbar {
   border-radius: 0 !important;
