@@ -1,18 +1,26 @@
-<div ng-controller="osController">
-  <uib-tabset active="activeJustified" justified="true">
+<div class="container-fluid">
+  <div class="row">
 
-   <uib-tab index="0" heading="Interfaces">
-     <ng-include src="'partials/network/interfaces.html'"></ng-include>
-   </uib-tab>
+    <!-- Sidebar -->
+    <div ng-include='"partials/host/sidebar.html"'></div>
 
-   <uib-tab index="1" heading="Routes">
-     <div ng-if="os.kernel == 'linux'">
-       <ng-include src="'partials/network/routes_linux.html'"></ng-include>
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+      <div ng-controller="osController">
+        <uib-tabset active="activeJustified" justified="true">
+
+          <uib-tab index="0" heading="Interfaces">
+            <ng-include src="'partials/host/network/interfaces.html'"></ng-include>
+          </uib-tab>
+
+          <uib-tab index="1" heading="Routes">
+            <ng-include src="'partials/host/network/routes.html'"></ng-include>
+          </uib-tab>
+
+        </uib-tabset>
       </div>
-      <div ng-if="os.kernel == 'darwin'">
-        <ng-include src="'partials/network/routes_darwin.html'"></ng-include>
-      </div>
-    </uib-tab>
 
-  </uib-tabset>
+    </div>
+
+  </div>
 </div>

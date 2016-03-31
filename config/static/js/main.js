@@ -15,6 +15,10 @@ app.config(['$routeProvider', function ($routeProvider) {
     .when("/hosts", {templateUrl: "partials/hosts.html", controller: "PageCtrl"})
     .when("/hosts/edit", {templateUrl: "partials/edit_host.html", controller: "PageCtrl"})
     .when("/hosts/overview", {templateUrl: "partials/host/overview.html", controller: "PageCtrl"})
+    .when("/hosts/network", {templateUrl: "partials/host/network.html", controller: "PageCtrl"})
+    .when("/hosts/storage", {templateUrl: "partials/host/storage.html", controller: "PageCtrl"})
+    .when("/hosts/system", {templateUrl: "partials/host/system.html", controller: "PageCtrl"})
+    .when("/hosts/docker", {templateUrl: "partials/host/docker.html", controller: "PageCtrl"})
     .when("/hosts/new", {templateUrl: "partials/new_host.html", controller: "PageCtrl"})
     .when("/images", {templateUrl: "partials/images.html", controller: "PageCtrl"})
 }]);

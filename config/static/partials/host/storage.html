@@ -1,15 +1,26 @@
-<uib-tabset active="activeJustified" justified="true">
+<div class="container-fluid">
+  <div class="row">
 
-  <uib-tab index="0" heading="Disks">
-    <ng-include src="'partials/storage/disks.html'"></ng-include>
-  </uib-tab>
+    <!-- Sidebar -->
+    <div ng-include='"partials/host/sidebar.html"'></div>
+
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+      <uib-tabset active="activeJustified" justified="true">
+
+        <uib-tab index="0" heading="Disks">
+          <ng-include src="'partials/host/storage/disks.html'"></ng-include>
+        </uib-tab>
   
-  <uib-tab index="1" heading="LVM">
-    <ng-include src="'partials/storage/lvm.html'"></ng-include>
-  </uib-tab>
+        <uib-tab index="1" heading="LVM">
+          <ng-include src="'partials/host/storage/lvm.html'"></ng-include>
+        </uib-tab>
 
-  <uib-tab index="2" heading="Mounts">
-    <ng-include src="'partials/storage/mounts.html'"></ng-include>
-  </uib-tab>
+        <uib-tab index="2" heading="Mounts">
+          <ng-include src="'partials/host/storage/mounts.html'"></ng-include>
+        </uib-tab>
         
-</uib-tabset>
+      </uib-tabset>
+
+  </div>
+</div>

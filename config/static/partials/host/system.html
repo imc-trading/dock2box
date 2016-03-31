@@ -1,13 +1,23 @@
-<uib-tabset active="activeJustified" justified="true">
+<div class="container-fluid">
+  <div class="row">
 
-  <uib-tab index="0" heading="Sysctls">
-    <ng-include src="'partials/system/sysctls.html'"></ng-include>
-  </uib-tab>
+    <!-- Sidebar -->
+    <div ng-include='"partials/host/sidebar.html"'></div>
 
-  <uib-tab index="1" heading="PCI">
-  </uib-tab>
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
-  <uib-tab index="2" heading="Memory">
-  </uib-tab>
- 
-</uib-tabset>
+      <uib-tabset active="activeJustified" justified="true">
+
+        <uib-tab index="0" heading="Sysctls">
+          <ng-include src="'partials/host/system/sysctls.html'"></ng-include>
+        </uib-tab>
+
+        <uib-tab index="1" heading="PCI">
+        </uib-tab>
+
+      </uib-tabset>
+
+    </div>
+
+  </div>
+</div>
