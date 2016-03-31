@@ -11,23 +11,28 @@ var app = angular.module('dock2box', [
 
 app.config(['$routeProvider', function ($routeProvider) {
   $routeProvider
-    .when("/", {templateUrl: "partials/dashboard.html", controller: "PageCtrl"})
-    .when("/hosts", {templateUrl: "partials/hosts.html", controller: "PageCtrl"})
-    .when("/hosts/edit", {templateUrl: "partials/edit_host.html", controller: "PageCtrl"})
-    .when("/hosts/overview", {templateUrl: "partials/host/overview.html", controller: "PageCtrl"})
-    .when("/hosts/network", {templateUrl: "partials/host/network.html", controller: "PageCtrl"})
-    .when("/hosts/storage", {templateUrl: "partials/host/storage.html", controller: "PageCtrl"})
-    .when("/hosts/system", {templateUrl: "partials/host/system.html", controller: "PageCtrl"})
-    .when("/hosts/docker", {templateUrl: "partials/host/docker.html", controller: "PageCtrl"})
-    .when("/hosts/new", {templateUrl: "partials/new_host.html", controller: "PageCtrl"})
-    .when("/images", {templateUrl: "partials/images.html", controller: "PageCtrl"})
+    .when("/", {templateUrl: "partials/dashboard.html", controller: "PageCtrl", activeTab: "dashboard"})
+    .when("/hosts", {templateUrl: "partials/hosts.html", controller: "PageCtrl", activeTab: "hosts"})
+    .when("/hosts/edit", {templateUrl: "partials/edit_host.html", controller: "PageCtrl", activeTab: "hosts"})
+    .when("/hosts/overview", {templateUrl: "partials/host/overview.html", controller: "PageCtrl", activeTab: "hosts", sideActiveTab: "overview"})
+    .when("/hosts/network", {templateUrl: "partials/host/network.html", controller: "PageCtrl", activeTab: "hosts", sideActiveTab: "network"})
+    .when("/hosts/storage", {templateUrl: "partials/host/storage.html", controller: "PageCtrl", activeTab: "hosts", sideActiveTab: "storage"})
+    .when("/hosts/system", {templateUrl: "partials/host/system.html", controller: "PageCtrl", activeTab: "hosts", sideActiveTab: "system"})
+    .when("/hosts/docker", {templateUrl: "partials/host/docker.html", controller: "PageCtrl", activeTab: "hosts", sideActiveTab: "docker"})
+    .when("/hosts/new", {templateUrl: "partials/new_host.html", controller: "PageCtrl", activeTab: "hosts"})
+    .when("/images", {templateUrl: "partials/images.html", controller: "PageCtrl", activeTab: "images"})
 }]);
 
 /**
  * Controls all other Pages
  */
-app.controller('PageCtrl', function (/* $scope, $location, $http */) {
+app.controller('PageCtrl', function () {
   console.log("Page Controller reporting for duty.");
+});
+
+app.controller('PageCtrl', function ($scope, $route) {
+  $scope.activeTab = $route.current.activeTab;
+  $scope.sideActiveTab = $route.current.sideActiveTab;
 });
 
 /*

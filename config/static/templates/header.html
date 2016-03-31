@@ -1,12 +1,12 @@
-<nav class="navbar navbar-inverse navbar-static-top">
+<nav class="navbar navbar-inverse navbar-static-top" ng-controller="PageCtrl">
   <div class="container-fluid">
     <div class="navbar-header">
       <a class="navbar-brand" href="#/"><img class="img-responsive2" src="img/dock2box.png"></a>
     </div>
     <div>
       <ul class="nav navbar-nav">
-        <li class="active"><a href="#/hosts">Hosts</a></li>
-        <li><a href="#/images">Images</a></li>
+        <li ng-class="{active: activeTab == 'hosts'}"><a href="#/hosts">Hosts</a></li>
+        <li ng-class="{active: activeTab == 'images'}"><a href="#/images">Images</a></li>
       </ul>
     </div>
   </div>
