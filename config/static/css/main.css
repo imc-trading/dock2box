@@ -24,7 +24,6 @@
 
 .navbar-brand {
   padding: 0px;
-  background: #090909;
   width: 180px;
 }
 
@@ -40,6 +39,18 @@
 
 .nav-pills {
   margin-bottom: 15px;
+}
+
+/* Active */
+.navbar .nav > .active > a,
+.navbar .nav > .active > a:focus {
+  font-weight: bold;
+  background-color: #292929;
+}
+
+/* Hover */
+.navbar .nav > li > a:hover {
+  background-color: #090909;
 }
 
 /* Sorting arrows in Smart Table */
