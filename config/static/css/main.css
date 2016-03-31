@@ -24,11 +24,13 @@
 
 .navbar-brand {
   padding: 0px;
+  background: #090909;
+  width: 180px;
 }
 
 .navbar-brand>img {
-  height: 50px;
-  padding: 3px 10px 3px 10px;
+  height: 46px;
+  padding: 6px 20px 3px 20px;
   width: auto;
 }
 
@@ -87,6 +89,9 @@
     overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
     background-color: #f2f2f2;
     border-right: 1px solid #eee;
+
+
+    width: 180px;
   }
 }
 

@@ -13,7 +13,7 @@ app.config(['$routeProvider', function ($routeProvider) {
   $routeProvider
     .when("/", {templateUrl: "partials/dashboard.html", controller: "PageCtrl", activeTab: "dashboard"})
     .when("/hosts", {templateUrl: "partials/hosts.html", controller: "PageCtrl", activeTab: "hosts"})
-    .when("/hosts/edit", {templateUrl: "partials/edit_host.html", controller: "PageCtrl", activeTab: "hosts"})
+    .when("/hosts/edit", {templateUrl: "partials/host/overview.html", controller: "PageCtrl", activeTab: "hosts", sideActiveTab: "overview"})
     .when("/hosts/overview", {templateUrl: "partials/host/overview.html", controller: "PageCtrl", activeTab: "hosts", sideActiveTab: "overview"})
     .when("/hosts/network", {templateUrl: "partials/host/network.html", controller: "PageCtrl", activeTab: "hosts", sideActiveTab: "network"})
     .when("/hosts/storage", {templateUrl: "partials/host/storage.html", controller: "PageCtrl", activeTab: "hosts", sideActiveTab: "storage"})
