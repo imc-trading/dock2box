@@ -45,12 +45,12 @@
 .navbar .nav > .active > a,
 .navbar .nav > .active > a:focus {
   font-weight: bold;
-  background-color: #292929;
+  background-color: #141414;
 }
 
 /* Hover */
 .navbar .nav > li > a:hover {
-  background-color: #090909;
+  background-color: #040404;
 }
 
 /* Sorting arrows in Smart Table */
@@ -113,12 +113,14 @@
   margin-left: -20px;
 }
 
+/* Default */
 .nav-sidebar > li > a {
   padding-right: 20px;
   padding-left: 20px;
   color: #8b8b8b;
 }
 
+/* Active */
 .nav-sidebar > .active > a,
 .nav-sidebar > .active > a:focus {
   font-weight: bold;
@@ -126,14 +128,8 @@
   background-color: #eaeaea;
 }
 
-.nav-sidebar > .active > a:hover {
-  font-weight: bold;
+/* Hover */
+.nav-sidebar > li > a:hover {
   color: #0e0e0e;
-  background-color: #cacaca;
-}
-
-.nav-sidebar > li > a:hover,
-.nav-sidebar > li > a:focus {
-  color: #6b6b6b;
   background-color: #cacaca;
 }
