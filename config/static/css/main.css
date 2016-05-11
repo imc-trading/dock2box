@@ -11,6 +11,8 @@
 .navbar {
   border-radius: 0 !important;
   -moz-border-radius: 0 !important;
+
+  box-shadow: 0px 5px 5px 0px #888888;
 }
 
 .list-sm { 
@@ -29,8 +31,17 @@
 
 .navbar-brand>img {
   height: 46px;
-  padding: 6px 20px 3px 20px;
+  padding: 6px 0px 3px 0px;
   width: auto;
+
+ /* margin: auto 15px;*/
+
+  /* Logo center */
+  margin: auto auto;
+}
+
+.navbar-right {
+  margin-right: 15px;
 }
 
 .nav-tabs {

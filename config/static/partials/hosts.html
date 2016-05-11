@@ -7,7 +7,7 @@
 <table st-table="displayedHosts" st-safe-src="hosts" class="table table-striped fixed sortable">
   <thead>
     <tr>
-      <th colspan="9" class="container">
+      <th colspan="10" class="container">
         <div class="form-group">
         <div class="input-group">
           <div class="input-group-addon"><i class="fa fa-search"></i></div>
@@ -31,26 +31,26 @@
     </tr>
     <tr>
       <th st-sort="hostname">Hostname</th>
+      <th st-sort="site">Site</th>
+      <th st-sort="tenant">Tenant</th>
       <th st-sort="build">Build</th>
       <th st-sort="debug">Debug</th>
       <th st-sort="gpt">GPT</th>
       <th st-sort="image">Image</th>
       <th st-sort="version">Image Version</th>
-      <th st-sort="kopts">KOpts</th>
-      <th st-sort="site">Site</th>
       <th>&nbsp;</th>
     </tr>
   </thead>
   <tbody>
     <tr ng-repeat="host in displayedHosts">
       <td><a href="#/hosts/edit">{{ host.hostname | replace:"\\..*":"" | lowercase }}</a></td>
+      <td>{{ host.site }}</td>
+      <td></td>
       <td>{{ host.build }}</td>
       <td>{{ host.debug }}</td>
       <td>{{ host.gpt }}</td>
       <td>{{ host.image }}</td>
       <td>{{ host.version }}</td>
-      <td>{{ host.kopts }}</td>
-      <td>{{ host.site }}</td>
       <td>
         <div class="input-btn-group pull-right">
           <button type="button" ng-click="" class="btn btn-sm btn-danger">
@@ -62,7 +62,7 @@
   </tbody>
   <tfoot>
     <tr>
-      <td colspan="9" class="text-center">
+      <td colspan="10" class="text-center">
         <div st-pagination="" st-items-by-page="10"></div>
       </td>
     </tr>

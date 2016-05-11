@@ -6,7 +6,7 @@
 <table st-table="displayedImages" st-safe-src="images" class="table table-striped fixed sortable">
   <thead>
     <tr>
-      <td colspan="3" class="container">
+      <td colspan="4" class="container">
         <div class="form-group">
         <div class="input-group">
           <div class="input-group-addon"><i class="fa fa-search"></i></div>
@@ -30,6 +30,7 @@
     </tr>
     <tr>
       <th st-sort="image">Image</th>
+      <th st-sort="image">Hosts</th>
       <th st-sort="type">Type</th>
       <th>&nbsp;</th>
     </tr>
@@ -37,6 +38,7 @@
   <tbody>
     <tr ng-repeat="image in displayedImages">
       <td>{{ image.image }}</td>
+      <td></td>
       <td>{{ image.type }}</td>
       <td>
         <div class="input-btn-group pull-right">
@@ -49,7 +51,7 @@
   </tbody>
   <tfoot>
     <tr>
-      <td colspan="3" class="text-center">
+      <td colspan="4" class="text-center">
         <div st-pagination="" st-items-by-page="10"></div>
       </td>
     </tr>

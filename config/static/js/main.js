@@ -13,14 +13,18 @@ app.config(['$routeProvider', function ($routeProvider) {
   $routeProvider
     .when("/", {templateUrl: "partials/dashboard.html", controller: "PageCtrl", activeTab: "dashboard"})
     .when("/hosts", {templateUrl: "partials/hosts.html", controller: "PageCtrl", activeTab: "hosts"})
+    .when("/hosts/view", {templateUrl: "partials/edit_host.html", controller: "PageCtrl", activeTab: "hosts"})
     .when("/hosts/edit", {templateUrl: "partials/host/overview.html", controller: "PageCtrl", activeTab: "hosts", sideActiveTab: "overview"})
     .when("/hosts/overview", {templateUrl: "partials/host/overview.html", controller: "PageCtrl", activeTab: "hosts", sideActiveTab: "overview"})
     .when("/hosts/network", {templateUrl: "partials/host/network.html", controller: "PageCtrl", activeTab: "hosts", sideActiveTab: "network"})
     .when("/hosts/storage", {templateUrl: "partials/host/storage.html", controller: "PageCtrl", activeTab: "hosts", sideActiveTab: "storage"})
     .when("/hosts/system", {templateUrl: "partials/host/system.html", controller: "PageCtrl", activeTab: "hosts", sideActiveTab: "system"})
     .when("/hosts/docker", {templateUrl: "partials/host/docker.html", controller: "PageCtrl", activeTab: "hosts", sideActiveTab: "docker"})
+    .when("/hosts/console", {templateUrl: "partials/host/console.html", controller: "PageCtrl", activeTab: "hosts", sideActiveTab: "console"})
     .when("/hosts/new", {templateUrl: "partials/new_host.html", controller: "PageCtrl", activeTab: "hosts"})
     .when("/images", {templateUrl: "partials/images.html", controller: "PageCtrl", activeTab: "images"})
+    .when("/sites", {templateUrl: "partials/sites.html", controller: "PageCtrl", activeTab: "sites"})
+    .when("/subnets", {templateUrl: "partials/subnets.html", controller: "PageCtrl", activeTab: "subnets"})
 }]);
 
 /**
@@ -85,7 +89,7 @@ app.controller('imagesController', [ '$scope', '$resource', function($scope, $re
 
 // CPU
 app.controller('cpuController', [ '$scope', '$resource', function($scope, $resource) {
-  var resource = $resource('/api/v1/system/cpu');
+  var resource = $resource('http://baryon:5050/api/v1/system/cpu');
 
   resource.get().$promise.then(function(value) {
     $scope.cpu = value;
@@ -95,7 +99,7 @@ app.controller('cpuController', [ '$scope', '$resource', function($scope, $resou
 
 // Memory
 app.controller('memoryController', [ '$scope', '$resource', function($scope, $resource) {
-  var resource = $resource('/api/v1/system/memory');
+  var resource = $resource('http://baryon:5050/api/v1/system/memory');
 
   resource.get().$promise.then(function(value) {
     $scope.memory = value;
@@ -105,7 +109,7 @@ app.controller('memoryController', [ '$scope', '$resource', function($scope, $re
 
 // System
 app.controller('systemController', [ '$scope', '$resource', function($scope, $resource) {
-  var resource = $resource('/api/v1/system');
+  var resource = $resource('http://baryon:5050/api/v1/system');
 
   resource.get().$promise.then(function(value) {
     $scope.system = value;
@@ -115,7 +119,7 @@ app.controller('systemController', [ '$scope', '$resource', function($scope, $re
 
 // OS
 app.controller('osController', [ '$scope', '$resource', function($scope, $resource) {
-  var resource = $resource('/api/v1/system/os');
+  var resource = $resource('http://baryon:5050/api/v1/system/os');
 
   resource.get().$promise.then(function(value) {
     $scope.os = value;
@@ -125,7 +129,7 @@ app.controller('osController', [ '$scope', '$resource', function($scope, $resour
 
 // Interfaces
 app.controller('interfacesController', [ '$scope', '$resource', function($scope, $resource) {
-  var resource = $resource('/api/v1/network/interfaces');
+  var resource = $resource('http://baryon:5050/api/v1/network/interfaces');
 
   resource.query().$promise.then(function(value) {
     $scope.interfaces = value;
@@ -135,7 +139,7 @@ app.controller('interfacesController', [ '$scope', '$resource', function($scope,
 
 // Routes
 app.controller('routesController', [ '$scope', '$resource', function($scope, $resource) {
-  var resource = $resource('/api/v1/network/routes');
+  var resource = $resource('http://baryon:5050/api/v1/network/routes');
 
   resource.query().$promise.then(function(value) {
     $scope.routes = value;
@@ -145,7 +149,7 @@ app.controller('routesController', [ '$scope', '$resource', function($scope, $re
 
 // Disks
 app.controller('disksController', [ '$scope', '$resource', function($scope, $resource) {
-  var resource = $resource('/api/v1/storage/disks');
+  var resource = $resource('http://baryon:5050/api/v1/storage/disks');
 
   resource.query().$promise.then(function(value) {
     $scope.disks = value;
@@ -155,7 +159,7 @@ app.controller('disksController', [ '$scope', '$resource', function($scope, $res
 
 // Mounts
 app.controller('mountsController', [ '$scope', '$resource', function($scope, $resource) {
-  var resource = $resource('/api/v1/storage/mounts');
+  var resource = $resource('http://baryon:5050/api/v1/storage/mounts');
 
   resource.query().$promise.then(function(value) {
     $scope.mounts = value;
@@ -165,7 +169,7 @@ app.controller('mountsController', [ '$scope', '$resource', function($scope, $re
 
 // LVM Physical Volumes
 app.controller('physVolsController', [ '$scope', '$resource', function($scope, $resource) {
-  var resource = $resource('/api/v1/storage/lvm/physvols');
+  var resource = $resource('http://baryon:5050/api/v1/storage/lvm/physvols');
 
   resource.query().$promise.then(function(value) {
     $scope.physVols = value;
@@ -175,7 +179,7 @@ app.controller('physVolsController', [ '$scope', '$resource', function($scope, $
 
 // LVM Logical Volumes
 app.controller('logVolsController', [ '$scope', '$resource', function($scope, $resource) {
-  var resource = $resource('/api/v1/storage/lvm/logvols');
+  var resource = $resource('http://baryon:5050/api/v1/storage/lvm/logvols');
 
   resource.query().$promise.then(function(value) {
     $scope.logVols = value;
@@ -185,7 +189,7 @@ app.controller('logVolsController', [ '$scope', '$resource', function($scope, $r
 
 // Sysctls
 app.controller('sysctlsController', [ '$scope', '$resource', function($scope, $resource) {
-  var resource = $resource('/api/v1/system/sysctls');
+  var resource = $resource('http://baryon:5050/api/v1/sysatem/sysctls');
 
   resource.query().$promise.then(function(value) {
     $scope.sysctls = value;
@@ -195,32 +199,50 @@ app.controller('sysctlsController', [ '$scope', '$resource', function($scope, $r
 
 // Docker
 app.controller('dockerController', [ '$scope', '$resource', function($scope, $resource) {
-  var resource = $resource('/api/v1/docker');
+  var resource = $resource('http://baryon:5050/api/v1/docker');
 
   resource.get().$promise.then(function(value) {
     $scope.docker = value;
-//    console.log (value);
+    console.log (value);
   });
 } ]);
 
 // Images
-/*
-app.controller('imagesController', [ '$scope', '$resource', function($scope, $resource) {
-  var resource = $resource('/api/v1/docker/images');
+app.controller('dockerImagesController', [ '$scope', '$resource', function($scope, $resource) {
+  var resource = $resource('http://baryon:5050/api/v1/docker/images');
 
   resource.query().$promise.then(function(value) {
     $scope.images = value;
 //    console.log (value);
   });
 } ]);
-*/
 
 // Containers
-app.controller('containersController', [ '$scope', '$resource', function($scope, $resource) {
-  var resource = $resource('/api/v1/docker/containers');
+app.controller('dockerContainersController', [ '$scope', '$resource', function($scope, $resource) {
+  var resource = $resource('http://baryon:5050/api/v1/docker/containers');
 
   resource.query().$promise.then(function(value) {
     $scope.containers = value;
+//    console.log (value);
+  });
+} ]);
+
+// Subnets
+app.controller('subnetsController', [ '$scope', '$resource', function($scope, $resource) {
+  var resource = $resource('/api/v1/subnets?table=true');
+
+  resource.query().$promise.then(function(value) {
+    $scope.subnets = value;
+//    console.log (value);
+  });
+} ]);
+
+// Sites
+app.controller('sitesController', [ '$scope', '$resource', function($scope, $resource) {
+  var resource = $resource('/api/v1/sites?table=true');
+
+  resource.query().$promise.then(function(value) {
+    $scope.sites = value;
 //    console.log (value);
   });
 } ]);
