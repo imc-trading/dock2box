@@ -1,0 +1,61 @@
+<!-- Header -->
+<div ng-include='"templates/header.html"'></div>
+
+<!-- Content -->
+<div class="container" ng-controller="subnetsController">
+<table st-table="displayedSubnets" st-safe-src="subnets" class="table table-striped fixed sortable">
+  <thead>
+    <tr>
+      <td colspan="3" class="container">
+        <div class="form-group">
+        <div class="input-group">
+          <div class="input-group-addon"><i class="fa fa-search"></i></div>
+          <input st-search="" type="text" class="form-control" placeholder="Search...">
+        </div>
+        </div>
+        <div class="form-group">
+        <div class="input-btn-group pull-right">
+          <button type="button" ng-click="" class="btn btn-sm btn-success">
+            <i class="fa fa-plus"></i>
+          </button>
+          <button type="button" ng-click="" class="btn btn-sm btn-default">
+            <i class="fa fa-refresh"></i>
+          </button>
+          <button type="button" ng-click="" class="btn btn-sm btn-default">
+            <i class="fa fa-align-justify"></i>
+          </button>
+        </div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <th st-sort="subnet">Subnet</th>
+      <th st-sort="site">Site</th>
+      <th>&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="subnet in displayedSubnets">
+      <td>{{ subnet.subnet }}</td>
+      <td><a href="#/sites/view">{{ subnet.site }}</a></td>
+      <td>
+        <div class="input-btn-group pull-right">
+          <button type="button" ng-click="" class="btn btn-sm btn-danger">
+            <i class="fa fa-trash"></i>
+          </button>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td colspan="3" class="text-center">
+        <div st-pagination="" st-items-by-page="10"></div>
+      </td>
+    </tr>
+  </tfoot>
+</table>
+</div>
+
+<!-- Footer -->
+<div ng-include='"templates/footer.html"'></div>
