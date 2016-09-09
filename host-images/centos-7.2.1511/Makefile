@@ -18,23 +18,21 @@ all: latest
 clean:
 	rm -rf packer_output
 
-check:
+test:
 	@type packer;
 	@type docker;
 	docker ps >/dev/null
-
-test: check
 	packer validate template.json
 
 build: clean test
 	packer build -only=$(BUILDER) -var "vm_name=$(NAME)" template.json
 
-export:
+export: build
 	docker pull $(VIRT_TAR_OUT):latest
 	docker run --privileged --rm -v "$${PWD}":/build --entrypoint /build.sh $(VIRT_TAR_OUT) $(NAME) $(BUILDER)
 
 import: export
-	docker build --no-cache --force-rm -t $(ORG)/$(NAME):$(REL) --build-arg NAME=${NAME} .
+        docker import packer_output/${NAME}.tar.gz $(ORG)/$(NAME):$(REL)
 
 push: import
 	docker login
