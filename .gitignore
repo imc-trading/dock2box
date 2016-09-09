@@ -14,3 +14,4 @@ scripts_cache
 /boot-images/*/apkovl.tar.gz
 /boot-images/*/initrd
 /boot-images/*/kernel
+/boot-images/*/release

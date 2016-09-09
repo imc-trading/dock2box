@@ -59,7 +59,7 @@ EOF
 
 # Add CA certificates
 mkdir -p /usr/local/share/ca-certificates/
-cp certs/* /usr/local/share/ca-certificates/
+cp certs/* /usr/local/share/ca-certificates/ || true
 
 # Add startup scripts
 cp dock2box /etc/init.d/dock2box
@@ -74,7 +74,7 @@ rc-update add hwdrivers
 mkdir -p /home/dock2box/.ssh
 chmod 700 /home/dock2box/.ssh
 chown -R dock2box:dock2box /home/dock2box/.ssh
-cat sshkeys/*.rsa >/home/dock2box/.ssh/authorized_keys
+cat sshkeys/*.rsa >/home/dock2box/.ssh/authorized_keys || true
 
 # Only allow public key login
 cat << EOF >>/etc/ssh/sshd_config
@@ -89,7 +89,7 @@ passwd -l root
 
 # Add motd
 vers=0.00.1
-rel=$(cat scripts_cache/release)
+rel=$(cat release)
 ts=$(date -u +'%F %T UTC')
 sed -e "s/version: x.xx.x/version: ${vers}/" -e "s/release: xxxxxxx/release: ${rel}/" \
     -e "s/built: xxxx-xx-xx xx:xx:xx xxx/built: ${ts}/" motd >>/etc/motd
@@ -102,7 +102,7 @@ alias ll="ls -lah"
 EOF
 
 # Add scripts
-cp scripts_cache/*.sh /root
+cp scripts/*.sh /root
 chmod +x /root/install.sh
 
 # Create apkovl.tar.gz with modules and package list
