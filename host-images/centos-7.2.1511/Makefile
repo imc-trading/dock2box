@@ -32,7 +32,7 @@ export: build
 	docker run --privileged --rm -v "$${PWD}":/build --entrypoint /build.sh $(VIRT_TAR_OUT) $(NAME) $(BUILDER)
 
 import: export
-        docker import packer_output/${NAME}.tar.gz $(ORG)/$(NAME):$(REL)
+	docker import packer_output/${NAME}.tar.gz $(ORG)/$(NAME):$(REL)
 
 push: import
 	docker login
