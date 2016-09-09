@@ -1,6 +1,0 @@
-# requirement for etcd-cli
-~dev-python/python-etcd-0.3.3 ~amd64
-# requirement for dock2box
-app-misc/jq ~amd64
-sys-apps/util-linux ~amd64
-sys-devel/bison ~amd64

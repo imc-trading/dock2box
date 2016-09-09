@@ -1,3 +1,0 @@
-OPTIONS="-p2 -b ntp1 ntp2 ntp3"
-RETRIES=2
-SYNC_HWCLOCK=yes
