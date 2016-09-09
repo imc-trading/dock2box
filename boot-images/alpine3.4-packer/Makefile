@@ -1,5 +1,6 @@
 NAME=alpine3.4
 ORG=dock2box
+VIRT_TAR_OUT=$(ORG)/debian8.5-virt-tar-out
 SYS=$(shell uname -s)
 REL=$(shell git rev-parse --verify --short HEAD)
 
@@ -17,20 +18,18 @@ all: latest
 clean:
 	rm -rf packer_output
 
-check:
+test:
 	@type packer;
 	@type docker;
 	docker ps >/dev/null
-
-test: check
 	packer validate template.json
 
 build: clean test
 	packer build -only=$(BUILDER) -var "vm_name=$(NAME)" template.json
 
 export: build
-	docker pull $(ORG)/dock2box-build:latest
-	docker run --privileged --rm -v "$${PWD}":/build --entrypoint /build.sh $(ORG)/debian8.5-virt-tar-out:latest $(NAME) $(BUILDER)
+	docker pull $(VIRT_TAR_OUT):latest
+	docker run --privileged --rm -v "$${PWD}":/build --entrypoint /build.sh $(VIRT_TAR_OUT):latest $(NAME) $(BUILDER)
 
 import: export
 	docker import packer_output/${NAME}.tar.gz $(ORG)/$(NAME):$(REL)

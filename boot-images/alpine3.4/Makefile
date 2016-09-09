@@ -1,7 +1,7 @@
 NAME=alpine3.4
 ORG=dock2box
 
-all: publish
+all: build
 
 clean:
 	rm -f initrd kernel apkovl.tar.gz

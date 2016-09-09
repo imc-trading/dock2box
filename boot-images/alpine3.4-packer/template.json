@@ -67,7 +67,7 @@
         "dhcp<enter>",
         "done<enter>no<enter>",
         "echo 'dock2box ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers.d/dock2box<enter>",
-        "mkdir -p /run/lock",
+        "mkdir -p /run/lock<enter>",
         "reboot<enter><wait>"
       ],
 
@@ -149,7 +149,7 @@
         "dhcp<enter>",
         "done<enter>no<enter>",
         "echo 'dock2box ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers.d/dock2box<enter>",
-        "mkdir /run/lock",
+        "mkdir /run/lock<enter>",
         "reboot<enter><wait>"
       ],
 
