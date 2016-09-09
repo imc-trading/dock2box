@@ -1,3 +1,0 @@
-app-emulation/docker vim-syntax -btrfs
-# required by Docker 1.10+
-sys-libs/libseccomp static-libs

@@ -1,3 +1,0 @@
-dev-libs/openssh -bindist
-dev-libs/openssl -bindist static-libs
-sys-libs/zlib static-libs

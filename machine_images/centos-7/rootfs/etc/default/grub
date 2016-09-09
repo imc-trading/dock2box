@@ -1,7 +1,0 @@
-GRUB_TIMEOUT=5
-GRUB_DISTRIBUTOR="dock2box Linux"
-GRUB_DEFAULT=saved
-GRUB_DISABLE_SUBMENU=true
-GRUB_TERMINAL_OUTPUT="console"
-GRUB_CMDLINE_LINUX="rd.lvm.lv=vg_root/lv_root root=/dev/mapper/vg_root-lv_root rootflags=rw,relatime,data=ordered rootfstype=ext4  vconsole.keymap=us verbose nomodeset crashkernel=auto selinux=0 pcie_aspm=off net.ifnames=0 biosdevname=0 None"
-GRUB_DISABLE_RECOVERY="true"

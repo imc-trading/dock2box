@@ -1,7 +1,0 @@
-app-emulation/docker ~amd64
-dev-go/blackfriday ~amd64
-dev-go/sanitized-anchor-name ~amd64
-dev-go/go-md2man ~amd64
-# required by Docker 1.10+
-sys-libs/libseccomp ~amd64
-

@@ -1,7 +1,0 @@
-[
-  {
-    "op": "replace",
-    "path": "/site",
-    "value": "apac"
-  }
-]
