@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "All Schemas",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "hosts": {
+      "$ref": "all_hosts.json#"
+    },
+    "hwaddr": {
+      "$ref": "all_hwaddr.json#"
+    },
+    "images": {
+      "$ref": "all_images.json#"
+    },
+    "sites": {
+      "$ref": "all_sites.json#"
+    },
+    "subnets": {
+      "$ref": "all_subnets.json#"
+    }
+  }
+}

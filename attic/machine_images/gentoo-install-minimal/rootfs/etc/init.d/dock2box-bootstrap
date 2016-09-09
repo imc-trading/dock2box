@@ -1,0 +1,36 @@
+#!/sbin/openrc-run
+# Author: Jean-Michel Smith - February 25, 2016
+
+description="Glue to download and run dock2box bootstrap script."
+
+depend()
+{   
+    uses net
+    after local
+}
+
+start()
+{   
+    WGET_OPTS="--quiet --dns-timeout=2 --connect-timeout=2 --read-timeout=2 --no-check-certificate"
+    BOOTSTRAPHOST="yum-mirror"
+    BOOTSTRAPSCRIPT="http://${BOOTSTRAPHOST}/osimages/gentoo-install-minimal-x86_64-latest/bootstrap.sh"
+    echo -n "Waiting for network to settle down "
+    counter=0
+    while ! ping -c 1 -W 1 10.192.0.254 &>/dev/null; do
+        sleep 1
+        echo -n .
+        counter=$((counter+1))
+        if [[ "$counter" -gt 100 ]]; then
+            eerror "Tried 100 pings, no joy.  Giving up.  Check your network connectivity to ${BOOTSTRAPHOST}."
+            exit 1
+        fi
+    done; echo " network up"
+    ebegin "Downloading and running ${BOOTSTRAPSCRIPT}"
+    # give networking time to settle down
+    /usr/bin/wget ${WGET_OPTS} -O /root/bootstrap.sh ${BOOTSTRAPSCRIPT} || \
+        { echo "Could not retrieve ${BOOTSTRAPSCRIPT}. Is the network up?" && return 1; }
+    chmod 755 /root/bootstrap.sh
+    /root/bootstrap.sh  | tee /dev/ttyS0 /bootstrap.log
+    eend $?
+    return 0
+}

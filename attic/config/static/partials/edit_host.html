@@ -1,0 +1,122 @@
+<!-- Header -->
+<div ng-include='"templates/header.html"'></div>
+
+<div class="container-fluid">
+  <div class="row">
+
+    <!-- Sidebar -->
+    <div ng-include='"partials/host/sidebar.html"'></div>
+
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+<form>
+
+<fieldset class="form-group row">
+  <label for="hostname" class="col-sm-2 form-control-label">Hostname</label>
+  <div class="col-sm-10">
+    <input type="text" ng-model="host.hostname" class="form-control" id="hostname" placeholder="Hostname">
+  </div>
+</fieldset>
+
+<fieldset class="form-group row">
+  <label for="build" class="col-sm-2 form-control-label">Build</label>
+  <div class="col-sm-10">
+    <input type="checkbox" ng-model="host.build">
+  </div>
+</fieldset>
+
+<fieldset class="form-group row">
+  <label for="director" class="col-sm-2 form-control-label">Debug</label>
+  <div class="col-sm-10">
+    <input type="checkbox" ng-model="host.debug">
+  </div>
+</fieldset>
+
+<fieldset class="form-group row">
+  <label for="director" class="col-sm-2 form-control-label">GPT</label>
+  <div class="col-sm-10">
+    <input type="checkbox" ng-model="host.gpt">
+  </div>
+</fieldset>
+
+<fieldset class="form-group row">
+  <label for="imageSelect" class="col-sm-2 form-control-label">Image</label>
+  <div class="col-sm-10">
+  <select class="form-control" id="imageSelect">
+    <option>1</option>
+    <option>2</option>
+    <option>3</option>
+  </select>
+  </div>
+</fieldset>
+
+<fieldset class="form-group row">
+  <label for="versionSelect" class="col-sm-2 form-control-label">Version</label>
+  <div class="col-sm-10">
+  <select class="form-control" id="versionSelect">
+    <option>1</option>
+    <option>2</option>
+    <option>3</option>
+  </select>
+  </div>
+</fieldset>
+
+<fieldset class="form-group row">
+  <label for="kopts" class="col-sm-2 form-control-label">Kernel Options</label>
+  <div class="col-sm-10">
+    <input type="text" ng-model="host.kopts" class="form-control" id="kopts" placeholder="Kernel Options">
+  </div>
+</fieldset>
+
+<fieldset class="form-group row">
+  <label for="siteSelect" class="col-sm-2 form-control-label">Site</label>
+  <div class="col-sm-10">
+  <select class="form-control" id="siteSelect">
+    <option>1</option>
+    <option>2</option>
+    <option>3</option>
+  </select>
+  </div>
+</fieldset>
+
+<div class="form-group pull-right">
+  <div class="col-sm-offset-2 col-sm-10">
+    <input type="submit" class="btn btn-primary" value="Submit">
+  </div>
+</div>
+
+</form>
+
+<!--
+<div ng-controller="imageController">
+
+  <div class="btn-group" uib-dropdown is-open="status.isopen">
+    <button id="single-button" type="button" class="btn btn-primary" uib-dropdown-toggle ng-disabled="disabled">
+      Images <span class="caret"></span>
+    </button>
+    <ul uib-dropdown-menu role="menu" aria-labelledby="single-button">
+      <li role="menuitem"><a href="#">CentOS</a></li>
+      <li role="menuitem"><a href="#">Fedora</a></li>
+      <li role="menuitem"><a href="#">Gentoo</a></li>
+    </ul>
+  </div>
+
+</div>
+
+
+
+
+<div class="form-group">
+  <div class="col-sm-offset-2 col-sm-10">
+    <input type="submit" class="btn btn-primary" value="Save"/>
+  </div>
+</div>
+
+-->
+
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<div ng-include='"templates/footer.html"'></div>

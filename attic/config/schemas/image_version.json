@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Image Version Schema",
+  "type": "object",
+  "required": [
+    "main_script",
+    "timestamp"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "main_script": {
+      "type": "string"
+    },
+    "timestamp": {
+      "type": "string"
+    }
+  }
+}

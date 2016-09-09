@@ -1,0 +1,50 @@
+# Routes
+routes:
+
+# Root
+- regexp: ^/$
+  schema: file://schemas/root.json
+
+# All Hosts
+- regexp: ^/host$
+  schema: file://schemas/all_hosts.json
+
+# Host
+- regexp: ^/host/[a-z]([a-z0-9-]+\.)+[a-z]+$
+  schema: file://schemas/host.json
+
+# All Host Interfaces
+- regexp: ^/host/[a-z]([a-z0-9-]+\.)+[a-z]+/interface$
+  schema: file://schemas/all_interfaces.json
+
+# Host Interface
+- regexp: ^/host/[a-z]([a-z0-9-]+\.)+[a-z]+/interface/.+$
+  schema: file://schemas/interface.json
+
+# All Images
+- regexp: ^/image$
+  schema: file://schemas/all_images.json
+
+# Image
+- regexp: ^/image/[a-zA-Z0-9-_]+$
+  schema: file://schemas/image.json
+
+# All Image Versions
+- regexp: ^/image/[a-zA-Z0-9-_]+/versions$
+  schema: file://schemas/all_image_versions.json
+
+# Image Version
+- regexp: ^/image/[a-zA-Z0-9-_]+/versions/[a-zA-Z0-9-_]+$
+  schema: file://schemas/image_version.json
+
+# All HWAddr
+- regexp: ^/hwaddr$
+  schema: file://schemas/all_hwaddr.json
+
+# HWaddr
+- regexp: ^/hwaddr/.+$
+  schema: file://schemas/hwaddr.json
+
+# Global
+- regexp: ^/global$
+  schema: file://schemas/global.json

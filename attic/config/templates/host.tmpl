@@ -1,0 +1,133 @@
+{{define "host"}}#!ipxe
+
+# Menu theme
+{{template "dock2box" .}}
+
+# Get default
+{{$default := get (print "/default")}}
+
+# Get host
+{{$hwaddr := get (print "/hwaddr/" .vars.hwaddr)}}
+{{$host := get (print "/host/" $hwaddr.hostname)}}
+
+# Set menu defaults
+set menu_timeout {{$default.menu_timeout}}
+set submenu_timeout {{$default.submenu_timeout}}
+set menu_name {{$default.menu_name}}
+set submenu_name {{$default.submenu_name}}
+
+{{if $host}}
+set menu_default {{$host.image}}
+set submenu_default {{$host.version}}
+{{else}}
+set menu_default {{$default.menu_default}}
+set submenu_default {{$default.submenu_default}}
+{{end}}
+
+# Set bootstrap image
+{{$bootstrap := get (print "/image/" $default.bootstrap_image)}}
+set bootstrap_image {{$default.bootstrap_image}}
+set bootstrap_version {{$default.bootstrap_version}}
+set bootstrap_kopts {{$bootstrap.kopts}}
+
+# Hostname
+{{if $host}}
+set hostname {{$hwaddr.hostname}}
+{{else}}
+set hostname {{replace ":" "" .vars.hwaddr}}
+{{end}}
+
+# Network
+set hwaddr {{.vars.hwaddr}}
+set ipv4 {{index .params.ipv4 0}}
+set netmask {{index .params.ipv4 0}}
+set gateway {{index .params.gateway 0}}
+
+# Set subnet
+{{$subnet_name := getsubnet (index .params.ipv4 0) (index .params.netmask 0)}}
+set subnet {{$subnet_name}}
+
+# Get subnet
+{{$subnet := get (print "/subnets/" (replace "/" "-" $subnet_name))}}
+
+# Get site
+{{if $subnet}}
+set site {{$subnet.site}}
+{{$site := get (print "/sites/" $subnet.site)}}
+set domain {{$site.domain}}
+set file_uri {{$site.file_uri}}
+set registry {{$site.registry}}
+{{else}}
+set site default
+{{$site := get (print "/sites/default")}}
+set domain {{$site.domain}}
+set file_uri {{$site.file_uri}}
+set registry {{$site.registry}}
+{{end}}
+
+set fqdn ${hostname}.${domain}
+
+:start
+imgfree
+
+menu ${menu_name}
+
+{{if $host}}
+item --gap -- {{center 82 "-" " Registered "}}
+{{else}}
+item --gap -- {{center 82 "-" " Unregistered "}}
+{{end}}
+
+item --gap -- hostname: ${fqdn}
+
+{{if $host}}
+item --gap -- build: {{$host.build}} debug: {{$host.debug}}
+item --gap -- ipv4: {{$host.interface.default.ip}} netmask: {{$host.interface.default.netmask}}
+item --gap -- gateway: {{$host.interface.default.gw}} hwaddr: {{$host.interface.default.hwaddr}}
+{{end}}
+
+item --gap -- subnet: ${subnet} site: ${site}
+item --gap -- file_uri: ${file_uri}
+item --gap -- registry: ${registry}
+item --gap -- {{center 82 "-" " Info "}}
+item --gap -- ipv4: ${ipv4} netmask: ${netmask}
+item --gap -- gateway: ${gateway} hwaddr: ${hwaddr}
+
+# Menu items
+item --gap -- {{center 82 "-" " Menu "}}
+{{$menu_items := get "/default/menu_items"}}
+{{range $item, $e := $menu_items}}item {{$item}} {{$e.name}}
+{{end}}
+
+# Images
+item --gap --
+{{$images := get "/image"}}
+{{range $image, $e := $images}}item {{$image}} {{$image}}
+{{end}}
+
+choose --default ${menu_default} --timeout ${menu_timeout} selected
+goto ${selected}
+
+# Menu commands
+{{range $item, $e := $menu_items}}
+:{{$item}}
+{{$e.command}}
+{{end}}
+
+# Image Versions
+{{range $image, $e := $images}}:{{$image}}
+menu ${submenu_name}
+item --gap -- Image: {{$image}}
+item --gap -- {{center 82 "-" " Versions "}}
+item --key 0x08 back .. (top menu)
+{{range $version, $e2 := $e.versions}}item {{$image}}-{{$version}} {{$version}} ({{$e2.timestamp}})
+{{end}}choose --default ${menu_default}-${submenu_default} --timeout ${menu_timeout} selected
+goto ${selected}
+:back
+goto start
+
+{{range $version, $e2 := $e.versions}}:{{$image}}-{{$version}}
+kernel ${file_uri}/${bootstrap_image}-${bootstrap_version}/kernel BOOTIF=${hwaddr} IP=None NETMASK=${netmask} GATEWAY=${gateway} ${bootstrap_kopts} image_type={{$e.type}} image_name={{$image}} image_version={{$version}} hostname=${hostname} file_uri=${file_uri} registry=${registry}
+initrd ${file_uri}/${bootstrap_image}-${bootstrap_version}/initrd
+boot
+{{end}}{{end}}{{end}}

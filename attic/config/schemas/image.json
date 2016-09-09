@@ -1,0 +1,77 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Image Schema",
+  "type": "object",
+  "required": [
+    "bootstrap_image",
+    "debug",
+    "docker_registry",
+    "file_registry",
+    "gpt",
+    "kexec",
+    "kopts",
+    "main_script",
+    "naming_scheme",
+    "type",
+    "version",
+    "versions"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "bootstrap_image": {
+      "type": "string"
+    },
+    "debug": {
+      "$ref": "types.json#/definitions/boolean"
+    },
+    "docker_registry": {
+      "type": "string"
+    },
+    "file_registry": {
+      "type": "string"
+    },
+    "gpt": {
+      "$ref": "types.json#/definitions/boolean"
+    },
+    "kexec": {
+      "$ref": "types.json#/definitions/boolean"
+    },
+    "kopts": {
+      "type": "string"
+    },
+    "volmgt": {
+      "type": "string",
+      "enum": [
+        "btrfs",
+        "lvm"
+      ]
+    },
+    "uefi": {
+      "$ref": "types.json#/definitions/boolean"
+    },
+    "main_script": {
+      "type": "string"
+    },
+    "post_script": {
+      "type": "string"
+    },
+    "naming_scheme": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string"
+    },
+    "version": {
+      "$ref": "types.json#/definitions/version"
+    },
+    "versions": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        "^[a-zA-Z0-9-_]+$": {
+          "$ref": "image_version.json#"
+        }
+      }
+    }
+  }
+}

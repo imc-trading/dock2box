@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Types Schema",
+  "definitions": {
+    "boolean": {
+      "type": "string",
+      "enum": [
+        "true",
+        "false",
+        "True",
+        "False"
+      ]
+    },
+    "integer": {
+      "type": "string",
+      "pattern": "^[0-9]+$"
+    },
+    "hostname": {
+      "type": "string",
+      "pattern": "^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9])$"
+    },
+    "hwaddr": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{2}:){5}[0-9a-f]{2}$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9-_]+$"
+    },
+    "interface": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]+$"
+    },
+    "site": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]+$"
+    }
+  }
+}

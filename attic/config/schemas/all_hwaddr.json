@@ -1,0 +1,11 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "All HWAddr Schema",
+  "type": "object",
+  "additionalProperties": false,
+  "patternProperties": {
+    "^([0-9a-f]{2}:){5}[0-9a-f]{2}$": {
+      "$ref": "hwaddr.json#"
+    }
+  }
+}

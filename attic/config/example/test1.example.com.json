@@ -1,0 +1,24 @@
+{
+    "build": "true",
+    "debug": "false",
+    "gpt": "false",
+    "image": "centos-7.1-x86_64",
+    "interface": {
+        "default": {
+            "gw": "10.0.0.254",
+            "hwaddr": "00:ab:12:4c:95:20",
+            "ip": "10.0.0.1",
+            "netmask": "255.255.255.0"
+        },
+        "eth0": {
+            "gw": "10.0.0.254",
+            "hwaddr": "00:ab:12:4c:95:20",
+            "ip": "10.0.0.1",
+            "netmask": "255.255.255.0"
+        }
+    },
+    "kexec": "false",
+    "kopts": "",
+    "site": "emea2",
+    "version": "latest"
+}

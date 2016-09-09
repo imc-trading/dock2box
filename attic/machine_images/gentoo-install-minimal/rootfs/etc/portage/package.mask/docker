@@ -1,0 +1,6 @@
+# restrict docker to 1.7.x for now (until registry is upgraded)
+#>=app-emulation/docker-1.8.0
+# docker 1.7.x does not build with go 1.5
+#>=dev-lang/go-1.5
+#>=sys-kernel/gentoo-sources-4.3.0
+>=app-emulation/docker-1.9.0

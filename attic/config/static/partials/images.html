@@ -1,0 +1,63 @@
+<!-- Header -->
+<div ng-include='"templates/header.html"'></div>
+
+<!-- Content -->
+<div class="container" ng-controller="imagesController">
+<table st-table="displayedImages" st-safe-src="images" class="table table-striped fixed sortable">
+  <thead>
+    <tr>
+      <td colspan="4" class="container">
+        <div class="form-group">
+        <div class="input-group">
+          <div class="input-group-addon"><i class="fa fa-search"></i></div>
+          <input st-search="" type="text" class="form-control" placeholder="Search...">
+        </div>
+        </div>
+        <div class="form-group">
+        <div class="input-btn-group pull-right">
+          <button type="button" ng-click="" class="btn btn-sm btn-success">
+            <i class="fa fa-plus"></i>
+          </button>
+          <button type="button" ng-click="" class="btn btn-sm btn-default">
+            <i class="fa fa-refresh"></i>
+          </button>
+          <button type="button" ng-click="" class="btn btn-sm btn-default">
+            <i class="fa fa-align-justify"></i>
+          </button>
+        </div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <th st-sort="image">Image</th>
+      <th st-sort="image">Hosts</th>
+      <th st-sort="type">Type</th>
+      <th>&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="image in displayedImages">
+      <td>{{ image.image }}</td>
+      <td></td>
+      <td>{{ image.type }}</td>
+      <td>
+        <div class="input-btn-group pull-right">
+          <button type="button" ng-click="" class="btn btn-sm btn-danger">
+            <i class="fa fa-trash"></i>
+          </button>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td colspan="4" class="text-center">
+        <div st-pagination="" st-items-by-page="10"></div>
+      </td>
+    </tr>
+  </tfoot>
+</table>
+</div>
+
+<!-- Footer -->
+<div ng-include='"templates/footer.html"'></div>

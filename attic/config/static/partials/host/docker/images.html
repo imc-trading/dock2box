@@ -1,0 +1,37 @@
+<table ng-controller="dockerImagesController" st-table="displayedImages" st-safe-src="images" class="table table-striped fixed sortable">
+  <thead>
+   <tr>
+      <td colspan="5" class="text-left">
+        <div class="form-group">
+          <div class="input-group">
+            <div class="input-group-addon"><i class="fa fa-search"></i></div>
+            <input st-search="" type="text" class="form-control" placeholder="Search">
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <th st-sort="id">ID</th>
+      <th st-sort="repo">Repository</th>
+      <th st-sort="tag">Tag</th>
+      <th st-sort="created">Created</th>
+      <th st-sort="virtSize">Virtual&nbsp;Size</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="image in displayedImages">
+      <td>{{ image.id | limitTo:12 }}</td>
+      <td>{{ image.repo }}</td>
+      <td>{{ image.tag }}</td>
+      <td>{{ image.created }}</td>
+      <td>{{ image.virtSize }}</td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td colspan="5" class="text-center">
+        <div st-pagination="" st-items-by-page="10"></div>
+      </td>
+    </tr>
+  </tfoot>
+</table>

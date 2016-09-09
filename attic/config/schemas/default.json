@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Default Schema",
+  "type": "object",
+  "required": [
+    "menu_timeout",
+    "submenu_timeout",
+    "menu_default",
+    "submenu_default",
+    "bootstrap_image",
+    "bootstrap_version"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "menu_timeout": {
+      "$ref": "types.json#/definitions/integer"
+    },
+    "submenu_timeout": {
+      "$ref": "types.json#/definitions/integer"
+    },
+    "menu_default": {
+      "type": "string"
+    },
+    "submenu_default": {
+      "type": "string"
+    },
+    "bootstrap_image": {
+      "type": "string"
+    },
+    "bootstrap_version": {
+      "type": "string"
+    }
+  }
+}

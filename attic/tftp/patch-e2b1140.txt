@@ -1,0 +1,33 @@
+diff -Naur ipxe-e2b1140/src/config/console.h ipxe-e2b1140-patched/src/config/console.h
+--- ipxe-e2b1140/src/config/console.h	2016-02-06 11:47:45.000000000 +0100
++++ ipxe-e2b1140-patched/src/config/console.h	2016-02-11 08:47:28.000000000 +0100
+@@ -35,7 +35,7 @@
+  */
+ 
+ //#define	CONSOLE_SERIAL		/* Serial port console */
+-//#define	CONSOLE_FRAMEBUFFER	/* Graphical framebuffer console */
++#define	CONSOLE_FRAMEBUFFER	/* Graphical framebuffer console */
+ //#define	CONSOLE_SYSLOG		/* Syslog console */
+ //#define	CONSOLE_SYSLOGS		/* Encrypted syslog console */
+ //#define	CONSOLE_VMWARE		/* VMware logfile console */
+diff -Naur ipxe-e2b1140/src/config/general.h ipxe-e2b1140-patched/src/config/general.h
+--- ipxe-e2b1140/src/config/general.h	2016-02-06 11:47:45.000000000 +0100
++++ ipxe-e2b1140-patched/src/config/general.h	2016-02-11 08:47:59.000000000 +0100
+@@ -109,7 +109,7 @@
+ //#define	IMAGE_EFI		/* EFI image support */
+ //#define	IMAGE_SDI		/* SDI image support */
+ //#define	IMAGE_PNM		/* PNM image support */
+-//#define	IMAGE_PNG		/* PNG image support */
++#define	IMAGE_PNG		/* PNG image support */
+ 
+ /*
+  * Command-line commands to include
+@@ -141,7 +141,7 @@
+ //#define PARAM_CMD		/* Form parameter commands */
+ //#define NEIGHBOUR_CMD		/* Neighbour management commands */
+ //#define PING_CMD		/* Ping command */
+-//#define CONSOLE_CMD		/* Console command */
++#define CONSOLE_CMD		/* Console command */
+ //#define IPSTAT_CMD		/* IP statistics commands */
+ //#define PROFSTAT_CMD		/* Profiling commands */
+ 
