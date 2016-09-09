@@ -36,7 +36,7 @@ import: export
 
 push: import
 	docker login
-	docker push ${REG}/${NAME}:${REL}
+	docker push ${ORG}/${NAME}:${REL}
 
 latest: push
 	docker tag $(ORG)/$(NAME):$(REL) $(ORG)/$(NAME):latest
