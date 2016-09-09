@@ -4,12 +4,6 @@
 packer_cache
 packer_output
 
-# Ignore salt cache
-salt_cache
-
-# Ignore scripts cache
-scripts_cache
-
 # Ignore boot image artifacts
 /boot-images/*/apkovl.tar.gz
 /boot-images/*/initrd
