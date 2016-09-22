@@ -1,8 +1,12 @@
 #!/bin/ash
 
-set -eux
+set -eu
 
 VERS=0.00.1
+
+#
+# Add applications and configuration
+#
 
 # Add repositories
 cat << EOF >/etc/apk/repositories
@@ -20,7 +24,6 @@ apk add pciutils \
         openssh \
         openssh-client \
         sudo \
-        docker \
         curl \
         udev \
         sfdisk \
@@ -28,31 +31,27 @@ apk add pciutils \
         ca-certificates \
         tar \
         coreutils \
-        jq
+        jq \
+        cmake
 
 # Add initramfs-init script
-cp init /usr/share/mkinitfs/initramfs-init
+cp scripts/init /usr/share/mkinitfs/initramfs-init
+
+# Copy scripts to root
+cp scripts/functions*.sh /
+cp scripts/dock2box-rebuild /
+cp scripts/config /
 
 # Add CA certificates
 mkdir -p /usr/local/share/ca-certificates/
 cp certs/* /usr/local/share/ca-certificates/
 
 # Add SSH keys
-mkdir -p /home/dock2box/.ssh
-chmod 700 /home/dock2box/.ssh
-chown -R dock2box:dock2box /home/dock2box/.ssh
-cat ssh/*.rsa >/home/dock2box/.ssh/authorized_keys
-chmod 600 /home/dock2box/.ssh/authorized_keys
-
-# Add SSH keys (root temp. workaround)
 mkdir -p /root/.ssh
 chmod 700 /root/.ssh
 chown -R root:root /root/.ssh
-cat ssh/*.rsa >/root/.ssh/authorized_keys
+cat sshkeys/*.rsa >/root/.ssh/authorized_keys
 chmod 600 /root/.ssh/authorized_keys
-
-# Copy scripts to root
-cp functions*.sh /
 
 # Only allow public key login
 cat << EOF >>/etc/ssh/sshd_config
@@ -61,7 +60,21 @@ RSAAuthentication yes
 PubkeyAuthentication yes
 EOF
 
-echo 'features="network ata base ide scsi usb virtio ext4 dhcp lspci sshd dock2box parted ca-certificates curl docker lvm sgdisk sfdisk udevadm mkfs jq"' >/etc/mkinitfs/mkinitfs.conf
+# Build ttylog
+git clone https://github.com/rocasa/ttylog.git /ttylog
+(
+    mkdir /ttylog/build && cd /ttylog/build
+    cmake /ttylog
+    make
+    make install
+)
+mv /usr/local/sbin/ttylog /usr/sbin/ttylog
+
+#
+# Files to include in initrd
+#
+
+echo 'features="network ata base ide scsi usb virtio ext4 dhcp lspci sshd dock2box parted ca-certificates tar chroot curl lvm sgdisk sfdisk udevadm mkfs jq ttylog"' >/etc/mkinitfs/mkinitfs.conf
 echo "/usr/share/udhcpc/default.script" >>/etc/mkinitfs/features.d/dhcp.files
 echo "kernel/net/packet/af_packet.ko" >>/etc/mkinitfs/features.d/dhcp.modules
 
@@ -74,7 +87,7 @@ cat << EOF >/etc/mkinitfs/features.d/lspci.files
 EOF
 
 # Add motd
-rel=$(cat scripts_cache/release)
+rel=$(cat release)
 ts=$(date -u +'%F %T UTC')
 sed -e "s/version: x.xx.x/version: ${VERS}/" -e "s/release: xxxxxxx/release: ${rel}/" \
     -e "s/built: xxxx-xx-xx xx:xx:xx xxx/built: ${ts}/" motd >/etc/motd
@@ -105,33 +118,21 @@ cat << EOF >/etc/mkinitfs/features.d/ca-certificates.files
 /usr/bin/c_rehash
 EOF
 
+#/home/dock2box/.ssh/authorized_keys
+
 cat << EOF >/etc/mkinitfs/features.d/dock2box.files
-/home/dock2box/.ssh/authorized_keys
 /root/.ssh/authorized_keys
 /functions*.sh
+/dock2box-rebuild
+/config
 EOF
 
-cat << EOF >/etc/mkinitfs/features.d/docker.files
-/usr/bin/docker
-/usr/bin/docker-containerd
-/usr/bin/docker-runc
-/usr/bin/docker-containerd-shim
-/usr/bin/docker-containerd-ctr
-/sbin/iptables
-/usr/lib/libip4tc.so.0
-/usr/lib/libip6tc.so.0
-/usr/lib/libxtables.so.11
-/usr/lib/xtables
-/usr/bin/tar
+cat << EOF >/etc/mkinitfs/features.d/chroot.modules
 /usr/sbin/chroot
 EOF
 
-cat << EOF >/etc/mkinitfs/features.d/docker.modules
-kernel/net/bridge
-kernel/net/netfilter
-kernel/net/ipv4
-kernel/net/ipv6/netfilter
-kernel/drivers/net/veth.ko
+cat << EOF >/etc/mkinitfs/features.d/tar.modules
+/usr/bin/tar
 EOF
 
 cat << EOF >/etc/mkinitfs/features.d/curl.files
@@ -186,14 +187,11 @@ cat << EOF >/etc/mkinitfs/features.d/jq.files
 /usr/bin/jq
 EOF
 
-# Fake uname
-mv /bin/uname /bin/uname.orig
-cat << EOF >/bin/uname
-#!/bin/ash
-echo 4.4.17-0-grsec
+cat << EOF >/etc/mkinitfs/features.d/ttylog.files
+/usr/sbin/ttylog
 EOF
-chmod +x /bin/uname
 
 # Build initrd and copy kernel
-mkinitfs -o initrd
+kver=$( ls /lib/modules | tail -1 )
+mkinitfs -o initrd $kver
 cp /boot/vmlinuz-grsec kernel

@@ -1,37 +1,3 @@
-ROOT="/mnt/sysimage"
-DOCKER_ROOT="/mnt/docker"
-
-INFO_COL="\033[1;32m"
-WARN_COL="\033[0;33m"
-FATAL_COL="\033[0;31m"
-NO_COL='\033[0m'
-
-# Print messages
-info() {
-    if [ "${KOPT_nocolor:-false}" == "true" ]; then
-        printf "* $1\n"
-    else
-        printf "${INFO_COL}*${NO_COL} $1\n"
-    fi
-}
-
-warn() {
-    if [ "${KOPT_nocolor:-false}" == "true" ]; then
-        printf "* $1\n"
-    else
-        printf "${WARN_COL}*${NO_COL} WARN: $1\n"
-    fi
-}
-
-fatal() {
-    if [ "${KOPT_nocolor:-false}" == "true" ]; then
-        printf "* $1\n"
-    else
-        printf "${FATAL_COL}*${NO_COL} FATAL: $1\n"
-    fi
-    exit 1
-}
-
 # Get disk size in MB
 disk_size_mb() {
     local disk=$1
@@ -86,20 +52,6 @@ wipe_lvm() {
     for PV in $(pvs -o name | tail -n +2); do
         pvremove --force --force ${PV}
     done
-    sleep 1s
-    set -e
-}
-
-# Wipe MD Raid
-wipe_mdraid() {
-    local disk1=$1 disk2=$2
-
-    set +e
-    for MD in $(cd /dev; ls -d md? 2>/dev/null); do
-        mdadm --stop ${MD}
-    done
-
-    udevadm control --reload
     sleep 1s
     set -e
 }
@@ -191,9 +143,13 @@ create_lvm_vgs() {
 
 # Create Logical Volumes
 create_lvm_lvs() {
-    lvcreate -y -n lv_root -L 10G vg_root
-    lvcreate -y -n lv_swap -L 4G vg_root
-    lvcreate -y -n lv_var -L 15G vg_root
+    [ -n "${KOPT_root_size:-}" ] || KOPT_root_size="10G"
+    [ -n "${KOPT_swap_size:-}" ] || KOPT_swap_size="4G"
+    [ -n "${KOPT_var_size:-}" ] || KOPT_var_size="15G"
+
+    lvcreate -y -n lv_root -L $KOPT_root_size vg_root
+    lvcreate -y -n lv_swap -L $KOPT_swap_size vg_root
+    lvcreate -y -n lv_var -L $KOPT_var_size vg_root
     lvcreate -y -n lv_docker -l +100%FREE vg_root
 }
 
@@ -207,38 +163,36 @@ create_lvm_fss() {
 
 # Mount filesystmes
 mount_fs() {
-    mkdir -p $ROOT
-    mount -t ext4 /dev/vg_root/lv_root $ROOT
+    mkdir -p $SYSROOT
+    mount -t ext4 /dev/vg_root/lv_root $SYSROOT
 
-    mkdir -p $ROOT/boot
-    mount -t vfat ${DEV_BOOT} $ROOT/boot
+    mkdir -p $SYSROOT/boot
+    mount -t vfat ${DEV_BOOT} $SYSROOT/boot
 
-    mkdir -p $ROOT/var
-    mount -t ext4 /dev/vg_root/lv_var $ROOT/var
+    mkdir -p $SYSROOT/var
+    mount -t ext4 /dev/vg_root/lv_var $SYSROOT/var
 
-    mkdir -p $DOCKER_ROOT
-    mount -t ext4 /dev/vg_root/lv_docker $DOCKER_ROOT
+    mkdir -p $TMPDIR
+    mount -t ext4 /dev/vg_root/lv_docker $TMPDIR
 
-    mkdir -p $ROOT/dev
-    mount -o bind /dev $ROOT/dev
+    mkdir -p $SYSROOT/dev
+    mount -o bind /dev $SYSROOT/dev
 
-    mkdir -p $ROOT/proc
-    mount -o bind /proc $ROOT/proc
+    mkdir -p $SYSROOT/proc
+    mount -o bind /proc $SYSROOT/proc
 
-    mkdir -p $ROOT/sys
-    mount -o bind /sys $ROOT/sys
+    mkdir -p $SYSROOT/sys
+    mount -o bind /sys $SYSROOT/sys
 }
 
 umount_fs() {
-    local sysroot=$1
-
-    umount $sysroot/dev
-    umount $sysroot/proc
-    umount $sysroot/sys
-    umount $sysroot/boot
-    umount $sysroot/var
-    umount $sysroot
-    umount $DOCKER_ROOT
+    umount $SYSROOT/dev
+    umount $SYSROOT/proc
+    umount $SYSROOT/sys
+    umount $SYSROOT/boot
+    umount $SYSROOT/var
+    umount $SYSROOT
+    umount $TMPDIR
     sync
 }
 
@@ -248,15 +202,10 @@ add_sshkey() {
         return
     fi
 
-    mkdir -p $ROOT/home/dock2box/.ssh
-    chmod 700 $ROOT/home/dock2box $ROOT/home/dock2box/.ssh
-    echo "ssh-rsa $KOPT_sshkey sshkey@kopt" >>$ROOT/home/dock2box/.ssh/authorized_keys
-    chroot $ROOT chown -R dock2box:dock2box /home/dock2box
-}
-
-release_dhcp() {
-#    killall -SIGUSR2 udhcpc
-    echo
+    mkdir -p $SYSROOT/home/dock2box/.ssh
+    chmod 700 $SYSROOT/home/dock2box $SYSROOT/home/dock2box/.ssh
+    echo "ssh-rsa $KOPT_sshkey sshkey@kopt" >>$SYSROOT/home/dock2box/.ssh/authorized_keys
+    chroot $SYSROOT chown -R dock2box:dock2box /home/dock2box
 }
 
 get_sda_device() {
@@ -292,8 +241,8 @@ docker_download() {
 }
 
 docker_apply() {
-    local source=$1 sysroot=$2
-    shift; shift
+    local source=$1
+    shift
 
 # Exclude should be in image creation to make it generic
 # Also fix /var/lib/yum/yumdb
@@ -301,10 +250,12 @@ docker_apply() {
     while [ -n "$1" ]; do
         file="$source/${1}.tar.gz"
         info "Apply: $file"
-        tar -xzf $file -h -C $sysroot \
-        --exclude=boot/grub/grubenv \
-        --exclude=boot/grub2/grubenv \
-        --exclude=sys/.keep
+        tar -xzf $file -h -C $SYSROOT \
+        --exclude=./boot/grub/grubenv \
+        --exclude=./boot/grub2/grubenv \
+        --exclude=./sys \
+        --exclude=./dev \
+        --exclude=./proc
         shift
     done
 }
@@ -320,12 +271,19 @@ docker_pull() {
     fi
 
     # Get layers
-    layers=$(curl -s -H "$header" "https://${reg}/v2/${name}/manifests/${tag}" | jq -r .fsLayers[].blobSum )
+    manifest=$( curl -s -H "$header" "https://${reg}/v2/${name}/manifests/${tag}" )
+    schemaVer=$( echo $manifest | jq -r .schemaVersion )
+
+    case $schemaVer in
+        1) layers=$(curl -s -H "$header" "https://${reg}/v2/${name}/manifests/${tag}" | jq -r .fsLayers[].blobSum ) ;;
+        2) layers=$(curl -s -H "$header" "https://${reg}/v2/${name}/manifests/${tag}" | jq -r .layers[].digest ) ;;
+        *) fatal "Unsupported schema version: $schemaVer" ;;
+    esac
 
     docker_download $reg $name $target $parallel "${header}" $layers
 
     # Run twice in-case of failure
     docker_download $reg $name $target $parallel "${header}" $layers
 
-    docker_apply $target $ROOT $layers
+    docker_apply $target $layers
 }

@@ -1,0 +1,317 @@
+#!/bin/sh
+
+exiting() {
+    echo "Entering emergency shell since something failed, will reboot once you exit the shell"
+    sh
+    reboot -d 3 -f
+}
+
+trap exiting EXIT
+
+VERSION=0.00.1
+SYSROOT="/mnt/sysimage"
+TMPDIR="/mnt/download"
+
+INFO="\033[1;32m"
+WARN="\033[0;33m"
+FATAL="\033[0;31m"
+CLEAR='\033[0m'
+
+/bin/busybox mkdir -p /usr/bin /usr/sbin /proc /sys /dev $SYSROOT \
+        /media/cdrom /media/usb /tmp /run
+/bin/busybox --install -s
+
+# Basic environment
+export PATH=/usr/bin:/bin:/usr/sbin:/sbin
+
+# Needed devs
+[ -c /dev/null ] || mknod -m 666 /dev/null c 1 3
+
+# Basic mounts
+mount -t proc -o noexec,nosuid,nodev proc /proc
+mount -t sysfs -o noexec,nosuid,nodev sysfs /sys
+
+info() {
+    [ "$KOPT_quiet" = yes ] && return 0
+    printf "${INFO}$1${CLEAR}\n"
+}
+
+warn() {
+    printf "${WARN}WARN: $1${CLEAR}\n"
+}
+
+fatal() {
+    printf "${FATAL}FATAL: $1${CLEAR}\n"
+    exit 1
+}
+
+# Get first interface
+ip_choose_if() {
+	for x in /sys/class/net/eth*; do
+		[ -e "$x" ] && echo ${x##*/} && return
+	done
+}
+
+configure_fixed() {
+    OIFS=$IFS
+    IFS=':'
+    eval set -- $KOPT_ip
+    IFS=$OIFS
+    
+    PROTO="static"
+    IP="$1"
+    NETMASK="$2"
+    GW="$3"
+
+    [ -n "$IP" ] || fatal "Missing ip address"
+    [ -n "$NETMASK" ] || fatal "Missing netmask"
+    [ -n "$GW" ] || fatal "Missing gateway"
+
+    ifconfig $INTERFACE $IP netmask $NETMASK || return $?
+    ip route add 0.0.0.0/0 via $GW dev $INTERFACE || return $?
+}
+
+configure_dns() {
+    OIFS=$IFS
+    IFS=':'
+    eval set -- $KOPT_dns
+    IFS=$OIFS
+
+    DNS1="$1"
+    DNS2="$2"
+    SEARCH="$3"
+
+    [ -n "$DNS1" ] || fatal "Missing dns server 1"
+    [ -n "$DNS2" ] || fatal "Missing dns server2"
+    [ -n "$SEARCH" ] || fatal "Missing search suffix"
+
+    cat << EOF >/etc/resolv.conf
+search $SEARCH
+nameserver $DNS1
+nameserver $DNS2
+EOF
+}
+
+configure_dhcp() {
+    PROTO="dhcp"
+    ifconfig $INTERFACE 0.0.0.0
+    udhcpc -i $INTERFACE -f -q -F $HOSTNAME
+}
+
+# Get kernel options
+set -- $(cat /proc/cmdline)
+
+myopts="quiet debug dma modules usbdelay blacklist distro image registry ip interface dns gpt install sshkey root_size var_size swap_size hostname"
+
+for opt; do
+    for i in $myopts; do
+        case "$opt" in
+            $i=*) eval "KOPT_${i}='${opt#*=}'" ;;
+            $i) eval "KOPT_${i}=yes" ;;
+            no$i) eval "KOPT_${i}=no" ;;
+        esac
+    done
+done
+
+[ "$KOPT_quiet" = yes ] || echo "Dock2Box Init $VERSION"
+
+# Enable debug
+[ -n "$KOPT_debug" ] && set -x
+
+info "Setting US keymap"
+zcat /etc/keymap/us.bmap.gz | loadkmap
+
+# No DMA
+[ "$KOPT_dma" = no ] && modprobe libata dma=0
+
+# Hide Kernel messages
+[ "$KOPT_quiet" = yes ] && dmesg -n 1
+
+# Blacklist modules
+for i in ${KOPT_blacklist/,/ }; do
+    echo "blacklist $i" >> /etc/modprobe.d/boot-opt-blacklist.conf
+done
+
+# Setup /dev
+mount -t devtmpfs -o exec,nosuid,mode=0755,size=2M devtmpfs /dev 2>/dev/null \
+	|| mount -t tmpfs -o exec,nosuid,mode=0755,size=2M tmpfs /dev
+[ -d /dev/pts ] || mkdir -m 755 /dev/pts
+[ -c /dev/ptmx ] || mknod -m 666 /dev/ptmx c 5 2
+# Make sure /dev/null is setup correctly
+[ -f /dev/null ] && rm -f /dev/null
+[ -c /dev/null ] || mknod -m 666 /dev/null c 1 3
+mount -t devpts -o gid=5,mode=0620,noexec,nosuid devpts /dev/pts
+[ -d /dev/shm ] || mkdir /dev/shm
+mount -t tmpfs -o nodev,nosuid,noexec shm /dev/shm
+
+# Start logging console
+#info "Log ttyS0"
+#ttylog -b 115200 -d /dev/ttyS0 >/console.txt &
+
+# Load drivers
+info "Loading boot drivers"
+
+modprobe -a $(echo "$KOPT_modules" | tr ',' ' ' ) 2> /dev/null
+if [ -f /etc/modules ] ; then
+    sed 's/\#.*//g' < /etc/modules |
+    while read module args; do
+        modprobe -q $module $args
+    done
+fi
+
+# Loading network drivers
+info "Loading network drivers"
+nlplug-findfs -p /sbin/mdev ${KOPT_debug:+-d} \
+    ${KOPT_usbdelay:+-t $(( $KOPT_usbdelay * 1000 ))}
+
+# Get network device
+info "Get network device"
+[ -n "${KOPT_interface:-}" ] || INTERFACE=$(ip_choose_if)
+[ -n "$INTERFACE" ] || fatal "Couldn't find a network device"
+HWADDR=$(cat /sys/class/net/$INTERFACE/address)
+
+# Get hostname
+info "Get hostname"
+if [ -n "$KOPT_hostname" ]; then
+    info "Set hostname based on kernel option"
+    HOSTNAME=$KOPT_hostname
+else
+    info "Set hostname based on hardware addr. ($INTERFACE)"
+    HOSTNAME=$(tr -d ':' < /sys/class/net/$INTERFACE/address)
+fi
+hostname "$HOSTNAME"
+
+if [ -n "${KOPT_ip}" ]; then
+    info "Configure network fixed"
+    configure_fixed
+else
+    info "Configure network dhcp"
+    configure_dhcp
+fi
+ifconfig lo up
+
+if [ -n "${KOPT_dns}" ]; then
+    info "Configure DNS"
+    configure_dns
+fi
+
+info "Loading hardware drivers"
+find /sys -name modalias -type f -print0 | xargs -0 sort -u \
+        | xargs modprobe -b -a 2> /dev/null
+
+# Run twice so we detect all devices
+find /sys -name modalias -type f -print0 | xargs -0 sort -u \
+        | xargs modprobe -b -a 2> /dev/null
+
+# Start sshd
+info "Starting sshd"
+mkdir -p /var/empty
+ssh-keygen -A
+/usr/sbin/sshd
+
+# Update CA certificates
+info "Update CA certificates"
+mkdir -p /etc/ssl/certs
+update-ca-certificates
+
+# No install
+if [ -z "$KOPT_install" ]; then
+    echo "Entering shell since install wasn't specified, will reboot on exit"
+    sh
+    reboot -d 3 -f
+fi
+
+info "Load functions"
+source /functions.sh
+source /functions-${KOPT_distro}.sh
+
+# Get first disk
+disk0=$(get_sda_device)
+if [ "$disk0" == '/dev/vda' ]; then
+   disk1='/dev/vdb'
+else
+   disk1='/dev/sdb'
+fi
+
+info "Wait for disk to become available"
+wait_for_disk $disk0
+
+info "Wipe disk(s)"
+wipe_lvm
+clear_disk_pt $disk0
+
+info "Partitions disk(s)"
+if [ "${KOPT_mdraid:-false}" == "true" ]; then
+    info 'Using mdraid for mirroring'
+    if [ "${KOPT_gpt:-false}" == "true" ]; then
+        info 'Using GPT'
+        partition_disk_gpt $disk0
+        partition_disk_gpt $disk1
+    else
+        partition_disk_mbr $disk0
+        partition_disk_mbr $disk1
+    fi
+    sleep 5s
+    create_mdraid $disk0 $disk1
+else
+    if [ "${KOPT_gpt:-false}" == "true" ]; then
+        info 'Using GPT'
+        partition_disk_gpt $disk0
+    else
+        partition_disk_mbr $disk0
+    fi
+    create_lvm_vgs $disk0
+fi
+
+info "Setting up logical volumes"
+create_lvm_lvs
+
+info "Setting up filesystems"
+ln -s /proc/mounts /etc/mtab
+create_lvm_fss
+
+info "Mounting filesystems"
+mount_fs
+
+info "Pull Docker image and apply to disk"
+docker_pull $KOPT_registry $KOPT_image latest $TMPDIR 4
+
+info "Write network config"
+conf_net
+if [ -n "${KOPT_ip}" ]; then
+    conf_net_static
+else
+    conf_net_dhcp
+fi
+
+info "Add SSH key to dock2box user"
+add_sshkey
+
+info "Write fstab"
+write_fstab
+
+sysctl -w kernel.grsecurity.chroot_caps=0
+sysctl -w kernel.grsecurity.chroot_deny_mount=0
+
+info "Install bootloader"
+install_grub $disk0 "$KOPTS ${KOPT_kopts:-}"
+
+info "Copy rebuild script"
+cp /dock2box-rebuild $SYSROOT/usr/sbin/dock2box-rebuild
+chmod 755 $SYSROOT/usr/sbin/dock2box-rebuild
+mkdir -p $SYSROOT/etc/dock2box
+cp /config $SYSROOT/etc/dock2box/config
+
+info "Copy logs"
+dmesg > $SYSROOT/root/dmesg.log
+
+info "Unmout filesystems"
+umount_fs
+
+if [ "${KOPT_debug:-false}" == "true" ]; then
+    echo "Debug is set start a shell, will reboot on exit"
+    sh
+fi
+
+warn "Done, will reboot in 3 sec."
+reboot -d 3 -f
