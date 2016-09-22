@@ -3,7 +3,7 @@ REPO=dock2box
 REG=
 SYS=$(shell uname -s)
 REL=$(shell git rev-parse --verify --short HEAD)
-VIRT_TAR_OUT=debian8.5-virt-tar-out
+VIRT_TAR_OUT=dock2box/debian8.5-virt-tar-out
 
 # To use VM-Ware builder, specify:
 # make BUILDER=vmware-iso
