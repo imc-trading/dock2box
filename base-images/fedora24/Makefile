@@ -3,7 +3,7 @@ REPO=dock2box
 REG=
 SYS=$(shell uname -s)
 REL=$(shell git rev-parse --verify --short HEAD)
-VIRT_TAR_OUT=debian8.5-virt-tar-out
+VIRT_TAR_OUT=dock2box/debian8.5-virt-tar-out
 
 # To use VM-Ware builder, specify:
 # make BUILDER=vmware-iso
@@ -26,10 +26,10 @@ test:
 	packer validate template.json
 
 build: clean test
+	docker login
 	packer build -only=$(BUILDER) -var "vm_name=$(NAME)" template.json
 
 import: build
-	docker login
 	docker pull $(REG)$(VIRT_TAR_OUT):latest
 	docker run --privileged --rm -v "$${PWD}":/build --entrypoint /build.sh $(REG)$(VIRT_TAR_OUT):latest $(NAME) $(BUILDER) | docker import -c "LABEL dock2box.type='host-image'" - $(REG)$(REPO)/$(NAME):$(REL)
 
