@@ -12,5 +12,4 @@ build: clean
 	docker build --pull=true --no-cache -t $(REG)$(REPO)/$(NAME):latest .
 
 push: build
-	docker login
-	docker push $(ORG)/$(NAME):latest
+	docker push $(REG)$(REPO)/$(NAME):latest
