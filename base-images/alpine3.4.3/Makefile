@@ -23,6 +23,7 @@ check:
 	@type packer;
 	@type docker;
 	docker ps >/dev/null
+	docker login
 
 test: check
 	packer validate template.json
@@ -35,7 +36,7 @@ import: build
 	docker run --privileged --rm -v "$${PWD}":/build --entrypoint /build.sh $(REG)$(VIRT_TAR_OUT):latest $(NAME) $(BUILDER) | docker import - $(REG)$(REPO)/$(NAME):$(REL)
 
 push: import
-	docker login
+#	docker login
 	docker push $(REG)$(REPO)/$(NAME):$(REL)
 
 latest: push
