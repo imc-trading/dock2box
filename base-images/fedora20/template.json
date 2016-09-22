@@ -1,0 +1,111 @@
+{
+  "variables": {
+    "iso_url": "http://archives.fedoraproject.org/pub/archive/fedora/linux/releases/20/Fedora/x86_64/iso/Fedora-20-x86_64-netinst.iso",
+    "iso_checksum_type": "sha256",
+    "iso_checksum": "376be7d4855ad6281cb139430606a782fd6189dcb01d7b61448e915802cc350f"
+  },
+  "builders": [
+    {
+      "type": "qemu",
+      "qemuargs": [
+        [ "-m", "1024M" ]
+      ],
+      "vm_name": "{{user `vm_name`}}",
+
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "iso_url": "{{user `iso_url`}}",
+      "output_directory": "packer_output",
+
+      "ssh_username": "dock2box",
+      "ssh_password": "D0ck2B0x",
+      "ssh_wait_timeout": "60m",
+      "ssh_host_port_min": 2222,
+      "ssh_host_port_max": 2229,
+
+      "disk_size": "10000",
+      "disk_interface": "virtio",
+
+      "format": "qcow2",
+      "accelerator": "kvm",
+
+      "http_directory": ".",
+      "http_port_min": 10082,
+      "http_port_max": 10089,
+
+      "net_device": "virtio-net",
+
+      "boot_wait": "3s",
+      "headless": false,
+      "boot_command": [
+        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter><wait>"
+      ],
+      "shutdown_command": "echo dock2box | sudo -S /sbin/halt -h -p"
+    },
+    {
+      "type": "virtualbox-iso",
+      "vm_name": "{{user `vm_name`}}",
+      "guest_os_type": "RedHat_64",
+
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "iso_url": "{{user `iso_url`}}",
+      "output_directory": "packer_output",
+
+      "ssh_username": "dock2box",
+      "ssh_password": "D0ck2B0x",
+      "ssh_wait_timeout": "60m",
+
+      "disk_size": "7000",
+
+      "http_directory": ".",
+
+      "boot_command": [
+        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter>"
+      ],
+      "shutdown_command": "echo dock2box | sudo -S /sbin/halt -h -p",
+
+      "vboxmanage": [
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--memory",
+          "1024"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--cpus",
+          "1"
+        ]
+      ]
+    },
+    {
+      "type": "vmware-iso",
+      "vm_name": "{{user `vm_name`}}",
+
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "iso_checksum": "{{user `iso_checksum`}}",      
+      "iso_url": "{{user `iso_url`}}",
+      "output_directory": "packer_output",
+
+      "ssh_username": "dock2box",
+      "ssh_password": "D0ck2B0x",
+      "ssh_wait_timeout": "60m",
+
+      "disk_size": "7000",
+
+      "http_directory": ".",
+
+      "vmx_data": {
+          "memsize": "1024",
+          "numvcpus": "1",
+          "cpuid.coresPerSocket": "1"
+      },
+      "boot_command": [
+        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter>"
+      ],
+      "shutdown_command": "echo dock2box | sudo -S /sbin/halt -h -p"
+    }
+  ]
+}

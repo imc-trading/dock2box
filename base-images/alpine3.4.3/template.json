@@ -1,0 +1,143 @@
+{
+  "variables": {
+    "iso_url": "http://dl-cdn.alpinelinux.org/alpine/v3.4/releases/x86_64/alpine-3.4.3-x86_64.iso",
+    "iso_checksum": "f127edf9e72125a577c7f20a19c4fcf17c94984e"
+  },
+  "builders": [
+    {
+      "type": "virtualbox-iso",
+      "vm_name": "{{user `vm_name`}}",
+      "guest_os_type": "Ubuntu_64",
+
+      "iso_url": "{{user `iso_url`}}",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "iso_checksum_type": "sha1",
+
+      "disk_size": 10240,
+      "output_directory": "packer_output",
+      "http_directory": ".",
+
+      "shutdown_command": "sudo poweroff",
+
+      "ssh_username": "dock2box",
+      "ssh_password": "D0ck2B0x",
+      "ssh_port": 22,
+      "ssh_wait_timeout": "60m",
+
+      "boot_wait": "30s",
+      "boot_command": [
+        "root<enter><wait>",
+        "ifconfig eth0 up && udhcpc -i eth0<enter><wait5>",
+        "setup-alpine<enter><wait>",
+        "us<enter>",
+        "us<enter>",
+        "alpine<enter>",
+        "done<enter>no<enter><enter><enter>",
+        "D0ck2B0x<enter>",
+        "D0ck2B0x<enter>",
+        "UTC<enter><wait5><enter>",
+        "1<enter>",
+        "openssh<enter><wait5>",
+        "openntpd<enter><wait>",
+        "sda<enter>",
+        "sys<enter>",
+        "y<enter><wait10><wait10>",
+
+        "sysctl -w kernel.grsecurity.chroot_caps=0<enter>",
+        "sysctl -w kernel.grsecurity.chroot_deny_chmod=0<enter>",
+        "sysctl -w kernel.grsecurity.chroot_deny_chroot=0<enter>",
+
+        "mount /dev/sda3 /mnt<enter><wait>",
+        "mount -o bind /dev /mnt/dev<enter>",
+        "chroot /mnt<enter>",
+        "apk add sudo linux-grsec-dev alpine-sdk<enter><wait10><wait10>",
+        "adduser dock2box<enter>D0ck2B0x<enter>D0ck2B0x<enter>",
+        "setup-interfaces<enter>",
+        "eth0<enter>",
+        "dhcp<enter>",
+        "done<enter>no<enter>",
+        "echo 'dock2box ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers.d/dock2box<enter>",
+        "mkdir /run/lock<enter>",
+        "reboot -f<enter><wait>"
+      ],
+
+      "hard_drive_interface": "sata",
+      "vboxmanage": [
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--memory",
+          "1024"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--cpus",
+          "1"
+        ]
+      ]
+    },
+    {
+      "type": "vmware-iso",
+      "vm_name": "{{user `vm_name`}}",
+
+      "iso_url": "{{user `iso_url`}}",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "iso_checksum_type": "sha1",
+
+      "disk_size": 10240,
+      "output_directory": "packer_output",
+      "http_directory": ".",
+
+      "shutdown_command": "sudo poweroff",
+
+      "ssh_username": "dock2box",
+      "ssh_password": "D0ck2B0x",
+      "ssh_port": 22,
+      "ssh_wait_timeout": "60m",
+
+      "boot_wait": "15s",
+      "boot_command": [
+        "root<enter><wait>",
+        "ifconfig eth0 up && udhcpc -i eth0<enter><wait5>",
+        "setup-alpine<enter><wait>",
+        "us<enter>",
+        "us<enter>",
+        "alpine34<enter>",
+        "done<enter>no<enter><enter><enter>",
+        "D0ck2B0x<enter>",
+        "D0ck2B0x<enter>",
+        "UTC<enter><wait5><enter>",
+        "1<enter>",
+        "openssh<enter><wait5>",
+        "openntpd<enter><wait>",
+        "sda<enter>",
+        "sys<enter>",
+        "y<enter><wait10><wait10>",
+
+        "sysctl -w kernel.grsecurity.chroot_caps=0<enter>",
+        "sysctl -w kernel.grsecurity.chroot_deny_chmod=0<enter>",
+        "sysctl -w kernel.grsecurity.chroot_deny_chroot=0<enter>",
+
+        "mount /dev/sda3 /mnt<enter><wait>",
+        "mount -o bind /dev /mnt/dev<enter>",
+        "chroot /mnt<enter>",
+        "apk add sudo linux-grsec-dev alpine-sdk<enter><wait10><wait10>",
+        "adduser dock2box<enter>D0ck2B0x<enter>D0ck2B0x<enter>",
+        "setup-interfaces<enter>",
+        "eth0<enter>",
+        "dhcp<enter>",
+        "done<enter>no<enter>",
+        "echo 'dock2box ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers.d/dock2box<enter>",
+        "mkdir /run/lock<enter>",
+        "reboot -f<enter><wait>"
+      ],
+
+      "vmx_data": {
+        "memsize": "1024",
+        "numvcpus": "1",
+        "cpuid.coresPerSocket": "1"
+      }
+    }
+  ]
+}

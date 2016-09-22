@@ -1,8 +1,9 @@
-NAME=centos-7.2.1511
-ORG=dock2box
-VIRT_TAR_OUT=$(ORG)/debian8.5-virt-tar-out
+NAME=centos7.2.1511
+REPO=dock2box
+REG=
 SYS=$(shell uname -s)
 REL=$(shell git rev-parse --verify --short HEAD)
+VIRT_TAR_OUT=dock2box/debian8.5-virt-tar-out
 
 # To use VM-Ware builder, specify:
 # make BUILDER=vmware-iso
@@ -27,17 +28,14 @@ test:
 build: clean test
 	packer build -only=$(BUILDER) -var "vm_name=$(NAME)" template.json
 
-export: build
-	docker pull $(VIRT_TAR_OUT):latest
-	docker run --privileged --rm -v "$${PWD}":/build --entrypoint /build.sh $(VIRT_TAR_OUT) $(NAME) $(BUILDER)
-
-import: export
-	docker import packer_output/${NAME}.tar.gz $(ORG)/$(NAME):$(REL)
+import: build
+	docker pull $(REG)$(VIRT_TAR_OUT):latest
+	docker run --privileged --rm -v "$${PWD}":/build --entrypoint /build.sh $(REG)$(VIRT_TAR_OUT):latest $(NAME) $(BUILDER) | docker import - $(REG)$(REPO)/$(NAME):$(REL)
 
 push: import
 	docker login
-	docker push ${ORG}/${NAME}:${REL}
+	docker push $(REG)$(REPO)/$(NAME):$(REL)
 
 latest: push
-	docker tag $(ORG)/$(NAME):$(REL) $(ORG)/$(NAME):latest
-	docker push $(ORG)/$(NAME):latest
+	docker tag $(REG)$(REPO)/$(NAME):$(REL) $(REG)$(REPO)/$(NAME):latest
+	docker push $(REG)$(REPO)/$(NAME):latest

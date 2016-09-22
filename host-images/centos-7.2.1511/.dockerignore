@@ -1,3 +1,0 @@
-*
-!packer_output/*.tar.gz
-!dracut.conf

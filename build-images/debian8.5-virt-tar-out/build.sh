@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -eux
+set -eu
 
 NAME=$1
 BUILDER=$2
@@ -11,13 +11,13 @@ BUILDER=$2
 
 case ${BUILDER} in
     virtualbox-iso)
-        virt-tar-out -a packer_output/${NAME}-disk1.vmdk / - | gzip --best > packer_output/${NAME}.tar.gz
+        virt-tar-out -a packer_output/${NAME}-disk1.vmdk / -
     ;;
     vmware-iso)
-        virt-tar-out -a packer_output/disk.vmdk / - | gzip --best > packer_output/${NAME}.tar.gz
+        virt-tar-out -a packer_output/disk.vmdk / -
     ;;
     qemu)
-        virt-tar-out -a packer_output/${NAME} / - | gzip --best > packer_output/${NAME}.tar.gz
+        virt-tar-out -a packer_output/${NAME} / -
     ;;
     *)
         echo "Unknown builder: ${BUILDER}"
