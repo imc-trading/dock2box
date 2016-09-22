@@ -26,6 +26,7 @@ test:
 	packer validate template.json
 
 build: clean test
+	docker login
 	packer build -only=$(BUILDER) -var "vm_name=$(NAME)" template.json
 
 import: build
@@ -33,7 +34,6 @@ import: build
 	docker run --privileged --rm -v "$${PWD}":/build --entrypoint /build.sh $(REG)$(VIRT_TAR_OUT):latest $(NAME) $(BUILDER) | docker import - $(REG)$(REPO)/$(NAME):$(REL)
 
 push: import
-	docker login
 	docker push $(REG)$(REPO)/$(NAME):$(REL)
 
 latest: push

@@ -46,6 +46,7 @@
       "type": "virtualbox-iso",
       "vm_name": "{{user `vm_name`}}",
       "guest_os_type": "RedHat_64",
+      "guest_additions_mode": "disable",
 
       "iso_checksum_type": "{{user `iso_checksum_type`}}",
       "iso_checksum": "{{user `iso_checksum`}}",

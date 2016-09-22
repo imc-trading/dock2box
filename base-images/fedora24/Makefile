@@ -29,11 +29,11 @@ build: clean test
 	packer build -only=$(BUILDER) -var "vm_name=$(NAME)" template.json
 
 import: build
+	docker login
 	docker pull $(REG)$(VIRT_TAR_OUT):latest
 	docker run --privileged --rm -v "$${PWD}":/build --entrypoint /build.sh $(REG)$(VIRT_TAR_OUT):latest $(NAME) $(BUILDER) | docker import -c "LABEL dock2box.type='host-image'" - $(REG)$(REPO)/$(NAME):$(REL)
 
 push: import
-	docker login
 	docker push $(REG)$(REPO)/$(NAME):$(REL)
 
 latest: push

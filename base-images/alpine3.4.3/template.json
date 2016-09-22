@@ -8,6 +8,7 @@
       "type": "virtualbox-iso",
       "vm_name": "{{user `vm_name`}}",
       "guest_os_type": "Ubuntu_64",
+      "guest_additions_mode": "disable",
 
       "iso_url": "{{user `iso_url`}}",
       "iso_checksum": "{{user `iso_checksum`}}",
