@@ -32,7 +32,9 @@ apk add pciutils \
         tar \
         coreutils \
         jq \
-        cmake
+        cmake \
+        v86d \
+        dialog
 
 # Add initramfs-init script
 cp scripts/init /usr/share/mkinitfs/initramfs-init
@@ -60,30 +62,65 @@ RSAAuthentication yes
 PubkeyAuthentication yes
 EOF
 
+# Copy splash screen
+cp dock2box.ppm /etc
+
+# Default uvesafb mode
+echo "options uvesafb mode_option=800x600-32 scroll=ywrap" >/etc/modprobe.d/uvesafb.conf
+
+# Copy fbsplash theme
+#mkdir -p /etc/splash
+#cp -r theme/* /etc/splash
+#cat << EOF >/etc/splash/splash
+#SPLASH_THEME="natural_antix"
+#EOF
+
+# Compile fbsplash
+#apk add libjpeg-turbo-dev \
+#        libpng-dev \
+#        freetype-dev \
+#(
+#    tar jf /... --owner=root
+#)   
+
 # Build ttylog
-git clone https://github.com/rocasa/ttylog.git /ttylog
-(
-    mkdir /ttylog/build && cd /ttylog/build
-    cmake /ttylog
-    make
-    make install
-)
-mv /usr/local/sbin/ttylog /usr/sbin/ttylog
+#git clone https://github.com/rocasa/ttylog.git /ttylog
+#(
+#    mkdir /ttylog/build && cd /ttylog/build
+#    cmake /ttylog
+#    make
+#    make install
+#)
+#mv /usr/local/sbin/ttylog /usr/sbin/ttylog
 
 #
 # Files to include in initrd
 #
 
-echo 'features="network ata base ide scsi usb virtio ext4 dhcp lspci sshd dock2box parted ca-certificates tar chroot curl lvm sgdisk sfdisk udevadm mkfs jq ttylog"' >/etc/mkinitfs/mkinitfs.conf
+echo 'features="network ata base ide scsi usb virtio ext4 dhcp lspci sshd dock2box parted ca-certificates tar chroot curl lvm sgdisk sfdisk udevadm mkfs jq v86d dialog"' >/etc/mkinitfs/mkinitfs.conf
 echo "/usr/share/udhcpc/default.script" >>/etc/mkinitfs/features.d/dhcp.files
 echo "kernel/net/packet/af_packet.ko" >>/etc/mkinitfs/features.d/dhcp.modules
 
 # bnx2x module is included by default, but depends on crc32c which is not included by default
 echo 'kernel/arch/x86/crypto/crc32c-intel.ko' >>/etc/mkinitfs/features.d/network.modules
 
+cat << EOF >>/etc/mkinitfs/features.d/base.files
+/etc/keymap/us.bmap.gz
+EOF
+
 cat << EOF >/etc/mkinitfs/features.d/lspci.files
 /usr/share/hwdata/pci.ids
 /usr/sbin/lspci
+EOF
+
+cat << EOF >/etc/dialogrc
+use_colors = ON
+title_color = (GREEN,BLACK,OFF)
+screen_color = (BLACK,BLACK,OFF)
+dialog_color = (WHITE,BLACK,OFF)
+border_color = (WHITE,BLACK,OFF)
+border2_color = (WHITE,BLACK,OFF)
+gauge_color = (GREEN,WHITE,OFF)
 EOF
 
 # Add motd
@@ -118,13 +155,12 @@ cat << EOF >/etc/mkinitfs/features.d/ca-certificates.files
 /usr/bin/c_rehash
 EOF
 
-#/home/dock2box/.ssh/authorized_keys
-
 cat << EOF >/etc/mkinitfs/features.d/dock2box.files
 /root/.ssh/authorized_keys
 /functions*.sh
 /dock2box-rebuild
 /config
+/etc/dock2box.ppm
 EOF
 
 cat << EOF >/etc/mkinitfs/features.d/chroot.modules
@@ -189,6 +225,23 @@ EOF
 
 cat << EOF >/etc/mkinitfs/features.d/ttylog.files
 /usr/sbin/ttylog
+EOF
+
+cat << EOF >/etc/mkinitfs/features.d/v86d.files
+/sbin/v86d
+/etc/modprobe.d/uvesafb.conf
+EOF
+
+cat << EOF >/etc/mkinitfs/features.d/v86d.modules
+kernel/drivers/video/console/fbcon.ko
+kernel/drivers/video/fbdev/uvesafb.ko
+EOF
+
+cat << EOF >/etc/mkinitfs/features.d/dialog.files
+/etc/dialogrc
+/usr/bin/dialog
+/usr/lib/libncursesw.so.6
+/etc/terminfo
 EOF
 
 # Build initrd and copy kernel

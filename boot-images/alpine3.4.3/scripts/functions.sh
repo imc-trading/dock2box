@@ -198,7 +198,7 @@ umount_fs() {
 
 add_sshkey() {
     if [ "${KOPT_sshkey:-none}" == "none" ]; then
-        info "No SSH Key specified"
+        warn "No SSH Key specified"
         return
     fi
 
