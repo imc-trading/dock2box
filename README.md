@@ -1,9 +1,25 @@
+# Structure
+
+Directory | Description
+--------- | -----------
+base-images | Base images built using Packer and then imported into Docker
+boot-images | Boot images used for PXE boot
+build-images | Build image used during builds
+
+# Authentication
+
+For the base images "root" is locked by default. You can use the following default credentials:
+
+**Default user:** dock2box
+
+**Default password:** D0ck2B0x
+
 # Kernel options
 
 Option | Type | Description
 ------ | ---- | -----------
-quiet | generic | Boot kernel in quiet mode
-debug | generic | Echo all commands in init to the Console
+quiet | generic | Boot kernel in quiet mode and use progress bar
+video | generic | Set uvesafb video mode ex. 800x600-32
 dma | generic | Disable DMA since it can cause issues
 modules=module:module | generic | Load kernel modules
 blacklist=module:module | generic | Blacklist kernel modules
