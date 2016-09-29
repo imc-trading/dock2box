@@ -11,6 +11,16 @@ VERS=0.00.1
 # Add repositories
 cat << EOF >/etc/apk/repositories
 http://nl.alpinelinux.org/alpine/v3.4/main
+http://nl.alpinelinux.org/alpine/edge/community
+EOF
+
+# Add pre-reqs
+apk update
+apk add pv
+
+# Add repositories
+cat << EOF >/etc/apk/repositories
+http://nl.alpinelinux.org/alpine/v3.4/main
 http://nl.alpinelinux.org/alpine/v3.4/community
 EOF
 
@@ -34,7 +44,10 @@ apk add pciutils \
         jq \
         cmake \
         v86d \
-        dialog
+        dialog \
+        sed \
+        grep \
+        wget
 
 # Add initramfs-init script
 cp scripts/init /usr/share/mkinitfs/initramfs-init
@@ -97,7 +110,7 @@ echo "options uvesafb mode_option=800x600-32 scroll=ywrap" >/etc/modprobe.d/uves
 # Files to include in initrd
 #
 
-echo 'features="network ata base ide scsi usb virtio ext4 dhcp lspci sshd dock2box parted ca-certificates tar chroot curl lvm sgdisk sfdisk udevadm mkfs jq v86d dialog"' >/etc/mkinitfs/mkinitfs.conf
+echo 'features="network ata base ide scsi usb virtio ext4 dhcp lspci sshd dock2box parted ca-certificates tar chroot curl lvm sgdisk sfdisk udevadm mkfs jq v86d dialog pv"' >/etc/mkinitfs/mkinitfs.conf
 echo "/usr/share/udhcpc/default.script" >>/etc/mkinitfs/features.d/dhcp.files
 echo "kernel/net/packet/af_packet.ko" >>/etc/mkinitfs/features.d/dhcp.modules
 
@@ -242,6 +255,10 @@ cat << EOF >/etc/mkinitfs/features.d/dialog.files
 /usr/bin/dialog
 /usr/lib/libncursesw.so.6
 /etc/terminfo
+EOF
+
+cat << EOF >/etc/mkinitfs/features.d/pv.files
+/usr/bin/pv
 EOF
 
 # Build initrd and copy kernel

@@ -2,6 +2,7 @@
 
 exiting() {
     echo "Entering emergency shell since something failed, will reboot once you exit the shell"
+    [ -e /tmp/progress ] && chvt 1
     sh
     reboot -d 3 -f
 }
@@ -34,15 +35,18 @@ mount -t sysfs -o noexec,nosuid,nodev sysfs /sys
 info() {
     [ -e /tmp/progress -a -n "${2:-}" ] && printf "XXX\n\n\n  Switch Virtual Cosole using ALT+Fx\n\n\n\n  $1\nXXX\n${2:-0}\n" >/tmp/progress
 
-#    [ "$KOPT_quiet" = yes ] && return 0
     printf "${INFO}$1${CLEAR}\n"
 }
 
 warn() {
+    [ -e /tmp/progress -a -n "${2:-}" ] && printf "XXX\n\n\n  Switch Virtual Cosole using ALT+Fx\n\n\n\n  WARN: $1\nXXX\n${2:-0}\n" >/tmp/progress
+
     printf "${WARN}WARN: $1${CLEAR}\n"
 }
 
 fatal() {
+    [ -e /tmp/progress ] && printf "XXX\n\n\n  Switch Virtual Cosole using ALT+Fx\n\n\n\n  FATAL: $1\nXXX\n100\n" >/tmp/progress
+
     printf "${FATAL}FATAL: $1${CLEAR}\n"
     exit 1
 }
@@ -249,6 +253,7 @@ update-ca-certificates
 # No install
 if [ -z "$KOPT_install" ]; then
     echo "Entering shell since install wasn't specified, will reboot on exit"
+    [ -e /tmp/progress ] && chvt 1
     sh
     reboot -d 3 -f
 fi
@@ -272,7 +277,7 @@ info "Wipe disk(s)" 60
 wipe_lvm
 clear_disk_pt $disk0
 
-info "Partitions disk(s)" 65
+info "Partition disk(s)" 65
 if [ "${KOPT_mdraid:-false}" == "true" ]; then
     info 'Using mdraid for mirroring' 67
     if [ "${KOPT_gpt:-false}" == "true" ]; then
@@ -305,7 +310,6 @@ create_lvm_fss
 info "Mounting filesystems" 82
 mount_fs
 
-info "Pull Docker image and apply to disk" 84
 docker_pull $KOPT_registry $KOPT_image latest $TMPDIR 4
 
 info "Write network config" 86

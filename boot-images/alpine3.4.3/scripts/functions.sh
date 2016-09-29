@@ -219,43 +219,69 @@ get_sda_device() {
 # Add error handling for HTTP status
 
 docker_download() {
-    local reg=$1 name=$2 target=$3 parallel=$4 header="${5}" checksum
+    local reg=$1 name=$2 target=$3 parallel=$4 header="${5}" full short checksum csize
     shift; shift; shift; shift; shift
 
     while [ -n "$1" ]; do
+        full=${1##sha256:}
+        short=${full:0:12}
+
         file="$target/${1}.tar.gz"
         if [ -f "$file" ]; then
             checksum=$( sha256sum $file | awk '{ print $1 }' )
-            if [ "$checksum" != "${1##sha256:}" ]; then
-                warn "File exist checksum doesn't match, download again: ${1}.tar.gz"
-                curl --progress-bar -o $file -L -H "$header" "https://${reg}/v2/${name}/blobs/${1}"
+            if [ "$checksum" != "$full" ]; then
+                warn "Re-download layer $short" 10
+                if [ -e /tmp/progress ]; then
+                    csize=$( curl -sI "https://${reg}/v2/${name}/blobs/${1}" | awk '/Content-Length/ {print $2}' )
+                    curl -s -L -H "$header" "https://${reg}/v2/${name}/blobs/${1}" | pv -n -s $csize >$file 2>/tmp/progress
+                else
+                    curl --progress-bar -o $file -L -H "$header" "https://${reg}/v2/${name}/blobs/${1}"
+                fi
             else
-                info "Skip file: ${1}.tar.gz"
+                info "Skip layer $short"
             fi
         else
-            info "Download: $file"
-            curl --progress-bar -o $file -L -H "$header" "https://${reg}/v2/${name}/blobs/${1}"
+            info "Download layer $short" 10
+            if [ -e /tmp/progress ]; then
+                csize=$( curl -sI "https://${reg}/v2/${name}/blobs/${1}" | awk '/Content-Length/ {print $2}' )
+                curl -s -L -H "$header" "https://${reg}/v2/${name}/blobs/${1}" | pv -n -s $csize >$file 2>/tmp/progress
+            else
+                curl --progress-bar -o $file -L -H "$header" "https://${reg}/v2/${name}/blobs/${1}"
+            fi
         fi
         shift
     done
 }
 
 docker_apply() {
-    local source=$1
+    local source=$1 full short
     shift
 
 # Exclude should be in image creation to make it generic
 # Also fix /var/lib/yum/yumdb
 
     while [ -n "$1" ]; do
+        full=${1##sha256:}
+        short=${full:0:12}
+
+        info "Apply layer ${short}" 0
         file="$source/${1}.tar.gz"
-        info "Apply: $file"
-        tar -xzf $file -h -C $SYSROOT \
-        --exclude=./boot/grub/grubenv \
-        --exclude=./boot/grub2/grubenv \
-        --exclude=./sys \
-        --exclude=./dev \
-        --exclude=./proc
+        if [ -e /tmp/progress ]; then
+            ( pv -n $file | tar xzf - -h -C $SYSROOT \
+            --exclude=./boot/grub/grubenv \
+            --exclude=./boot/grub2/grubenv \
+            --exclude=./sys \
+            --exclude=./dev \
+            --exclude=./proc
+            ) >/tmp/progress 2>&1
+        else
+            tar -xzf $file -h -C $SYSROOT \
+            --exclude=./boot/grub/grubenv \
+            --exclude=./boot/grub2/grubenv \
+            --exclude=./sys \
+            --exclude=./dev \
+            --exclude=./proc
+        fi
         shift
     done
 }
