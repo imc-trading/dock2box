@@ -37,3 +37,13 @@ gpt | disk | Use GPT partitions
 root_size=size | disk | size of "/root", ex. "10G"
 var_size=size | disk | Size of "/var", ex. "15G"
 swap_size=size | disk | Size of "swap", ex. "4G"
+
+# Example iPXE script
+
+```
+#!ipxe
+
+kernel http://my-server/dock2box/boot-images/alpine3.4.3/kernel distro=centos image=dock2box/centos7.2.1511 install gpt quiet video=800x600-32
+initrd http://my-server/dock2box/boot-images/alpine3.4.3/initrd
+boot
+```
