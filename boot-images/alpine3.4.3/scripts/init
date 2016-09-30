@@ -349,5 +349,10 @@ if [ "${KOPT_debug:-false}" == "true" ]; then
     sh
 fi
 
-warn "Done, will reboot in 3 sec." 100
-reboot -d 3 -f
+warn "Done, will reboot in 3 sec." 0
+sleep 60
+info "2 ..." 33 
+sleep 60
+info "3 ..." 100
+sleep 60
+reboot -f

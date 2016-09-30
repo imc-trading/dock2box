@@ -59,13 +59,17 @@ cp scripts/config /
 
 # Add CA certificates
 mkdir -p /usr/local/share/ca-certificates/
-cp certs/* /usr/local/share/ca-certificates/
+[ -n "$(ls certs)" ] && cp certs/* /usr/local/share/ca-certificates/
 
 # Add SSH keys
 mkdir -p /root/.ssh
 chmod 700 /root/.ssh
 chown -R root:root /root/.ssh
-cat sshkeys/*.rsa >/root/.ssh/authorized_keys
+if [ -n "$(ls sshkeys)" ]; then
+    cat sshkeys/*.rsa >/root/.ssh/authorized_keys || true
+else
+    touch /root/.ssh/authorized_keys
+fi
 chmod 600 /root/.ssh/authorized_keys
 
 # Only allow public key login
@@ -76,7 +80,7 @@ PubkeyAuthentication yes
 EOF
 
 # Copy splash screen
-cp dock2box.ppm /etc
+#cp dock2box.ppm /etc
 
 # Default uvesafb mode
 echo "options uvesafb mode_option=800x600-32 scroll=ywrap" >/etc/modprobe.d/uvesafb.conf
