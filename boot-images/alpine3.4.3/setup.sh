@@ -2,7 +2,8 @@
 
 set -eu
 
-VERS=0.00.1
+REL=$1
+TS="$2"
 
 #
 # Add applications and configuration
@@ -107,10 +108,7 @@ cat << EOF >/etc/mkinitfs/features.d/lspci.files
 EOF
 
 # Add motd
-rel=$(cat release)
-ts=$(date -u +'%F %T UTC')
-sed -e "s/version: x.xx.x/version: ${VERS}/" -e "s/release: xxxxxxx/release: ${rel}/" \
-    -e "s/built: xxxx-xx-xx xx:xx:xx xxx/built: ${ts}/" motd >/etc/motd
+printf "dock2box, release: ${REL} (${TS})\n" >/etc/motd
 
 cat << EOF >/etc/mkinitfs/features.d/sshd.files
 /usr/bin/ssh-keygen
