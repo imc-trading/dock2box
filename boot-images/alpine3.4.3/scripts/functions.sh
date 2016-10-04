@@ -231,9 +231,9 @@ docker_download() {
             checksum=$( sha256sum $file | awk '{ print $1 }' )
             if [ "$checksum" != "$full" ]; then
                 warn "Re-download layer $short" 10
-                if [ -e /tmp/progress ]; then
+                if [ -e /tmp/progress_bar ]; then
                     csize=$( curl -sI "https://${reg}/v2/${name}/blobs/${1}" | awk '/Content-Length/ {print $2}' )
-                    curl -s -L -H "$header" "https://${reg}/v2/${name}/blobs/${1}" | pv -n -s $csize >$file 2>/tmp/progress
+                    curl -s -L -H "$header" "https://${reg}/v2/${name}/blobs/${1}" | pv -n -s $csize >$file 2>/tmp/progress_bar
                 else
                     curl --progress-bar -o $file -L -H "$header" "https://${reg}/v2/${name}/blobs/${1}"
                 fi
@@ -242,9 +242,9 @@ docker_download() {
             fi
         else
             info "Download layer $short" 10
-            if [ -e /tmp/progress ]; then
+            if [ -e /tmp/progress_bar ]; then
                 csize=$( curl -sI "https://${reg}/v2/${name}/blobs/${1}" | awk '/Content-Length/ {print $2}' )
-                curl -s -L -H "$header" "https://${reg}/v2/${name}/blobs/${1}" | pv -n -s $csize >$file 2>/tmp/progress
+                curl -s -L -H "$header" "https://${reg}/v2/${name}/blobs/${1}" | pv -n -s $csize >$file 2>/tmp/progress_bar
             else
                 curl --progress-bar -o $file -L -H "$header" "https://${reg}/v2/${name}/blobs/${1}"
             fi
@@ -266,14 +266,14 @@ docker_apply() {
 
         info "Apply layer ${short}" 0
         file="$source/${1}.tar.gz"
-        if [ -e /tmp/progress ]; then
+        if [ -e /tmp/progress_bar ]; then
             ( pv -n $file | tar xzf - -h -C $SYSROOT \
             --exclude=./boot/grub/grubenv \
             --exclude=./boot/grub2/grubenv \
             --exclude=./sys \
             --exclude=./dev \
             --exclude=./proc
-            ) >/tmp/progress 2>&1
+            ) >/tmp/progress_bar 2>&1
         else
             tar -xzf $file -h -C $SYSROOT \
             --exclude=./boot/grub/grubenv \

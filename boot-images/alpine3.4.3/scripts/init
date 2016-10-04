@@ -2,7 +2,7 @@
 
 exiting() {
     echo "Entering emergency shell since something failed, will reboot once you exit the shell"
-    [ -e /tmp/progress ] && chvt 1
+    [ -e /tmp/progress_bar ] && chvt 1
     sh
     reboot -d 3 -f
 }
@@ -13,10 +13,40 @@ VERSION=0.00.1
 SYSROOT="/mnt/sysimage"
 TMPDIR="/mnt/download"
 
-INFO="\033[0;32m"
-WARN="\033[0;33m"
-FATAL="\033[0;31m"
-CLEAR='\033[0m'
+WHITE="\e[1;37m"
+BLACK="\e[0;30m"
+BLUE="\e[0;34m"
+LBLUE="\e[1;34m"
+GREEN="\e[0;32m"
+LGREEN="\e[1;32m"
+CYAN="\e[0;36m"
+LCYAN="\e[1;36m"
+RED="\e[0;31m"
+LRED="\e[1;31m"
+PURPLE="\e[0;35m"
+LPURPLE="\e[1;35m"
+BROWN="\e[0;33m"
+ORANGE=$BROWN
+YELLOW="\e[1;33m"
+LGRAY="\e[0;37m"
+DGRAY="\e[1;30m"
+
+CLEAR="\033[0m"
+CLEAR_LINE="\033[K"
+
+BKGR_GREEN="\e[42m"
+BKGR_YELLOW="\e[43m"
+BKGR_LGRAY="\e[47m"
+BKGR_BLACK="\e[40m"
+
+TITLE=$LGRAY
+HELP=$DGRAY
+INFO=$DGRAY
+WARN=$ORANGE
+FATAL=$RED
+
+COLS=$(tput cols)
+LINES=$(tput lines)
 
 /bin/busybox mkdir -p /usr/bin /usr/sbin /proc /sys /dev $SYSROOT \
         /media/cdrom /media/usb /tmp /run
@@ -33,22 +63,58 @@ mount -t proc -o noexec,nosuid,nodev proc /proc
 mount -t sysfs -o noexec,nosuid,nodev sysfs /sys
 
 info() {
-    [ -e /tmp/progress -a -n "${2:-}" ] && printf "XXX\n\n\n  Switch Virtual Cosole using ALT+Fx\n\n\n\n  $1\nXXX\n${2:-0}\n" >/tmp/progress
+    if [ -e /tmp/progress_bar ]; then
+        clear_lines $(($LINES-6)) >/dev/tty2
+        print_center $(($LINES-6)) "$1" $INFO >/dev/tty2
+        [ -n "${2:-}" ] && echo $2 >/tmp/progress_bar
+    fi
 
     printf "${INFO}$1${CLEAR}\n"
 }
 
 warn() {
-    [ -e /tmp/progress -a -n "${2:-}" ] && printf "XXX\n\n\n  Switch Virtual Cosole using ALT+Fx\n\n\n\n  WARN: $1\nXXX\n${2:-0}\n" >/tmp/progress
+    if [ -e /tmp/progress_bar ]; then
+        clear_lines $(($LINES-6)) >/dev/tty2
+        print_center $(($LINES-6)) "$1" $WARN >/dev/tty2
+        [ -n "${2:-}" ] && echo $2 >/tmp/progress_bar
+    fi
 
     printf "${WARN}WARN: $1${CLEAR}\n"
 }
 
 fatal() {
-    [ -e /tmp/progress ] && printf "XXX\n\n\n  Switch Virtual Cosole using ALT+Fx\n\n\n\n  FATAL: $1\nXXX\n100\n" >/tmp/progress
+    if [ -e /tmp/progress_bar ]; then
+        clear_lines $(($LINES-6)) >/dev/tty2
+        print_center $(($LINES-6)) "$1" $FATAL >/dev/tty2
+        echo 100 >/tmp/progress_bar
+    fi
 
     printf "${FATAL}FATAL: $1${CLEAR}\n"
     exit 1
+}
+
+print_center() {
+    local line=$1 text="$2" color="${3:-$LGRAY}" center
+
+    center=$(( $COLS/2-${#text}/2 ))
+    tput cup $line $center
+    echo -en "${color}${text}${CLEAR}"
+}
+
+print_pos() {
+    local line=$1 col=$2 text="$3" color="${4:-$LGRAY}"
+
+    tput cup $line $col
+    echo -en "${color}${text}${CLEAR}"
+}
+
+clear_lines() {
+    local beg=$1 num=${2:-0}
+
+    for line in $(seq 0 $num); do
+        tput cup $(( $beg + $line )) 0
+        echo -en ${CLEAR_LINE}
+    done
 }
 
 # Get first interface
@@ -164,22 +230,37 @@ if [ -n "${KOPT_video:-}" ]; then
     echo "options uvesafb mode_option=${KOPT_video} scroll=ywrap" >/etc/modprobe.d/uvesafb.conf
     modprobe uvesafb
     modprobe fbcon
+
+    COLS=$(tput cols)
+    LINES=$(tput lines)
 fi
 
-#if [ "$KOPT_splash" = yes ]; then
-#    echo "IMAGE_ALIGN=CM" > /tmp/fbsplash.cfg
-#    fbsplash -s /etc/dock2box.ppm -d /dev/fb0 -i /tmp/fbsplash.cfg
-#fi
-
-if [ "$KOPT_quiet" = yes ]; then
+if [ "$KOPT_splash" = yes ]; then
     chvt 2
-    mkfifo /tmp/progress
+    setterm -msg off -cursor off -foreground green >/dev/tty2
+    tput clear >/dev/tty2
+    cat << EOF > /etc/fbsplash.conf
+IMAGE_ALIGN=CM
 
-    size=$(stty size)
-    size_h=${size%% *}
-    size_w=${size##* }
+BAR_LEFT=50
+BAR_TOP=525
 
-    ( while true; do cat /tmp/progress; done ) | dialog --no-lines --title "Installing Host" --gauge "" 10 $size_w 0 >/dev/tty2 &
+BAR_WIDTH=700
+BAR_HEIGHT=20
+
+BAR_R=35
+BAR_G=35
+BAR_B=35
+EOF
+
+    mkfifo /tmp/progress_bar
+    fbsplash -s /etc/dock2box.ppm -i /etc/fbsplash.conf -f /tmp/progress_bar &
+    if [ -n "$KOPT_install" ]; then
+        print_center 1 "Install ${KOPT_image##*/}" $TITLE >/dev/tty2
+    else
+        print_center 1 "Start shell" $TITLE >/dev/tty2
+    fi
+    print_pos 3 1 "Switch Virtual Terminal using ALT+Fx" $HELP >/dev/tty2
 fi
 
 # Load drivers
@@ -253,7 +334,7 @@ update-ca-certificates
 # No install
 if [ -z "$KOPT_install" ]; then
     echo "Entering shell since install wasn't specified, will reboot on exit"
-    [ -e /tmp/progress ] && chvt 1
+    [ -e /tmp/progress_bar ] && chvt 1
     sh
     reboot -d 3 -f
 fi
@@ -349,10 +430,11 @@ if [ "${KOPT_debug:-false}" == "true" ]; then
     sh
 fi
 
-warn "Done, will reboot in 3 sec." 0
-sleep 60
-info "2 ..." 33 
-sleep 60
-info "3 ..." 100
-sleep 60
-reboot -f
+warn "Done, will reboot in 3 sec." 100
+sleep 1
+warn "Done, will reboot in 2 sec." 100
+sleep 1
+warn "Done, will reboot in 1 sec." 100
+sleep 1
+warn "Rebooting..." 100
+reboot -d 1 -f

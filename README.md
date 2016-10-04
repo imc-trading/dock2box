@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="logo.png" width="50%">
+</p>
+
 # Structure
 
 Directory | Description
@@ -6,7 +10,17 @@ base-images | Base images built using Packer and then imported into Docker
 boot-images | Boot images used for PXE boot
 build-images | Build image used during builds
 
-# Authentication
+# Default authentication
+
+## Boot image
+
+For the boot image you can **only** login as "root".
+
+**Default user:** root
+
+**Default password:** D0ck2B0x
+
+## Base images
 
 For the base images "root" is locked by default. You can use the following default credentials:
 
@@ -43,7 +57,7 @@ swap_size=size | disk | Size of "swap", ex. "4G"
 ```
 #!ipxe
 
-kernel http://my-server/dock2box/boot-images/alpine3.4.3/kernel distro=centos image=dock2box/centos7.2.1511 install gpt quiet video=800x600-32
+kernel http://my-server/dock2box/boot-images/alpine3.4.3/kernel distro=centos image=dock2box/centos7.2.1511 install gpt quiet video=800x600-32 splash
 initrd http://my-server/dock2box/boot-images/alpine3.4.3/initrd
 boot
 ```

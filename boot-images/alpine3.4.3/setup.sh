@@ -44,10 +44,13 @@ apk add pciutils \
         jq \
         cmake \
         v86d \
-        dialog \
-        sed \
-        grep \
-        wget
+        ncurses \
+        util-linux
+
+# Setup root passwd
+grep -v 'root:' /usr/share/mkinitfs/passwd >/tmp/passwd
+echo 'root:$6$BaHYi8W6U.pAapmr$AfxQe39FlxKZh1EiFbNeROwiUWadGFUbgHs.ZZK0RNi8M4giXhDDnX/SukpZRXelKPt8B3ZJHcVAsHD.qroTw1:0:0:root:/root:/bin/ash' >/usr/share/mkinitfs/passwd
+cat /tmp/passwd >>/usr/share/mkinitfs/passwd
 
 # Add initramfs-init script
 cp scripts/init /usr/share/mkinitfs/initramfs-init
@@ -65,56 +68,29 @@ mkdir -p /usr/local/share/ca-certificates/
 mkdir -p /root/.ssh
 chmod 700 /root/.ssh
 chown -R root:root /root/.ssh
-if [ -n "$(ls sshkeys)" ]; then
-    cat sshkeys/*.rsa >/root/.ssh/authorized_keys || true
-else
-    touch /root/.ssh/authorized_keys
-fi
+touch /root/.ssh/authorized_keys
+[ -n "$(ls sshkeys)" ] && cat sshkeys/*.rsa >>/root/.ssh/authorized_keys
 chmod 600 /root/.ssh/authorized_keys
 
 # Only allow public key login
 cat << EOF >>/etc/ssh/sshd_config
-PasswordAuthentication no
+PasswordAuthentication yes
+PermitRootLogin yes
 RSAAuthentication yes
 PubkeyAuthentication yes
 EOF
 
 # Copy splash screen
-#cp dock2box.ppm /etc
+cp dock2box.ppm /etc
 
 # Default uvesafb mode
 echo "options uvesafb mode_option=800x600-32 scroll=ywrap" >/etc/modprobe.d/uvesafb.conf
-
-# Copy fbsplash theme
-#mkdir -p /etc/splash
-#cp -r theme/* /etc/splash
-#cat << EOF >/etc/splash/splash
-#SPLASH_THEME="natural_antix"
-#EOF
-
-# Compile fbsplash
-#apk add libjpeg-turbo-dev \
-#        libpng-dev \
-#        freetype-dev \
-#(
-#    tar jf /... --owner=root
-#)   
-
-# Build ttylog
-#git clone https://github.com/rocasa/ttylog.git /ttylog
-#(
-#    mkdir /ttylog/build && cd /ttylog/build
-#    cmake /ttylog
-#    make
-#    make install
-#)
-#mv /usr/local/sbin/ttylog /usr/sbin/ttylog
 
 #
 # Files to include in initrd
 #
 
-echo 'features="network ata base ide scsi usb virtio ext4 dhcp lspci sshd dock2box parted ca-certificates tar chroot curl lvm sgdisk sfdisk udevadm mkfs jq v86d dialog pv"' >/etc/mkinitfs/mkinitfs.conf
+echo 'features="network ata base ide scsi usb virtio ext4 dhcp lspci sshd dock2box parted ca-certificates tar chroot curl lvm sgdisk sfdisk udevadm mkfs jq v86d pv ncurses tput setterm"' >/etc/mkinitfs/mkinitfs.conf
 echo "/usr/share/udhcpc/default.script" >>/etc/mkinitfs/features.d/dhcp.files
 echo "kernel/net/packet/af_packet.ko" >>/etc/mkinitfs/features.d/dhcp.modules
 
@@ -130,16 +106,6 @@ cat << EOF >/etc/mkinitfs/features.d/lspci.files
 /usr/sbin/lspci
 EOF
 
-cat << EOF >/etc/dialogrc
-use_colors = ON
-title_color = (GREEN,BLACK,OFF)
-screen_color = (BLACK,BLACK,OFF)
-dialog_color = (WHITE,BLACK,OFF)
-border_color = (WHITE,BLACK,OFF)
-border2_color = (WHITE,BLACK,OFF)
-gauge_color = (GREEN,WHITE,OFF)
-EOF
-
 # Add motd
 rel=$(cat release)
 ts=$(date -u +'%F %T UTC')
@@ -152,6 +118,7 @@ cat << EOF >/etc/mkinitfs/features.d/sshd.files
 /usr/sbin/sshd
 /usr/lib/ssh/ssh-pkcs11-helper
 /etc/motd
+/usr/bin/scp
 EOF
 
 cat << EOF >/etc/mkinitfs/features.d/parted.files
@@ -254,15 +221,21 @@ kernel/drivers/video/console/fbcon.ko
 kernel/drivers/video/fbdev/uvesafb.ko
 EOF
 
-cat << EOF >/etc/mkinitfs/features.d/dialog.files
-/etc/dialogrc
-/usr/bin/dialog
+cat << EOF >/etc/mkinitfs/features.d/pv.files
+/usr/bin/pv
+EOF
+
+cat << EOF >/etc/mkinitfs/features.d/ncurses.files
 /usr/lib/libncursesw.so.6
 /etc/terminfo
 EOF
 
-cat << EOF >/etc/mkinitfs/features.d/pv.files
-/usr/bin/pv
+cat << EOF >/etc/mkinitfs/features.d/tput.files
+/usr/bin/tput
+EOF
+
+cat << EOF >/etc/mkinitfs/features.d/setterm.files
+/usr/bin/setterm
 EOF
 
 # Build initrd and copy kernel
