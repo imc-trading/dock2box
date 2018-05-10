@@ -1,6 +1,12 @@
 package model
 
-import "time"
+import (
+	"fmt"
+	"time"
+
+	"github.com/mickep76/qry"
+	"github.com/pborman/uuid"
+)
 
 type Rack struct {
 	UUID       string     `json:"uuid"`
@@ -14,3 +20,58 @@ type Rack struct {
 }
 
 type Racks []*Rack
+
+func NewRack(name string) *Rack {
+	return &Rack{
+		UUID:    uuid.New(),
+		Created: time.Now(),
+		Name:    name,
+	}
+}
+
+func (ds *Datastore) QueryRack(q *qry.Query) (Racks, error) {
+	kvs, err := ds.Values("racks")
+	if err != nil {
+		return nil, err
+	}
+
+	racks := Racks{}
+	if err := kvs.Decode(&racks); err != nil {
+		return nil, err
+	}
+
+	r, err := q.Eval(racks)
+	if err != nil {
+		return nil, err
+	}
+
+	return r.(Racks), nil
+}
+
+func (ds *Datastore) OneRack(uuid string) (*Rack, error) {
+	kvs, err := ds.Values(fmt.Sprintf("racks/%s", uuid))
+	if err != nil {
+		return nil, err
+	}
+
+	racks := Racks{}
+	if err := kvs.Decode(&racks); err != nil {
+		return nil, err
+	}
+
+	if len(racks) > 0 {
+		return racks[0], nil
+	}
+
+	return nil, nil
+}
+
+func (ds *Datastore) CreateRack(rack *Rack) error {
+	return ds.Set(fmt.Sprintf("racks/%s", rack.UUID), rack)
+}
+
+func (ds *Datastore) UpdateRack(rack *Rack) error {
+	now := time.Now()
+	rack.Updated = &now
+	return ds.Set(fmt.Sprintf("racks/%s", rack.UUID), rack)
+}

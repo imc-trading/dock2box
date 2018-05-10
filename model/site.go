@@ -1,6 +1,12 @@
 package model
 
-import "time"
+import (
+	"fmt"
+	"time"
+
+	"github.com/mickep76/qry"
+	"github.com/pborman/uuid"
+)
 
 type Site struct {
 	UUID    string     `json:"uuid"`
@@ -15,3 +21,58 @@ type Site struct {
 }
 
 type Sites []*Site
+
+func NewSite(name string) *Site {
+	return &Site{
+		UUID:    uuid.New(),
+		Created: time.Now(),
+		Name:    name,
+	}
+}
+
+func (ds *Datastore) QuerySite(q *qry.Query) (Sites, error) {
+	kvs, err := ds.Values("sites")
+	if err != nil {
+		return nil, err
+	}
+
+	sites := Sites{}
+	if err := kvs.Decode(&sites); err != nil {
+		return nil, err
+	}
+
+	r, err := q.Eval(sites)
+	if err != nil {
+		return nil, err
+	}
+
+	return r.(Sites), nil
+}
+
+func (ds *Datastore) OneSite(uuid string) (*Site, error) {
+	kvs, err := ds.Values(fmt.Sprintf("sites/%s", uuid))
+	if err != nil {
+		return nil, err
+	}
+
+	sites := Sites{}
+	if err := kvs.Decode(&sites); err != nil {
+		return nil, err
+	}
+
+	if len(sites) > 0 {
+		return sites[0], nil
+	}
+
+	return nil, nil
+}
+
+func (ds *Datastore) CreateSite(site *Site) error {
+	return ds.Set(fmt.Sprintf("sites/%s", site.UUID), site)
+}
+
+func (ds *Datastore) UpdateSite(site *Site) error {
+	now := time.Now()
+	site.Updated = &now
+	return ds.Set(fmt.Sprintf("sites/%s", site.UUID), site)
+}
