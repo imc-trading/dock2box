@@ -47,6 +47,24 @@ func (ds *Datastore) QueryClients(q *qry.Query) (Clients, error) {
 	return r.(Clients), nil
 }
 
+func (ds *Datastore) OneClient(uuid string) (*Client, error) {
+	kvs, err := ds.Values(fmt.Sprintf("clients/%s", uuid))
+	if err != nil {
+		return nil, err
+	}
+
+	clients := Clients{}
+	if err := kvs.Decode(&clients); err != nil {
+		return nil, err
+	}
+
+	if len(clients) > 0 {
+		return clients[0], nil
+	}
+
+	return nil, nil
+}
+
 func (ds *Datastore) CreateClient(client *Client) error {
 	return ds.Set(fmt.Sprintf("clients/%s", client.UUID), client, kvstore.WithLease(ds.lease))
 }

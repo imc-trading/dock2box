@@ -45,6 +45,24 @@ func (ds *Datastore) QueryServers(q *qry.Query) (Servers, error) {
 	return r.(Servers), nil
 }
 
+func (ds *Datastore) OneServer(uuid string) (*Server, error) {
+	kvs, err := ds.Values(fmt.Sprintf("servers/%s", uuid))
+	if err != nil {
+		return nil, err
+	}
+
+	servers := Servers{}
+	if err := kvs.Decode(&servers); err != nil {
+		return nil, err
+	}
+
+	if len(servers) > 0 {
+		return servers[0], nil
+	}
+
+	return nil, nil
+}
+
 func (ds *Datastore) CreateServer(server *Server) error {
 	return ds.Set(fmt.Sprintf("servers/%s", server.UUID), server, kvstore.WithLease(ds.lease))
 }
