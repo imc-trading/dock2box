@@ -10,21 +10,19 @@ import (
 )
 
 type Server struct {
-	UUID     string     `json:"uuid" kvstore:"unique"`
-	Created  time.Time  `json:"created"`
-	Updated  *time.Time `json:"updated,omitempty"`
-	Hostname string     `json:"hostname" kvstore:"unique"`
-	Bind     string     `json:"bind"`
+	UUID    string     `json:"uuid"`
+	Created time.Time  `json:"created"`
+	Updated *time.Time `json:"updated,omitempty"`
+	Name    string     `json:"name"`
 }
 
 type Servers []*Server
 
-func NewServer(hostname string, bind string) *Server {
+func NewServer(name string) *Server {
 	return &Server{
-		UUID:     uuid.New(),
-		Created:  time.Now(),
-		Hostname: hostname,
-		Bind:     bind,
+		UUID:    uuid.New(),
+		Created: time.Now(),
+		Name:    name,
 	}
 }
 

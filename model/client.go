@@ -10,21 +10,21 @@ import (
 )
 
 type Client struct {
-	UUID     string     `json:"uuid" kvstore:"unique"`
+	UUID     string     `json:"uuid"`
 	Created  time.Time  `json:"created"`
 	Updated  *time.Time `json:"updated,omitempty"`
-	Hostname string     `json:"hostname" kvstore:"unique"`
+	Name     string     `json:"name"`
 	IPAddr   string     `json:"ipAddr"`
 	Hardware *Hardware  `json:"hardware,omitempty"`
 }
 
 type Clients []*Client
 
-func NewClient(hostname string) *Client {
+func NewClient(name string) *Client {
 	return &Client{
-		UUID:     uuid.New(),
-		Created:  time.Now(),
-		Hostname: hostname,
+		UUID:    uuid.New(),
+		Created: time.Now(),
+		Name:    name,
 	}
 }
 

@@ -13,8 +13,8 @@ import (
 	_ "github.com/mickep76/kvstore/etcdv3"
 	"github.com/mickep76/qry"
 
-	"github.com/mickep76/kvstore/example/handler"
-	"github.com/mickep76/kvstore/example/model"
+	"github.com/imc-trading/dock2box/handler"
+	"github.com/imc-trading/dock2box/model"
 )
 
 var clientHandler = kvstore.WatchHandler(func(kv kvstore.KeyValue) {
@@ -26,7 +26,7 @@ var clientHandler = kvstore.WatchHandler(func(kv kvstore.KeyValue) {
 		return
 	}
 
-	log.Printf("client value: created: %s updated: %s uuid: %s hostname: %s", c.Created, c.Updated, c.UUID, c.Hostname)
+	log.Printf("client value: created: %s updated: %s uuid: %s hostname: %s", c.Created, c.Updated, c.UUID, c.Name)
 
 	if kv.PrevValue() != nil {
 		c := &model.Client{}
@@ -35,7 +35,7 @@ var clientHandler = kvstore.WatchHandler(func(kv kvstore.KeyValue) {
 			return
 		}
 
-		log.Printf("client prev. value: created: %s updated: %s uuid: %s hostname: %s", c.Created, c.Updated, c.UUID, c.Hostname)
+		log.Printf("client prev. value: created: %s updated: %s uuid: %s hostname: %s", c.Created, c.Updated, c.UUID, c.Name)
 	}
 })
 
@@ -59,7 +59,7 @@ func main() {
 	// Find existing server in datastore.
 	log.Printf("find existing server in datastore")
 	hostname, _ := os.Hostname()
-	servers, err := ds.QueryServers(qry.Eq("Hostname", hostname))
+	servers, err := ds.QueryServers(qry.Eq("Name", hostname))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -74,7 +74,7 @@ func main() {
 		}
 	} else {
 		log.Printf("create new server")
-		s = model.NewServer(hostname, *bind)
+		s = model.NewServer(hostname)
 
 		// Create server in datastore.
 		log.Printf("create server in datastore")

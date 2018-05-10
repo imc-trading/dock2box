@@ -11,7 +11,7 @@ import (
 	_ "github.com/mickep76/kvstore/etcdv3"
 	"github.com/mickep76/qry"
 
-	"github.com/mickep76/kvstore/example/model"
+	"github.com/imc-trading/dock2box/model"
 )
 
 func main() {
@@ -33,7 +33,7 @@ func main() {
 	// Find existing client in datastore.
 	log.Printf("find existing client in datastore")
 	hostname, _ := os.Hostname()
-	clients, err := ds.QueryClients(qry.Eq("Hostname", hostname))
+	clients, err := ds.QueryClients(qry.Eq("Name", hostname))
 	if err != nil {
 		log.Fatal(err)
 	}

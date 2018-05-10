@@ -8,7 +8,7 @@ import (
 )
 
 type Rule struct {
-	UUID    string      `json:"uuid" kvstore:"unique"`
+	UUID    string      `json:"uuid"`
 	Created time.Time   `json:"created"`
 	Updated *time.Time  `json:"updated,omitempty"`
 	Name    string      `json:"name" toml:"name"`

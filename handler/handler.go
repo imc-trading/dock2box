@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"github.com/mickep76/kvstore/example/model"
+	"github.com/imc-trading/dock2box/model"
 )
 
 type Handler struct {
