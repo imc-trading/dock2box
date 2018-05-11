@@ -31,7 +31,7 @@ func NewSubnet(name string) *Subnet {
 	}
 }
 
-func (ds *Datastore) QuerySubnet(q *qry.Query) (Subnets, error) {
+func (ds *Datastore) QuerySubnets(q *qry.Query) (Subnets, error) {
 	kvs, err := ds.Values("subnets")
 	if err != nil {
 		return nil, err

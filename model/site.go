@@ -30,7 +30,7 @@ func NewSite(name string) *Site {
 	}
 }
 
-func (ds *Datastore) QuerySite(q *qry.Query) (Sites, error) {
+func (ds *Datastore) QuerySites(q *qry.Query) (Sites, error) {
 	kvs, err := ds.Values("sites")
 	if err != nil {
 		return nil, err

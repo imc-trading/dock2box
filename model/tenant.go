@@ -25,7 +25,7 @@ func NewTenant(name string) *Tenant {
 	}
 }
 
-func (ds *Datastore) QueryTenant(q *qry.Query) (Tenants, error) {
+func (ds *Datastore) QueryTenants(q *qry.Query) (Tenants, error) {
 	kvs, err := ds.Values("tenants")
 	if err != nil {
 		return nil, err

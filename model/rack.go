@@ -29,7 +29,7 @@ func NewRack(name string) *Rack {
 	}
 }
 
-func (ds *Datastore) QueryRack(q *qry.Query) (Racks, error) {
+func (ds *Datastore) QueryRacks(q *qry.Query) (Racks, error) {
 	kvs, err := ds.Values("racks")
 	if err != nil {
 		return nil, err

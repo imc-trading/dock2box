@@ -9,40 +9,43 @@ import (
 )
 
 type Host struct {
-	UUID           string         `json:"uuid"`
-	Created        time.Time      `json:"created"`
-	Updated        *time.Time     `json:"updated,omitempty"`
-	ClientUUID     string         `json:"clientUUID"`
-	Name           string         `json:"name"`
-	IPAddr         string         `json:"ipAddr"`
-	Hardware       *Hardware      `json:"hardware,omitempty"`
-	HwAddr         string         `json:"hwAddr,omitempty"`
-	SerialNumber   string         `json:"serialNumber,omitempty"`
-	Role           *Role          `json:"role,omitempty"`
-	Host           *Host          `json:"host,omitempty"`
-	Site           *Site          `json:"site,omitempty"`
-	Rack           *Rack          `json:"rack,omitempty"`
-	RackUnitPos    int            `json:"rackUnitPos,omitempty"`
-	RackUnitHeight int            `json:"rackUnitHeight,omitempty"`
-	Tenant         *Tenant        `json:"tenantUUID,omitempty"`
-	DockerImage    *DockerImage   `json:"dockerImage,omitempty"`
-	AllowBuild     bool           `json:"allowBuild"`
-	SecurityGroup  *SecurityGroup `json:"securityGroup"`
-	HostGroups     HostGroups     `json:"hostGroups,omitempty"`
+	UUID              string         `json:"uuid"`
+	Created           time.Time      `json:"created"`
+	Updated           *time.Time     `json:"updated,omitempty"`
+	Name              string         `json:"name"`
+	HwAddr            string         `json:"hwAddr,omitempty"`
+	Hardware          *Hardware      `json:"hardware,omitempty"`
+	RoleUUID          string         `json:"roleUUID,omitempty"`
+	Role              *Role          `json:"role,omitempty"`
+	SiteUUID          string         `json:"siteUUID,omitempty"`
+	Site              *Site          `json:"site,omitempty"`
+	RackUUID          string         `json:"rackUUID,omitempty"`
+	Rack              *Rack          `json:"rack,omitempty"`
+	RackPos           int            `json:"rackPos,omitempty"`
+	RackHeight        int            `json:"rackHeight,omitempty"`
+	TenantUUID        string         `json:"tenantUUID,omitempty"`
+	Tenant            *Tenant        `json:"tenant,omitempty"`
+	ImageUUID         string         `json:"imageUUID,omitempty"`
+	Image             *Image         `json:"image,omitempty"`
+	AllowBuild        bool           `json:"allowBuild"`
+	SecurityGroupUUID string         `json:"securityGroupUUID,omitempty"`
+	SecurityGroup     *SecurityGroup `json:"securityGroup"`
+	HostGroupUUIDs    []string       `json:"hostGroupUUIDs"`
+	HostGroups        HostGroups     `json:"hostGroups,omitempty"`
 }
 
 type Hosts []*Host
 
-func NewHost(name string, ipAddr string) *Host {
+func NewHost(name string, hwAddr string) *Host {
 	return &Host{
 		UUID:    uuid.New(),
 		Created: time.Now(),
 		Name:    name,
-		IPAddr:  ipAddr,
+		HwAddr:  hwAddr,
 	}
 }
 
-func (ds *Datastore) QueryHost(q *qry.Query) (Hosts, error) {
+func (ds *Datastore) QueryHosts(q *qry.Query) (Hosts, error) {
 	kvs, err := ds.Values("hosts")
 	if err != nil {
 		return nil, err

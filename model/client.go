@@ -14,8 +14,8 @@ type Client struct {
 	Created  time.Time  `json:"created"`
 	Updated  *time.Time `json:"updated,omitempty"`
 	Name     string     `json:"name"`
-	IPAddr   string     `json:"ipAddr"`
 	Hardware *Hardware  `json:"hardware,omitempty"`
+	HostUUID string     `json:"hostUUID"`
 }
 
 type Clients []*Client

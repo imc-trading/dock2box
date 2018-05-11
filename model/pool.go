@@ -25,7 +25,7 @@ func NewPool(name string) *Pool {
 	}
 }
 
-func (ds *Datastore) QueryPool(q *qry.Query) (Pools, error) {
+func (ds *Datastore) QueryPools(q *qry.Query) (Pools, error) {
 	kvs, err := ds.Values("pools")
 	if err != nil {
 		return nil, err

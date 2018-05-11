@@ -25,7 +25,7 @@ func NewRole(name string) *Role {
 	}
 }
 
-func (ds *Datastore) QueryRole(q *qry.Query) (Roles, error) {
+func (ds *Datastore) QueryRoles(q *qry.Query) (Roles, error) {
 	kvs, err := ds.Values("roles")
 	if err != nil {
 		return nil, err
