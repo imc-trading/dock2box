@@ -77,9 +77,9 @@ cat /tmp/passwd >>/usr/share/mkinitfs/passwd
 cp init.sh /usr/share/mkinitfs/initramfs-init
 
 # Add CA certificates
-#mkdir -p /usr/local/share/ca-certificates/
-#[ -n "$(ls .certs-cache)" ] && cp .certs-cache/* /usr/local/share/ca-certificates/
-#update-ca-certificates
+mkdir -p /usr/local/share/ca-certificates/
+[ -n "$(ls .certs-cache)" ] && cp .certs-cache/* /usr/local/share/ca-certificates/
+update-ca-certificates
 
 # Add client
 cp ./client /usr/bin/client
