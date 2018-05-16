@@ -1,0 +1,19 @@
+<div class="pagination" ng-if="vm.numPages > 1">
+  <ul class="pagination">
+    <li ng-if="vm.page > 1">
+      <a ng-click="vm.setPage(1)"><i class="fa fa-angle-double-left"></i></a>
+    </li>
+    <li ng-if="vm.page > 1">
+      <a ng-click="vm.setPage(vm.page - 1)"><i class="fa fa-angle-left"></i></a>
+    </li>
+    <li ng-repeat="page in [] | range:vm.fromPage:vm.toPage" ng-class="{active: page == vm.page}">
+      <a ng-click="vm.setPage(page)">{{page}}</a>
+    </li>
+    <li ng-if="vm.page < vm.numPages">
+      <a ng-click="vm.setPage(vm.page + 1)"><i class="fa fa-angle-right"></i></a>
+    </li>
+    <li ng-if="vm.page < vm.numPages">
+      <a ng-click="vm.setPage(vm.numPages)"><i class="fa fa-angle-double-right"></i></a>
+    </li>
+  </ul>
+</div>

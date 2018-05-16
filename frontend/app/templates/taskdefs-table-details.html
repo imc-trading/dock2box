@@ -1,0 +1,129 @@
+<div class="rolldown-header">
+</div>
+
+<div class="col-md-12">
+  <div class="col-md-4">
+    <label>Task Definition</label>
+    <dl class="dl-horizontal">
+      <dt>Name</dt>
+      <dd>{{vm.row.name}}</dd>
+
+      <dt>Description</dt>
+      <dd>{{vm.row.descr}}</dd>
+
+      <dd>&nbsp;</dd>
+
+      <dt>User</dt>
+      <dd>{{vm.row.user}}</dd>
+
+      <dt>Group</dt>
+      <dd>{{vm.row.group}}</dd>
+
+      <dt>Working Directory</dt>
+      <dd>{{vm.row.dir}}</dd>
+
+      <dt>Command</dt>
+      <dd>{{vm.row.cmd}}</dd>
+
+      <dd>&nbsp;</dd>
+
+      <dt>File Exists<dt>
+      <dd>{{vm.row.fileExists}}<dd>
+
+      <dt>File Not Exists<dt>
+      <dd>{{vm.row.fileNotExists}}<dd>
+
+      <dd>&nbsp;</dd>
+
+      <dt>Reboot<dt>
+      <dd>
+        <i ng-if="vm.row.reboot" class="fa fa-check-square-o"></i>
+        <i ng-if="!vm.row.reboot" class="fa fa-square-o"></i>
+      <dd>
+
+      <dt>Reboot Exit Code</dt>
+      <dd>{{vm.row.rebootExitCode}}</dd>
+
+      <dt>Reboot File Exist</dt>
+      <dd>{{vm.row.rebootFileExist}}</dd>
+
+      <dt>Reboot File Not Exist</dt>
+      <dd>{{vm.row.rebootFileNotExist}}</dd>
+    </dl>
+  </div>
+
+  <div class="col-md-2" ng-click="$event.stopPropagation()">
+    <label>Rules</label>
+    <ul class="list-nav">
+      <li ng-if="vm.row.trigger !== undefined" ng-class="{ 'selected': vm.rule.name == 'trigger' }"><a href="" ng-click="vm.rule = {}; vm.rule.name = 'trigger'; vm.rule.code = vm.row.trigger">Trigger</a></li>
+      <li ng-if="vm.row.require !== undefined" ng-class="{ 'selected': vm.rule.name == 'require' }"><a href="" ng-click="vm.rule = {}; vm.rule.name = 'require'; vm.rule.code = vm.row.require">Require</a></li>
+    </ul>
+    <div class="clearfix"></div>
+
+    <div ng-if="vm.row.args !== undefined">
+      <label class="pointer" ng-click="vm.openArgs = !vm.openArgs">
+        <i ng-if="!vm.openArgs" class="fa fa-plus-square-o"></i>
+        <i ng-if="vm.openArgs" class="fa fa-minus-square-o"></i>
+        &nbsp;
+        Arguments
+      </label>
+      <ul class="list-nav" uin-collapse="!vm.openArgs">
+        <li ng-repeat="v in vm.row.args" ng-class="{ 'selected': vm.rule.name == v.name }"><a href="" ng-click="vm.rule = v">{{v.display}}</a></li>
+      </ul>
+      <div class="clearfix"></div>
+    </div>
+
+    <div ng-if="vm.row.env !== undefined">
+      <label class="pointer" ng-click="vm.openEnv = !vm.openEnv">
+        <i ng-if="!vm.openEnv" class="fa fa-plus-square-o"></i>
+        <i ng-if="vm.openEnv" class="fa fa-minus-square-o"></i>
+        &nbsp;
+        Environment
+      </label>
+      <ul class="list-nav" uib-collapse="!vm.openEnv">
+        <li ng-repeat="v in vm.row.env" ng-class="{ 'selected': vm.rule.name == v.name }"><a href="" ng-click="vm.rule = v">{{v.display}}</a></li>
+      </ul>
+      <div class="clearfix"></div>
+    </div>
+
+    <div ng-if="vm.row.pre !== undefined">
+      <label class="pointer" ng-click="vm.openPre = !vm.openPre">
+        <i ng-if="!vm.openPre" class="fa fa-plus-square-o"></i>
+        <i ng-if="vm.openPre" class="fa fa-minus-square-o"></i>
+        &nbsp;
+        Pre
+      </label>
+      <ul class="list-nav" uib-collapse="!vm.openPre">
+        <li ng-repeat="v in vm.row.pre" ng-class="{ 'selected': vm.rule.name == v.name }"><a href="" ng-click="vm.rule = v">{{v.display}}</a></li>
+      </ul>
+      <div class="clearfix"></div>
+    </div>
+
+    <div ng-if="vm.row.post !== undefined">
+      <label class="pointer" ng-click="vm.openPost = !vm.openPost">
+        <i ng-if="!vm.openPost" class="fa fa-plus-square-o"></i>
+        <i ng-if="vm.openPost" class="fa fa-minus-square-o"></i>
+        &nbsp;
+        Post
+      </label>
+      <ul class="list-nav" uib-collapse="!vm.openPost">
+        <li ng-repeat="v in vm.row.post" ng-class="{ 'selected': vm.rule.name == v.name }"><a href="" ng-click="vm.rule = v">{{v.display}}</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <dl class="dl-horizontal">
+      <dt>Name</dt>
+      <dd>{{vm.rule.name}}</dd>
+      <dt>Description</dt>
+      <dd>{{vm.rule.descr}}</dd>
+      <dt>Value</dt>
+      <dd>{{vm.rule.value}}</dd>
+    </dl>
+    <div class="hljs hljs-md" hljs hljs-source="vm.rule.code"></div>
+  </div>
+</div>
+
+<div class="roller-footer">
+</div>

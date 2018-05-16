@@ -1,0 +1,12 @@
+<div class="modal-body modal-body-tall">
+  <div uib-alert ng-repeat="alert in vm.alerts" ng-class="'alert-' + (alert.type || 'danger')" close="vm.closeAlert($index)">{{alert.msg}}</div>
+  <div class="col-md-12">
+    <label>Are you sure that you wan't to stop task?</label>
+    <p>{{vm.task.name}}</p>
+</div>
+<div class="modal-footer">
+  <div class="col-md-12">
+    <button class="btn btn-danger" type="button" ng-click="vm.stop()">Stop</button>
+    <button class="btn btn-default" type="button" ng-click="vm.close()">Close</button>
+  </div>
+</div>

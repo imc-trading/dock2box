@@ -1,0 +1,12 @@
+<a class="btn btn-small btn-default btn-no-border" ng-click="vm.openHardware(row)" tooltip-placement="bottom" uib-tooltip="Hardware" tooltip-popup-delay="500">
+  <i class="fa fa-microchip"></i>
+</a>
+<a class="btn btn-small btn-default btn-no-border" tooltip-placement="bottom" uib-tooltip="SSH" tooltip-popup-delay="500" href="ssh://root@{{row.ipv4}}">
+  <i class="fa fa-terminal"></i>
+</a>
+<a ng-if="row.ipmiIPv4" class="btn btn-small btn-default btn-no-border" tooltip-placement="bottom" uib-tooltip="Management interface" tooltip-popup-delay="500" href="https://{{row.ipmiIPv4}}" target="_blank">
+  <i class="fa fa-tty"></i>
+</a>
+<a class="btn btn-small btn-default btn-no-border" tooltip-placement="bottom" uib-tooltip="Status" tooltip-popup-delay="500">
+  <i ng-if="row.running > 0" class="fa fa-circle-o-notch fa-spin text-success"></i>
+</a>

@@ -1,0 +1,72 @@
+<form name="form" ng-submit="vm.run()" novalidate>
+<div class="modal-body">
+  <div uib-alert ng-repeat="alert in vm.alerts" ng-class="'alert-' + (alert.type || 'danger')" close="vm.closeAlert($index)">{{alert.msg}}</div>
+
+  <div class="col-md-12 form-horizontal">
+
+    <div class="row">
+      <div class="form-group">
+
+        <div class="col-md-6">
+        </div>
+
+        <div class="col-md-6 has-feedback" uib-dropdown keyboard-nav is-open="taskDef.isopen">
+          <label for="taskDef">Task Definition</label>
+          <input type="text" id="taskDef" class="form-control form-control-modal form-control-dropdown" uib-dropdown-toggle ng-keypress="taskDef.isopen=true" readonly="readonly" required ng-model="vm.taskDef.value">
+          <span class="form-control-feedback"><i class="fa fa-caret-down"></i></span>
+          <ul class="dropdown-menu dropdown-menu-scrollable dropdown-menu-modal" uib-dropdown-menu role="menu" aria-labelledby="taskDef">
+            <li ng-repeat="taskDef in vm.taskDefs | filter" role="menuitem" ng-click="vm.taskDef=taskDef; vm.taskDef.value=taskDef.name">
+              <a href="">{{taskDef.name}}</a>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+
+    <dl class="dl-horizontal">
+      <dt>Task Definition</dt>
+      <dd>{{vm.taskDef.name}}</dd>
+      <dt>Description</dt>
+      <dd>{{vm.taskDef.descr}}</dd>
+      <dt>User</dt>
+      <dd>{{vm.taskDef.user}}</dd>
+      <dt>Group</dt>
+      <dd>{{vm.taskDef.group}}</dd>
+      <dt>Working Directory</dt>
+      <dd>{{vm.taskDef.dir}}</dd>
+      <dt>Environment</dt>
+      <dd>
+        <ul class="list-unstyled">
+          <li ng-repeat="(k, v) in vm.taskDef.envVals">{{k}}={{v}}</li>
+        </ul>
+      </dd>
+      <dt>Command</dt>
+      <dd>{{vm.taskDef.cmd}}</dd>
+      <dt>Arguments<dt>
+      <dd>{{vm.taskDef.args.join(" ")}}</dd>
+      <dt>File Exists<dt>
+      <dd>{{vm.taskDef.fileExists}}<dd>
+      <dt>File Not Exists<dt>
+      <dd>{{vm.taskDef.fileNotExists}}<dd>
+      <dt>Reboot<dt>
+      <dd>
+        <i ng-if="vm.taskDef.reboot" class="fa fa-check-square-o"></i>
+        <i ng-if="!vm.taskDef.reboot" class="fa fa-square-o"></i>
+      <dd>
+      <dt>Reboot Exit Code</dt>
+      <dd>{{vm.taskDef.rebootExitCode}}</dd>
+      <dt>Reboot File Exist</dt>
+      <dd>{{vm.taskDef.rebootFileExist}}</dd>
+      <dt>Reboot File Not Exist</dt>
+      <dd>{{vm.taskDef.rebootFileNotExist}}</dd>
+    </dl>
+
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-success" type="submit" ng-disabled="form.$invalid">Run</button>
+  <button class="btn btn-default" type="button" ng-click="vm.close()">Close</button>
+</div>
+</form>

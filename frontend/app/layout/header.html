@@ -1,0 +1,20 @@
+<object type="image/svg+xml" data="img/logo.svg" class="brand"></object>
+
+<nav class="navbar navbar-default navbar-static-top navbar-fixed-top">
+  <div class="container-fluid">
+    <ul class="nav navbar-nav">
+      <li ng-class="{active: vm.getTab() == 'dashboard'}"><a href="#!dashboard">Dashboard</a></li>
+    </ul>
+    <ul class="nav navbar-nav">
+      <li ng-class="{active: vm.getTab() == 'hosts'}"><a href="#!hosts">Hosts</a></li>
+    </ul>
+    <ul class="nav navbar-nav">
+      <li ng-class="{active: vm.getTab() == 'tasks'}"><a href="#!tasks">Tasks</a></li>
+    </ul>
+    <ul class="nav navbar-nav">
+      <li ng-class="{active: vm.getTab() == 'taskdefs'}"><a href="#!taskdefs">Task Defs</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="navbar-margin"></div>

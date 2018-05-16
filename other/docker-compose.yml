@@ -1,0 +1,51 @@
+boot:
+  image: dock2box/boot
+etcd:
+  command:
+  - /usr/local/bin/etcd
+  - --name
+  - my-etcd-1
+  - --data-dir
+  - /etcd-data
+  - --listen-client-urls
+  - http://0.0.0.0:2379
+  - --advertise-client-urls
+  - http://0.0.0.0:2379
+  - --listen-peer-urls
+  - http://0.0.0.0:2380
+  - --initial-advertise-peer-urls
+  - http://0.0.0.0:2380
+  - --initial-cluster
+  - my-etcd-1=http://0.0.0.0:2380
+  - --initial-cluster-token
+  - my-etcd-token
+  - --initial-cluster-state
+  - new
+  image: gcr.io/etcd-development/etcd
+  ports:
+  - 2379:2379
+  - 2380:2380
+  volumes:
+  - /var/lib/dock2box/etcd:/etcd-data
+frontend:
+  image: dock2box/frontend
+server:
+  command:
+  - --endpoints
+  - etcd:2379
+  image: dock2box/server
+  links:
+  - etcd
+  ports:
+  - 80:80
+  - 443:8080
+  volumes:
+  - /etc/dock2box:/etc/dock2box
+  - /var/lib/dock2box/taskdefs:/var/lib/dock2box/taskdefs
+  volumes_from:
+  - frontend
+  - boot
+tftp:
+  image: dock2box/tftp
+  ports:
+  - 69:69/udp

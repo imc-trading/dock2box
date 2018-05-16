@@ -1,0 +1,15 @@
+<dl class="dl-horizontal">
+  <dt ng-repeat-start="field in vm.fields">{{field.name}}</dt>
+  <dd ng-repeat-end>
+    <span ng-if="!field.array">
+      <span ng-if="field.kind!='boolean'">{{vm.row[field.field] | fmtField:field.kind}} {{field.unit}}</span>
+      <span ng-if="field.kind=='boolean'">
+        <i ng-if="vm.row[field.field]" class="fa fa-check-square-o"></i>
+        <i ng-if="!vm.row[field.field]" class="fa fa-square-o"></i>
+      </span>
+    </span>
+    <ul class="list-unstyled" ng-if="field.array">
+      <li ng-repeat="item in vm.row[field.field]">{{item | fmtField:field.kind}}</li>
+    </ul>
+  </dd>
+</dl>

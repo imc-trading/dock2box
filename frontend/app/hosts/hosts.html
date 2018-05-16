@@ -1,0 +1,17 @@
+<div ng-controller="hosts as vm">
+  <div class="container-fluid">
+    <div class="form-horizontal toolbar toolbar-default toolbar-fixed">
+      <div class="pull-right">
+        <span ng-include='"templates/table-show-fields.html"'></span>
+        <span ng-include='"templates/table-row-limit.html"'></span>
+        <span ng-include='"templates/table-refresh.html"'></span>
+      </div>
+      <div class="clearfix"></div>
+      <span ng-include='"templates/table-search.html"'></span>
+    </div>
+  </div>
+  <div class="container">
+    <span ng-include='"templates/table.html"'></span>
+  </div>
+  <div ng-include='"templates/table-pagination.html"'></div>
+</div>

@@ -1,0 +1,11 @@
+<div class="btn-group" uib-dropdown>
+  <button id="showFields" type="button" class="btn btn-default" uib-dropdown-toggle tooltip-placement="right" uib-tooltip="Show&nbsp;fields" tooltip-popup-delay="500">
+    <i class="fa fa-columns" aria-hidden="true"></i>
+  </button>
+  <ul ng-click="$event.stopPropagation();" class="dropdown-menu dropdown-menu-right dropdown-menu-checkbox dropdown-menu-scrollable" uib-dropdown-menu role="menu" aria-labelledby="showFields">
+    <div ng-repeat="field in vm.fields" class="checkbox checkbox-default">
+      <input id="field{{ field.name }}" type="checkbox" class="styled" ng-model="field.show">
+      <label for="field{{ field.name }}">{{ field.name | replace:" ":"&nbsp;" }}</label>
+    </div>
+  </ul>
+</div>

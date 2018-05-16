@@ -1,0 +1,36 @@
+<div class="rolldown" ng-click="vm.showDetails=!vm.showDetails" uib-collapse="!vm.showDetails" ng-include='"templates/" + vm.module + "-table-details.html"'>
+</div>
+<table class="table table-fixed table-margin sortable">
+  <thead>
+    <tr>
+      <th ng-if="vm.tableControls">&nbsp;</th>
+      <th ng-if="vm.tableButtons">&nbsp;</th>
+      <th ng-repeat="field in vm.fields" ng-if="field.show" class="{{ vm.getSortClass(field.field) }}" ng-click="vm.setOrderBy(field.field)"><a href="">{{field.name}}</a></th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <tr ng-repeat="row in vm.rows | orderBy:vm.orderBy:vm.reverse | limitTo:vm.rowLimit:((vm.page - 1) * vm.rowLimit)" class="{{vm.getRowClass(row)}} pointer">
+      <td ng-if="vm.tableControls" ng-include='"templates/" + vm.module + "-table-controls.html"'></td>
+      <td ng-if="vm.tableButtons" ng-include='"templates/" + vm.module + "-table-buttons.html"'></td>
+      <td ng-click="vm.showDetails=!vm.showDetails; vm.row=row" ng-repeat="field in vm.fields" ng-if="field.show">
+        <span ng-if="!field.array && !field.dict && !field.progress">
+          <span ng-if="field.kind!='boolean'">{{row[field.field] | fmtField:field.kind}}</span>
+          <span ng-if="field.kind=='boolean'">
+            <i ng-if="row[field.field]" class="fa fa-check-square-o"></i>
+            <i ng-if="!row[field.field]" class="fa fa-square-o"></i>
+          </span>
+        </span>
+        <ul class="list-unstyled" ng-if="field.array">
+          <li ng-repeat="item in row[field.field]">{{item | fmtField:field.kind}}</li>
+        </ul>
+        <ul class="list-unstyled" ng-if="field.dict">
+          <li ng-repeat="(key, val) in row[field.field]">{{key}}={{val | fmtField:field.kind}}</li>
+        </ul>
+        <uib-progressbar ng-if="field.progress && row['running']" value="row[field.field]" type="{{ row['durationLeft'] >= 0 ? 'success' : 'danger' }}"><b>{{row['durationLeft'] | fmtField:'duration'}} {{row['durationLeft'] >= 0 ? 'left' : 'over'}}</b></uib-progressbar>
+        <div ng-if="field.progress && !row['running']">{{row['duration'] | fmtField:'duration'}}</div>
+      </td>
+    </tr>
+
+  </tbody>
+</table>

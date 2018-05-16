@@ -1,0 +1,18 @@
+<button ng-if="!row.match" type="button" class="btn btn-small btn-success" ng-click="vm.openCreate(row)" tooltip-placement="bottom" uib-tooltip="Create" tooltip-popup-delay="500">
+  &nbsp;
+  <i class="fa fa-plus-circle"></i>
+  Create
+  &nbsp;
+</button>
+<button ng-if="row.match" type="button" class="btn btn-small btn-primary" ng-click="vm.openEdit(row)" tooltip-placement="bottom" uib-tooltip="Edit" tooltip-popup-delay="500">
+  &nbsp;
+  <i class="fa fa-pencil"></i>
+  Edit
+  &nbsp;
+</button>
+<button ng-if="row.match" type="button" class="btn btn-small btn-success" ng-click="vm.openRun(row)" tooltip-placement="bottom" uib-tooltip="Run" tooltip-popup-delay="500">
+  &nbsp;
+  <i class="fa fa-play"></i>
+  Run
+  &nbsp;
+</button>

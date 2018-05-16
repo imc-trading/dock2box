@@ -1,0 +1,41 @@
+<div class="form-group col-md-6">
+  <input type="text" ng-model="vm.search" class="form-control form-control-modal-default" placeholder="Search" autofocus>
+</div>
+<div class="form-group col-md-6">
+  <div class="btn-group pull-right" uib-dropdown>
+    <button id="showField" type="button" class="btn btn-default" uib-dropdown-toggle tooltip-placement="right" uib-tooltip="Show fields" tooltip-popup-delay="500">
+      <i class="fa fa-columns" aria-hidden="true"></i>
+    </button>
+    <ul ng-click="$event.stopPropagation();" class="dropdown-menu dropdown-menu-modal dropdown-menu-right dropdown-menu-checkbox dropdown-menu-scrollable" uib-dropdown-menu role="menu" aria-labelledby="showFields">
+      <div ng-repeat="field in vm.fields" class="checkbox checkbox-default">
+        <input id="field{{ field.name }}" type="checkbox" class="styled" ng-model="field.show">
+        <label for="field{{ field.name }}">{{ field.name | replace:" ":"&nbsp;" }}</label>
+      </div>
+    </ul>
+  </div>
+</div>
+<div class="col-md-12">
+  <table class="table table-scroll">
+    <thead>
+      <tr>
+        <th ng-repeat="field in vm.fields" ng-if="field.show">{{field.name}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="row in vm.rows | filter:vm.search" class="table-row-striped">
+        <td ng-repeat="field in vm.fields" ng-if="field.show">
+          <span ng-if="!field.array">
+            <span ng-if="field.kind!='boolean'">{{row[field.field] | fmtField:field.kind}} {{field.unit}}</span>
+            <span ng-if="field.kind=='boolean'">
+              <i ng-if="row[field.field]" class="fa fa-check-square-o"></i>
+              <i ng-if="!row[field.field]" class="fa fa-square-o"></i>
+            </span>
+          </span>
+          <ul class="list-unstyled" ng-if="field.array">
+            <li ng-repeat="item in row[field.field]">{{item | fmtField:field.kind}}</li>
+          </ul>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

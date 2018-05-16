@@ -3,8 +3,3 @@
 # Ignore packer cache and artifacts
 packer_cache
 packer_output
-
-# Ignore boot image artifacts
-/boot-images/*/release
-/boot-images/*/initrd
-/boot-images/*/kernel

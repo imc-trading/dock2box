@@ -1,0 +1,127 @@
+<div class="modal-body">
+  <div uib-alert ng-repeat="alert in vm.alerts" ng-class="'alert-' + (alert.type || 'danger')" close="vm.closeAlert($index)">{{alert.msg}}</div>
+  <uib-tabset type="pills">
+    <uib-tab heading="Settings">
+      <div class="col-md-12">
+      <dl class="dl-horizontal">
+        <dt>Task Definition</dt>
+        <dd>{{vm.taskDef.name}}</dd>
+        <dt>Description</dt>
+        <dd>{{vm.taskDef.descr}}</dd>
+        <dt>User</dt>
+        <dd>{{vm.taskDef.user}}</dd>
+        <dt>Group</dt>
+        <dd>{{vm.taskDef.group}}</dd>
+        <dt>Working Directory</dt>
+        <dd>{{vm.taskDef.dir}}</dd>
+        <dt>Command</dt>
+        <dd>{{vm.taskDef.cmd}}</dd>
+        <dt>File Exists<dt>
+        <dd>{{vm.taskDef.fileExists}}<dd>
+        <dt>File Not Exists<dt>
+        <dd>{{vm.taskDef.fileNotExists}}<dd>
+        <dt>Reboot<dt>
+        <dd>
+          <i ng-if="vm.taskDef.reboot" class="fa fa-check-square-o"></i>
+          <i ng-if="!vm.taskDef.reboot" class="fa fa-square-o"></i>
+        <dd>
+        <dt>Reboot Exit Code</dt>
+        <dd>{{vm.taskDef.rebootExitCode}}</dd>
+        <dt>Reboot File Exist</dt>
+        <dd>{{vm.taskDef.rebootFileExist}}</dd>
+        <dt>Reboot File Not Exist</dt>
+        <dd>{{vm.taskDef.rebootFileNotExist}}</dd>
+      </dl>
+      </div>
+    </uib-tab>
+
+    <uib-tab ng-if="vm.taskDef.trigger" heading="Trigger">
+
+      <div class="col-md-12">
+        <div hljs hljs-md hljs-source="vm.taskDef.trigger"></div>
+      </div>
+
+    </uib-tab>
+
+    <uib-tab ng-if="vm.taskDef.require" heading="Require">
+
+      <div class="col-md-12">
+        <div hljs hljs-md hljs-source="vm.taskDef.require"></div>
+      </div>
+
+    </uib-tab>
+
+    <uib-tab ng-if="vm.taskDef.env" heading="Environment">
+
+      <div class="col-md-2">
+        <ul class="list-nav">
+          <li ng-repeat="v in vm.taskDef.env" ng-class="{ 'selected': vm.env.name == v.name }"><a href="" ng-click="vm.env=v">{{v.display}}</a></li>
+        </ul>
+      </div>
+
+      <div class="col-md-10">
+        <dl class="dl-horizontal">
+          <dt>Name</dt>
+          <dd>{{vm.env.name}}</dd>
+          <dt>Description</dt>
+          <dd>{{vm.env.descr}}</dd>
+          <dt>Value</dt>
+          <dd>{{vm.env.value}}</dd>
+        </dl>
+        <div hljs hljs-md hljs-source="vm.env.code"></div>
+      </div>
+
+    </uib-tab>
+
+    <uib-tab ng-if="vm.taskDef.pre" heading="Pre">
+
+      <div class="col-md-2">
+        <ul class="list-nav">
+          <li ng-repeat="v in vm.taskDef.pre" ng-class="{ 'selected': vm.pre.name == v.name }"><a href="" ng-click="vm.pre=v">{{v.display}}</a></li>
+        </ul>
+      </div>
+
+      <div class="col-md-10">
+        <dl class="dl-horizontal">
+          <dt>Name</dt>
+          <dd>{{vm.pre.name}}</dd>
+          <dt>Description</dt>
+          <dd>{{vm.pre.descr}}</dd>
+          <dt>Value</dt>
+          <dd>{{vm.pre.value}}</dd>
+        </dl>
+        <div hljs hljs-md hljs-source="vm.pre.code"></div>
+      </div>
+
+    </uib-tab>
+
+    <uib-tab ng-if="vm.taskDef.post" heading="Post">
+
+      <div class="col-md-2">
+        <ul class="list-nav">
+          <li ng-repeat="v in vm.taskDef.post" ng-class="{ 'selected': vm.post.name == v.name }"><a href="" ng-click="vm.post=v">{{v.display}}</a></li>
+        </ul>
+      </div>
+    
+      <div class="col-md-10">
+        <dl class="dl-horizontal">
+          <dt>Name</dt>
+          <dd>{{vm.post.name}}</dd>
+          <dt>Description</dt>
+          <dd>{{vm.post.descr}}</dd>
+          <dt>Value</dt>
+          <dd>{{vm.post.value}}</dd>
+        </dl>
+        <div hljs hljs-md hljs-source="vm.post.code"></div>
+      </div>
+
+    </uib-tab>
+
+  </uib-tabset>
+</div>
+
+<div class="modal-footer">
+  <div class="col-md-12">
+    <button class="btn btn-default" type="button" ng-click="vm.close()">Close</button>
+  </div>
+</div>

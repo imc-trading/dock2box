@@ -1,0 +1,11 @@
+<div class="btn-group" uib-dropdown is-open="status.isopen">
+  <button id="rowLimit" type="button" class="btn btn-default" uib-dropdown-toggle tooltip-placement="bottom" uib-tooltip="Row&nbsp;limit" tooltip-popup-delay="500">
+    <i class="fa fa-list" aria-hidden="true"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-right dropdown-menu-slim" uib-dropdown-menu role="menu" aria-labelledby="rowLimit">
+    <li role="menuitem" ng-click="vm.setRowLimit(10)"><a href="">10</a></li>
+    <li role="menuitem" ng-click="vm.setRowLimit(25)"><a href="">25</a></li>
+    <li role="menuitem" ng-click="vm.setRowLimit(50)"><a href="">50</a></li>
+    <li role="menuitem" ng-click="vm.setRowLimit(75)"><a href="">75</a></li>
+  </ul>
+</div>

@@ -1,0 +1,174 @@
+<form name="form" ng-submit="vm.edit()" novalidate>
+<div class="modal-body">
+  <div uib-alert ng-repeat="alert in vm.alerts" ng-class="'alert-' + (alert.type || 'danger')" close="vm.closeAlert($index)">{{alert.msg}}</div>
+
+  <div class="col-md-12 form-horizontal">
+
+    <div class="row">
+      <div class="form-group">
+
+        <div class=" col-md-4">
+          <label for="hostname" class="control-label">Hostname</label>
+          <input type="text" id="hostname" name="hostname" class="form-control form-control-modal" ng-blur="vm.valHostname()" ng-model="vm.hostname" autofocus required pattern="[a-z0-9]{3,}"/>
+          <p ng-show="form.hostname.$error.required && !form.hostname.$pristine">Hostname is required.</p>
+          <p ng-show="form.hostname.$error.pattern && !form.hostname.$pristine">Hostname needs to match pattern "[a-z0-9-]{3,}".</p>
+        </div>
+
+        <div class=" col-md-4">
+          <label for="domain" class="control-label">Domain</label>
+          <input type="text" id="domain" name="domain" class="form-control form-control-modal" ng-model="vm.domain" required pattern="([a-z0-9]{2,}\.)+[a-z]{2,}"/>
+          <p ng-show="form.domain.$error.required && !form.domain.$pristine">Domain is required.</p>
+          <p ng-show="form.domain.$error.pattern && !form.domain.$pristine">Domain needs to match pattern "([a-z0-9]{2,}\.)+[a-z]{2,}".</p>
+        </div>
+
+        <div class="col-md-4">
+          <label for="serial-number" class="control-label">Serial Number</label>
+          <input tabindex="-1" type="text" id="serial-number" class="form-control form-control-modal" readonly="readonly" value="{{vm.host.serialNumber}}"/>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group">
+
+        <div class=" col-md-12">
+          <label for="descr" class="control-label">Description</label>
+          <input type="text" id="descr" class="form-control form-control-modal" ng-model="vm.descr"/>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group">
+
+        <div class=" col-md-4">
+          <div class="checkbox checkbox-default">
+            <input id="allowBuild" type="checkbox" class="styled" ng-model="vm.allowBuild">
+            <label for="allowBuild">Allow Build&nbsp;</label>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group">
+
+        <div class="col-md-4 has-feedback" uib-dropdown keyboard-nav is-open="interface.isopen">
+          <label for="interface">Interface</label>
+          <input type="text" id="interface" name="interface" class="form-control form-control-modal form-control-dropdown" uib-dropdown-toggle ng-keypress="interface.isopen=true" ng-model="vm.interface.value" required pattern="([0-9a-f]{2}:){5}[0-9a-f]{2}"/>
+          <span class="form-control-feedback"><i class="fa fa-caret-down"></i></span>
+          <ul class="dropdown-menu dropdown-menu-scrollable dropdown-menu-modal" uib-dropdown-menu role="menu" aria-labelledby="interface">
+            <li ng-repeat="intf in vm.host.interfaces | filter:vm.interface.value" role="menuitem" ng-click="vm.setInterface(intf)">
+              <a ng-if="intf.ipv4 === undefined" href="">{{intf.hwAddr}}</a>
+              <a ng-if="intf.ipv4 !== undefined" href="">{{intf.hwAddr}} ({{interface.ipv4}}/{{intf.netmask}})</a>
+            </li>
+          </ul>
+          <p ng-show="form.interface.$error.required && !form.interface.$pristine">Interface is required.</p>
+          <p ng-show="form.interface.$error.pattern && !form.interface.$pristine">Interface needs to match pattern "([0-9a-f]{2}:){5}[0-9a-f]{2}".</p>
+        </div>
+
+        <div class="col-md-4 has-feedback" uib-dropdown keyboard-nav is-open="site.isopen">
+          <label for="site">Site</label>
+          <input type="text" id="site" name="site" class="form-control form-control-modal form-control-dropdown" uib-dropdown-toggle ng-keypress="site.isopen=true" ng-model="vm.site.value" required/>
+          <span class="form-control-feedback"><i class="fa fa-caret-down"></i></span>
+          <ul class="dropdown-menu dropdown-menu-scrollable dropdown-menu-modal" uib-dropdown-menu role="menu" aria-labelledby="site">
+            <li ng-repeat="site in vm.sites | filter:vm.site.value" role="menuitem" ng-click="vm.site=site; vm.site.value=site.site">
+              <a ng-if="site.descr === undefined" href="">{{site.site}}</a>
+              <a ng-if="site.descr !== undefined" href="">{{site.site}} ({{site.descr}})</a>
+            </li>
+          </ul>
+          <p ng-show="form.site.$error.required && !form.site.$pristine">Site is required.</p>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group">
+
+        <div class="col-md-4 has-feedback" uib-dropdown keyboard-nav is-open="role.isopen">
+          <label for="role">Role</label>
+          <input type="text" id="role" name="role" class="form-control form-control-modal form-control-dropdown" uib-dropdown-toggle ng-keypress="role.isopen=true" ng-model="vm.role.value" required/>
+          <span class="form-control-feedback"><i class="fa fa-caret-down"></i></span>
+          <ul class="dropdown-menu dropdown-menu-scrollable dropdown-menu-modal" uib-dropdown-menu role="menu" aria-labelledby="role">
+            <li ng-repeat="role in vm.roles | filter:vm.role.value" role="menuitem" ng-click="vm.role=role; vm.role.value=role.role"><a href="">{{role.role}}</a></li>
+          </ul>
+          <p ng-show="form.role.$error.required && !form.role.$pristine">Role is required.</p>
+        </div>
+
+        <div class="col-md-8 has-feedback" uib-dropdown keyboard-nav is-open="image.isopen">
+          <label for="image">Image</label>
+          <input type="text" id="image" name="image" class="form-control form-control-modal form-control-dropdown" uib-dropdown-toggle ng-keypress="image.isopen=true" ng-model="vm.image.value" required/>
+          <span class="form-control-feedback"><i class="fa fa-caret-down"></i></span>
+          <ul class="dropdown-menu dropdown-menu-scrollable dropdown-menu-modal" uib-dropdown-menu role="menu" aria-labelledby="image">
+            <li ng-repeat="image in vm.images | filter:vm.image.value" role="menuitem" ng-click="vm.image=image; vm.image.value=image.image"><a href="">{{image.image}}</a></li>
+          </ul>
+          <p ng-show="form.image.$error.required && !form.image.$pristine">Image is required.</p>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group">
+
+        <div class="col-md-4 has-feedback" uib-dropdown keyboard-nav is-open="tenant.isopen">
+          <label for="tenant">Tenant</label>
+          <input type="text" id="tenant" name="tenant" class="form-control form-control-modal form-control-dropdown" required uib-dropdown-toggle ng-keypress="tenant.isopen=true" ng-model="vm.tenant.value"/>
+          <span class="form-control-feedback"><i class="fa fa-caret-down"></i></span>
+          <ul class="dropdown-menu dropdown-menu-scrollable dropdown-menu-modal" uib-dropdown-menu role="menu" aria-labelledby="tenant">
+            <li ng-repeat="tenant in vm.tenants | filter:vm.tenant.value" role="menuitem" ng-click="vm.tenant=tenant; vm.tenant.value=tenant.tenant"><a href="">{{tenant.tenant}}</a></li>
+          </ul>
+          <p ng-show="form.tenant.$invalid && !form.tenant.$pristine">Tenant is required.</p>
+        </div>
+
+        <div class="col-md-4 has-feedback" uib-dropdown keyboard-nav is-open="securityGroup.isopen">
+          <label for="securityGroup">Security Group</label>
+          <input type="text" id="securityGroup" name="securityGroup" class="form-control form-control-modal form-control-dropdown" uib-dropdown-toggle ng-keypress="securityGroup.isopen=true" ng-model="vm.securityGroup.value" required/>
+          <span class="form-control-feedback"><i class="fa fa-caret-down"></i></span>
+          <ul class="dropdown-menu dropdown-menu-scrollable dropdown-menu-modal" uib-dropdown-menu role="menu" aria-labelledby="securityGroup">
+            <li ng-repeat="securityGroup in vm.securityGroups | filter:vm.securityGroup.value" role="menuitem" ng-click="vm.securityGroup=securityGroup; vm.securityGroup.value=securityGroup.group"><a href="">{{securityGroup.group}}</a></li>
+          </ul>
+          <p ng-show="form.securityGroup.$error.required && !form.securityGroup.$pristine">Security Group is required.</p>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group">
+
+        <div class="col-md-4 has-feedback" uib-dropdown keyboard-nav is-open="status.isopen">
+          <label for="status">Status</label>
+          <input type="text" id="status" name="status" class="form-control form-control-modal form-control-dropdown" uib-dropdown-toggle ng-keypress="status.isopen=true" ng-model="vm.status.value" required/>
+          <span class="form-control-feedback"><i class="fa fa-caret-down"></i></span>
+          <ul class="dropdown-menu dropdown-menu-scrollable dropdown-menu-modal" uib-dropdown-menu role="menu" aria-labelledby="status">
+            <li ng-repeat="status in vm.statuses | filter:vm.status.value" role="menuitem" ng-click="vm.status=status; vm.status.value=status.status"><a href="">{{status.status}}</a></li>
+          </ul>
+          <p ng-show="form.status.$error.required && !form.status.$pristine">Status is required.</p>
+        </div>
+
+        <div class="col-md-4 has-feedback" uib-dropdown keyboard-nav is-open="environment.isopen">
+          <label for="environment">Environment</label>
+          <input type="text" id="environment" name="environment" class="form-control form-control-modal form-control-dropdown" uib-dropdown-toggle ng-keypress="environment.isopen=true" ng-model="vm.environment.value" required/>
+          <span class="form-control-feedback"><i class="fa fa-caret-down"></i></span>
+          <ul class="dropdown-menu dropdown-menu-scrollable dropdown-menu-modal" uib-dropdown-menu role="menu" aria-labelledby="environment">
+            <li ng-repeat="environment in vm.environments | filter:vm.environment.value" role="menuitem" ng-click="vm.environment=environment; vm.environment.value=environment.environment"><a href="">{{environment.environment}}</a></li>
+          </ul>
+          <p ng-show="form.environment.$error.required && !form.environment.$pristine">Environment is required.</p>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-success" type="submit" ng-disabled="form.$invalid">Edit</button>
+  <button class="btn btn-default" type="button" ng-click="vm.close()">Close</button>
+</div>
+</form>

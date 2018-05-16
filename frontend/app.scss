@@ -1,0 +1,775 @@
+/* Defines */
+$def-success:                           #03BB4F;
+$def-primary:				#4c9fd1;
+$def-danger:				rgba(255, 50, 50, .20);
+$def-text:                              #C7CDD1;
+$def-text-dark:                         #85898D;
+$def-floating:                          rgba(75, 80, 86, .90);
+$def-modal-floating:                    rgba(95, 100, 106, .90);
+$def-modal-bg-disabled:                 rgba(60, 65, 71, .90);
+$def-modal-text-dark:                   #65696D;
+
+$def-table-row:                         rgba(50, 53, 56, .20);
+$def-table-row-hover:                   rgba(100, 103, 106, .60);
+$def-table-row-accent:                  rgba(50, 53, 56, .60);
+$def-table-row-accent-hover:            rgba(100, 103, 106, .60);
+
+$text-danger:				$def-danger;
+$text-success:				$def-success;
+
+/* Global */
+$body-bg:                               #262A2C;
+$text-color:                            $def-text;
+$font-family-sans-serif:                "Source Sans Pro", sans-serif;
+$grid-float-breakpoint:                 0px;
+
+/* Link */
+$link-color:                            $def-text-dark;
+$link-hover-color:                      $def-success;
+$link-hover-decoration:                 none;
+
+/* Button default */
+$btn-default-bg:                        transparent;
+$btn-default-color:                     $def-text-dark;
+$btn-default-border:                    $def-text-dark;
+
+/* Button default, non Bootstrap */
+$btn-default-hover-bg:                  transparent;
+$btn-default-hover-color:               $def-success;
+$btn-default-hover-border:              $def-success;
+
+$btn-default-open-bg:                   transparent;
+$btn-default-open-color:                $def-success;
+$btn-default-open-border:               $def-success;
+
+/* Button success */
+$btn-success-bg:                        $def-success;
+$btn-success-color:                     $body-bg;
+$btn-success-border:                    $btn-success-bg;
+
+/* Button success, non Bootstrap */
+$btn-success-hover-bg:                  #03e260;
+$btn-success-hover-color:               $btn-success-color;
+$btn-success-hover-border:              $btn-success-hover-bg;
+
+/* Button primary */
+$btn-primary-bg:                        $def-primary;
+$btn-primary-color:                     $body-bg;
+$btn-primary-border:                    $btn-primary-bg;
+
+/* Button primary, non Bootstrap */
+$btn-primary-hover-bg:                  #71b2da;
+$btn-primary-hover-color:               $btn-primary-color;
+$btn-primary-hover-border:              $btn-primary-hover-bg;
+
+/* Button danger */
+$btn-danger-bg:                         $def-danger;
+$btn-danger-color:                      $def-text;
+$btn-danger-border:                     $btn-danger-bg;
+
+/* Button danger, non Bootstrap */
+$btn-danger-hover-bg:                   #ff6060;
+$btn-danger-hover-color:                $btn-danger-color;
+$btn-danger-hover-border:               $btn-danger-hover-bg;
+
+/* Navbar */
+$navbar-default-bg:                     #1C2022;
+$navbar-default-color:                  $def-text-dark;
+$navbar-default-border:                 none;
+$navbar-border-radius:                  0;
+
+$navbar-default-link-hover-color:       $def-text;
+$navbar-default-link-hover-bg:          $navbar-default-bg;
+
+$navbar-default-link-active-color:      $def-text;
+$navbar-default-link-active-bg:         $navbar-default-bg;
+
+$navbar-height:                         60px;
+$navbar-margin-bottom:                  0px;
+
+/* Navbar, non Bootstrap*/
+$navbar-default-link-border-top-color:  transparent;
+$navbar-default-link-active-border-top-color: $def-success;
+
+$navbar-padding-left:                   170px;
+
+/* Table */
+$table-bg:                              transparent;
+$table-bg-accent:                       transparent;
+$table-border-color:                    transparent;
+
+/* Table, non Bootstrap */
+$table-header-bg:                       none;
+$table-header-color:                    $btn-success-bg;
+$table-header-hover-color:              $navbar-default-link-hover-color;
+$table-header-active-color:             $navbar-default-link-active-color;
+
+$table-row-success:                     rgba(70, 200, 70, .20);
+$table-row-success-hover:		rgba(70, 200, 70, .60);
+$table-row-primary:                     rgba(65, 131, 215, .20);
+$table-row-primary-hover:               rgba(65, 131, 215, .60);
+$table-row-danger:                      rgba(255, 50, 50, .20);
+$table-row-danger-hover:                rgba(255, 50, 50, .60);
+
+/* Input */
+$input-bg:                              transparent;
+$input-color:                           $text-color;
+$input-border:                          $navbar-default-color;
+$input-border-focus:                    $btn-success-bg;
+$input-bg-disabled:                     $def-modal-bg-disabled;
+
+/* Input, non Bootstrap */
+$input-color-disabled:                  $def-modal-text-dark;
+
+/* Pagination */
+$pagination-color:                      #979C9F;
+$pagination-bg:                         $def-floating;
+$pagination-border:                     none;
+
+$pagination-hover-color:                $btn-success-bg;
+$pagination-hover-bg:                   $def-floating;
+$pagination-hover-border:               none;
+
+$pagination-active-color:               $body-bg;
+$pagination-active-bg:                  $btn-success-bg;
+$pagination-active-border:              none;
+
+$zindex-pagination:                     2050;
+
+/* Dropdown */
+$dropdown-bg:                           $def-floating;
+$dropdown-border:                       $def-floating;
+
+$dropdown-link-color:                   $text-color;
+$dropdown-link-hover-color:             $body-bg;
+$dropdown-link-hover-bg:                $btn-success-bg;
+
+/* Dropdown, non Bootstrap */
+$dropdown-modal-bg:                     $def-modal-floating;
+
+$dropdown-link-hover-border:            $btn-success-bg;
+
+/* Brand, non Bootstrap */
+$brand-top:                             10px;
+$brand-left:                            10px;
+$brand-height:                          90px;
+$zindex-brand:                          1033;
+
+/* Roller, non Bootstrap */
+$toolbar-padding-top:                   80px;
+$zindex-roller:                         1032;
+
+/* Toolbar, non Bootstrap */
+$toolbar-padding-left:                  10px;
+$toolbar-padding-right:                 40px;
+$toolbar-padding-top:                   80px;
+$toolbar-default-bg:                    $body-bg;
+$zindex-toolbar:                        1031;
+
+/* Container, non Bootstrap */
+$container-padding-top:                 180px;
+$container-margin-left:                 10px;
+$container-margin-right:                10px;
+
+/* Checkbox, non Bootstrap */
+$checkbox-success-bg:                   rgba(38, 42, 44, .75);
+$checkbox-success-color:                rgba(38, 42, 44, .75);
+
+$checkbox-success-active-bg:            $btn-success-bg;
+$checkbox-success-active-color:         $btn-success-bg;
+
+/* Modal */
+$modal-content-bg:                      $def-floating;
+$modal-content-border-color:            $def-floating;
+$modal-header-border-color:             $def-floating;
+$modal-footer-border-color:             $def-floating;
+
+$modal-lg:                              90vw;
+$modal-md:                              60vw;
+$modal-sm:                              30vw;
+
+/* Pill */
+$nav-pills-active-link-hover-bg:	transparent;
+$nav-pills-active-link-hover-color:     $def-text;
+
+/* Pill, non Bootstrap */
+$nav-pills-active-border-top-color:     $def-success;
+
+$nav-pills-link-bg:                     transparent;
+$nav-pills-link-color:                  $def-text-dark;
+$nav-pills-link-border-radius:          0;
+
+$nav-pills-hover-link-bg:               transparent;
+$nav-pills-hover-link-color:            $def-text;
+
+/* Console */
+$console-color:                         $def-text;
+$console-bg:                            rgba(50, 53, 56, .60);
+
+/* Types */
+$dl-horizontal-dt-color:                $def-text-dark;
+$dl-horizontal-dd-color:                $def-text;
+
+/* Progressbar */
+$progress-bar-success-bg:               rgba(3, 187, 79, .60);
+$progress-bar-danger-bg:                $def-danger;
+$progress-bar-color:                    $def-text;
+$progress-bg:                           rgba(50, 50, 50, .30);
+
+/* Import font */
+@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400);
+
+/* Import Bootstrap */
+@import "bower_components/bootstrap-sass/assets/stylesheets/_bootstrap-custom.scss";
+
+/*
+ * Progress
+ */
+
+.progress {
+  margin-bottom: 0px !important;
+}
+
+/*
+ * Types
+ */
+
+.dl-horizontal {
+  > dt {
+    color: $dl-horizontal-dt-color;
+  }
+
+  > dd {
+    color: $dl-horizontal-dd-color;
+  }
+}
+
+/*
+ * Console
+ */
+
+.console {
+  border-radius: 6px;
+  overflow-y: scroll !important;
+  color: $console-color;
+  background-color: $console-bg;
+  padding: 0 5px 0 5px;
+  margin: 0px;
+
+  > li {
+    list-style-type: none;
+  }
+}
+
+.hljs {
+  overflow-y: scroll !important;
+  border-radius: 6px;
+  padding: 0 5px 0 5px;
+  margin: 0px;
+  background-color: #323538;
+}
+
+.hljs-sm {
+  height: 25vh;
+  max-height: 25vh;
+}
+
+.hljs-md {
+  height: 50vh;
+  max-height: 50vh;
+}
+
+.hljs-lg {
+  height: 75vh;
+  max-height: 75vh;
+}
+
+.console-sm {
+  height: 10vh;
+  max-height: 15vh;
+}
+
+.console-md {
+  height: 50vh;
+  max-height: 50vh;
+}
+
+.console-lg {
+  height: 75vh;
+  max-height: 75vh;
+}
+
+/*
+ * Pills
+ */
+
+.nav {
+  > li > a {
+    background-color: $nav-pills-link-bg;
+    color: $nav-pills-link-color;
+    border-top: 4px solid transparent;
+    border-radius: $nav-pills-link-border-radius;
+
+    &:hover {
+      background-color: $nav-pills-hover-link-bg;
+      color: $nav-pills-hover-link-color;
+    }
+  }
+
+  .active > a {
+    border-top: 4px solid $nav-pills-active-border-top-color;
+  }
+}
+
+/*
+ * Checkbox
+ */
+
+.checkbox-default input[type="checkbox"] + label::before,
+.checkbox-default input[type="radio"] + label::before {
+  background-color: $checkbox-success-bg;
+  border-color: $checkbox-success-color;
+}
+
+.checkbox-default input[type="checkbox"]:checked + label::before,
+.checkbox-default input[type="radio"]:checked + label::before {
+  background-color: $checkbox-success-active-bg;
+  border-color: $checkbox-success-active-color;
+}
+
+.checkbox label {
+  padding-left: 5px;
+  line-height: 16px;
+}
+
+/*
+ * Dropdown
+ */
+
+.dropdown-menu {
+  border: none !important;
+}
+
+.dropdown-menu-modal {
+  background: $dropdown-modal-bg !important;
+}
+
+ul.dropdown-menu-checkbox {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.dropdown-menu-scrollable {
+  height: auto;
+  max-height: 400px;
+  overflow-x: hidden;
+}
+
+.dropdown-menu-wide {
+  min-width: 500px !important;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.dropdown-menu-tiny {
+  min-width: 15px !important;
+}
+
+.dropdown-menu-slim {
+  min-width: 30px !important;
+}
+
+.dropdown-input-group {
+  margin-top: 5px;
+}
+
+/*
+ * Pagination
+ */
+
+.pagination {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+}
+
+.pagination > ul {
+  position: relative;
+  left: -50%;
+  @include box-shadow(0 6px 12px rgba(0,0,0,.175));
+  z-index: $zindex-pagination !important;
+}
+
+.pagination > li > a {
+  font-weight: bold;
+}
+
+.pagination > li > a:hover {
+  cursor: pointer;
+}
+
+/*
+ * Form Control
+ */
+
+.form-control {
+    box-shadow: none !important;
+    transition: none !important;
+}
+
+.form-control-dropdown {
+  cursor: pointer;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+input[type="text"]:read-only {
+  border-color:  $input-color-disabled;
+  &:focus, &:active { border-color: $input-color-disabled; }
+}
+
+.form-control-clear {
+  pointer-events: auto;
+
+  &:hover {
+    color: $def-success;
+    cursor: pointer;
+  }
+}
+
+/*
+ * Table
+ */
+
+th {
+  background: $table-header-bg;
+}
+
+th, td {
+  white-space: nowrap;
+}
+
+tr {
+  border-bottom: 2px solid transparent !important;
+  background-clip: padding-box;
+}
+
+.table > tbody > tr.table-row-striped:nth-child(even) {
+  background-color: $def-table-row;
+
+  &:hover {
+    background-color: $def-table-row-hover;
+  }
+}
+
+.table > tbody > tr.table-row-striped:nth-child(odd) {
+  background-color: $def-table-row-accent;
+
+  &:hover {
+    background-color: $def-table-row-accent-hover;
+  }
+}
+
+.sortable th.sort-desc:after {
+  font-family: FontAwesome;
+  content: '\0000a0\f106';
+  color: $btn-success-bg;
+}
+
+.sortable th.sort-asc:after {
+  font-family: FontAwesome;
+  content: '\0000a0\f107';
+  color: $btn-success-bg;
+}
+
+tr.table-row-success {
+  background-color: $table-row-success;
+
+  &:hover {
+    background-color: $table-row-success-hover;
+  }
+}
+
+tr.table-row-primary {
+  background-color: $table-row-primary;
+
+  &:hover {
+    background-color: $table-row-primary-hover;
+  }
+}
+
+tr.table-row-danger {
+  background-color: $table-row-danger;
+
+  &:hover {
+    background-color: $table-row-danger-hover;
+  }
+}
+
+.table-scroll thead, .table-scroll tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.table-scroll tbody {
+  display: block;
+  max-height: 50vh !important;
+  overflow-y: scroll !important;
+  overflow-x: hidden !important;
+}
+
+.table-scroll th, td {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/*
+ * Container
+ */
+
+.container {
+  padding-top: $container-padding-top;
+  margin-left: $container-margin-left;
+  margin-right: $container-margin-right;
+}
+
+/*
+ * Toolbar
+ */
+
+.toolbar {
+  padding-left: $toolbar-padding-left;
+  padding-right: $toolbar-padding-right;
+  padding-top: $toolbar-padding-top;
+  width: 100%;
+  zindex: $zindex-toolbar;
+}
+
+.toolbar-default {
+  background: $toolbar-default-bg;
+}
+
+.toolbar-fixed {
+  position: fixed;
+}
+
+/*
+ * Buttons
+ */
+
+.btn {
+  box-shadow: none !important;
+}
+
+.btn-default {
+  background: $btn-default-bg !important;
+  color: $btn-default-color !important;
+  border-color: $btn-default-border !important;
+
+  &:hover {
+    background: $btn-default-hover-bg !important;
+    color: $btn-default-hover-color !important;
+    border-color: $btn-default-hover-border !important;
+  }
+}
+
+.btn-success {
+  background: $btn-success-bg !important;
+  color: $btn-success-color !important;
+  border-color: $btn-success-border !important;
+
+  &:hover {
+    background: $btn-success-hover-bg !important;
+    color: $btn-success-hover-color !important;
+    border-color: $btn-success-hover-border !important;
+  }
+}
+
+.btn-primary {
+  background: $btn-primary-bg !important;
+  color: $btn-primary-color !important;
+  border-color: $btn-primary-border !important;
+
+  &:hover {
+    background: $btn-primary-hover-bg !important;
+    color: $btn-primary-hover-color !important;
+    border-color: $btn-primary-hover-border !important;
+  }
+}
+
+.btn-danger {
+  background: $btn-danger-bg !important;
+  color: $btn-danger-color !important;
+  border-color: $btn-danger-border !important;
+
+  &:hover {
+    background: $btn-danger-hover-bg !important;
+    color: $btn-danger-hover-color !important;
+    border-color: $btn-danger-hover-border !important;
+  }
+}
+
+.btn-small {
+  padding: 0;
+  height: 21px;
+}
+
+.btn-no-border {
+  padding: 0;
+  border: none;
+}
+
+/*
+ * Brand
+ */
+
+.brand {
+  position: fixed;
+  top: $brand-top;
+  left: $brand-left;
+  height: $brand-height;
+  z-index: $zindex-brand;
+}
+
+/*
+ * Navbar
+ */
+
+.navbar-default {
+  padding-left: $navbar-padding-left;
+
+  .navbar-nav {
+    > li > a {
+      border-top: 4px solid $navbar-default-link-border-top-color;
+      font-weight: bold;
+    }
+
+    > .active > a,
+    > .active > a:focus {
+      border-top: 4px solid $navbar-default-link-active-border-top-color;
+    }
+  }
+}
+
+/*
+ * List
+ */
+
+.dl-horizontal dt{
+  text-align: left;
+}
+
+.dl-horizontal {
+  margin-top: 10px;
+}
+
+.list-nav {
+  list-style: none;
+  padding: 0;
+  margin-top: 10px;
+
+  > li {
+    padding-left: 1em;
+  }
+
+  > li.selected:before {
+    color: $def-success;
+    content: '\0000a0\f105';
+    font-family: FontAwesome;
+    display: inline-block;
+    margin-left: -1em;
+    width: 1em;
+  }
+
+  > li.selected > a {
+      color: $def-text;
+  }
+}
+
+/*
+ * Roller
+ */
+
+.rolldown {
+  margin: 0;
+  padding-top: $toolbar-padding-top;
+
+  background-color: $navbar-default-bg;
+  position: absolute;
+//  top: 61px;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  z-index: $zindex-roller !important;
+
+  height: 100%;
+  max-height: 100%;
+}
+
+.rolldown-header {
+  padding-top: 60px;
+}
+
+.rolldown-footer {
+  padding-bottom: 100%;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+/*
+ * Vertical spacing
+ */
+
+.row-vh-1 {
+  min-height: 8.3vh;
+}
+
+.row-vh-2 {
+  min-height: 16.6vh;
+}
+
+.row-vh-3 {
+  min-height: 24.9vh;
+}
+
+.row-vh-4 {
+  min-height: 33.2vh;
+}
+
+.row-vh-5 {
+  min-height: 41.5vh;
+}
+
+.row-vh-6 {
+  min-height: 49.8vh;
+}
+
+.row-vh-7 {
+  min-height: 58.1vh;
+}
+
+.row-vh-8 {
+  min-height: 66.4vh;
+}
+
+.row-vh-9 {
+  min-height: 74.7vh;
+}
+
+.row-vh-10 {
+  min-height: 83vh;
+}
+
+.row-vh-11 {
+  min-height: 91.3vh;
+}
+
+.row-vh-12 {
+  min-height: 100vh;
+}

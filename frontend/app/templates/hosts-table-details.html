@@ -1,0 +1,130 @@
+<div class="rolldown-header">
+</div>
+
+<div class="col-md-12">
+  <dl class="col-md-6 dl-horizontal">
+    <dt>Hostname</dt>
+    <dd>{{vm.row.hostname}}</dd>
+
+    <dt>Operating System</dt>
+    <dd>{{vm.row.distroDescr}}</dt>
+
+<!--
+    <dt>Kernel</dt>
+    <dd>{{vm.row.kernel}}</dt>
+-->
+
+    <dt>Site</dt>
+    <dd>{{vm.row.site}}</dt>
+
+    <dt>Description</dt>
+    <dd>{{vm.row.descr}}</dt>
+  </dl>
+
+  <dl class="col-md-6 dl-horizontal">
+    <dt>Serial Number</dt>
+    <dd>{{vm.row.SerialNumber}}</dd>
+
+    <dt>Primary Interface</dt>
+    <dd>{{vm.row.matchHwAddr}}</dd>
+  </dl>
+</div>
+
+<div class="col-md-12">
+  <dl class="col-md-6 dl-horizontal">
+    <dt>Status</dt>
+    <dd>{{vm.row.status}}</dt>
+
+    <dt>Role</dt>
+    <dd>{{vm.row.role}}</dt>
+
+    <dt>Environment</dt>
+    <dd>{{vm.row.environment}}</dt>
+
+    <dt>Tenant</dt>
+    <dd>{{vm.row.tenant}}</dt>
+
+    <dt>Security Group</dt>
+    <dd>{{vm.row.securityGroup}}</dt>
+  </dl>
+
+<dl class="col-md-6 dl-horizontal">
+  <dt>Manufacturer</dt>
+  <dd>{{vm.row.manufacturer}}</dd>
+
+  <dt>Product</dt>
+  <dd>{{vm.row.product}}</dd>
+
+  <dt>Product Version</dt>
+  <dd>{{vm.row.productVersion}}</dd>
+
+  <dd>&nbsp;</dd>
+
+  <dt>Total Memory</dt>
+  <dd>{{vm.row.memoryTotalGB | number:2}} GB</dd>
+
+  <dt>CPU Model</dt>
+  <dd>{{vm.row.cpuModel}}</dt>
+
+  <dt>CPU Speed</dt>
+  <dd>{{vm.row.cpuSpeedGHz}} GHz</dt>
+
+  <dt>CPU Sockets</dt>
+  <dd>{{vm.row.cpuSockets}}</dd>
+
+ <dt>CPU Logical Cores</dt>
+  <dd>{{vm.row.cpuLogicalCores}}</dd>
+
+  <dt>CPU Physical Cores</dt>
+  <dd>{{vm.row.cpuPhysicalCores}}</dd>
+
+<!--
+  <dt>Disk 1</dt>
+  <dd></dd>
+
+  <dt>Disk 2</dt>
+  <dd></dd>
+-->
+
+<!--
+  <dt>Interface 1</dt>
+  <dd></dd>
+
+  <dt>Interface 2</dt>
+  <dd></dd>
+-->
+</dl>
+</div>
+
+<div class="col-md-12">
+  <dl class="col-md-12 dl-horizontal">
+    <dt>Allow Build</dt>
+    <dd>
+      <i ng-if="vm.row.allowBuild" class="fa fa-check-square-o"></i>
+      <i ng-if="!vm.row.allowBuild" class="fa fa-square-o"></i>
+    </dd>
+
+    <dt>Image</dt>
+    <dd>{{vm.row.image}}</dd>
+  </dl>
+</div>
+
+<div class="col-md-12">
+  <dl class="col-md-2 dl-horizontal">
+    <dt>Running</dt>
+    <dd>{{vm.data[0]}}</dd>
+    <dt>Successful</dt>
+    <dd>{{vm.data[1]}}</dd>
+    <dt>Failed</dt>
+    <dd>{{vm.data[2]}}</dd>
+  </dl>
+  
+  <div class="col-md-4">
+    <canvas id="doughnut" class="chart chart-doughnut"
+      chart-dataset-override="vm.datasets" chart-data="vm.data" chart-labels="vm.labels" chart-options="vm.options">
+    </canvas> 
+  </div>
+</div>
+
+<div class="rolldown-footer">
+</div>

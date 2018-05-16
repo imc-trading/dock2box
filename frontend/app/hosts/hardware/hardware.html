@@ -1,0 +1,41 @@
+<div class="modal-body">
+  <uib-tabset type="pills">
+    <uib-tab heading="System" ng-click="vm.getSystem()">
+      <br />
+      <div ng-include='"hosts/hardware/list.html"'></div>
+    </uib-tab>
+    <uib-tab heading="CPU" ng-click="vm.getCPU()">
+      <br />
+      <div ng-include='"hosts/hardware/list.html"'></div>
+    </uib-tab>
+    <uib-tab heading="DNS" ng-click="vm.getDNS()">
+      <br />
+      <div ng-include='"hosts/hardware/list.html"'></div>
+    </uib-tab>
+    <uib-tab heading="IPMI" ng-click="vm.getIPMI()">
+      <br />
+      <div ng-include='"hosts/hardware/list.html"'></div>
+    </uib-tab>
+    <uib-tab heading="PCI Cards" ng-click="vm.getPCICards()">
+      <br />
+      <div ng-include='"hosts/hardware/table.html"'></div>
+    </uib-tab>
+    <uib-tab heading="Disks" ng-click="vm.getDisks()">
+      <br />
+      <div ng-include='"hosts/hardware/table.html"'></div>
+    </uib-tab>
+    <uib-tab heading="Interfaces" ng-click="vm.getInterfaces()">
+      <br />
+      <div ng-include='"hosts/hardware/table.html"'></div>
+    </uib-tab>
+    <uib-tab heading="Routes" ng-click="vm.getRoutes()">
+      <br />
+      <div ng-include='"hosts/hardware/table.html"'></div>
+    </uib-tab>
+  </uib-tabset>
+</div>
+<div class="modal-footer">
+  <div class="col-md-12">
+    <button class="btn btn-default" type="button" ng-click="vm.close()">Close</button>
+  </div>
+</div>

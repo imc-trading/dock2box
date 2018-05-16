@@ -1,0 +1,79 @@
+<div class="rolldown-header">
+</div>
+
+<div class="col-md-12">
+  <dl class="col-md-6 dl-horizontal">
+    <dt>Started</dt>
+    <dd>{{vm.row.started | fmtField:"datetime"}}</dd>
+
+    <dt>Finished</dt>
+    <dd>{{vm.row.finished | fmtField:"datetime"}}</dd>
+
+    <dt>Duration</dt>
+    <dd>{{vm.row.duration | fmtField:"duration"}}</dd>
+  </dl>
+
+  <dl class="col-md-6 dl-horizontal">
+    <dt>Running</dt>
+    <dd>
+      <i ng-if="vm.row.running" class="fa fa-check-square-o"></i>
+      <i ng-if="!vm.row.running" class="fa fa-square-o"></i>
+    </dd>
+
+    <dt>Terminated</dt>
+    <dd>
+      <i ng-if="vm.row.terminated" class="fa fa-check-square-o"></i>
+      <i ng-if="!vm.row.terminated" class="fa fa-square-o"></i>
+    </dd>
+
+    <dt>Orphaned</dt>
+    <dd>
+      <i ng-if="vm.row.orphaned" class="fa fa-check-square-o"></i>
+      <i ng-if="!vm.row.orphaned" class="fa fa-square-o"></i>
+    </dd>
+  </dl>
+</div>
+
+<div class="col-md-12">
+  <dl class="col-md-6 dl-horizontal">
+    <dt>Environment</dt>
+    <dd>
+      <ul class="list-unstyled">
+        <li ng-repeat="(k, v) in vm.row.env">{{k}}={{v}}</li>
+      </ul>
+    </dd>
+
+    <dt>Command</dt>
+    <dd>{{vm.row.cmd}}</dd>
+
+    <dt>Arguments<dt>
+    <dd>{{vm.row.args.join(" ")}}</dd>
+  </dl>
+
+  <dl class="col-md-6 dl-horizontal">
+    <dt>Exit Code</dt>
+    <dd>{{vm.row.exitCode}}</dd>
+
+    <dt>Error</dt>
+    <dd>{{vm.row.error}}</dd>
+  </dl>
+</div>
+
+<div class="col-md-12">
+  <dl class="col-md-12 dl-horizontal">
+    <dt>Log Tail</dt>
+    <dd>
+      <ul class="list-unstyled">
+        <li ng-repeat="line in vm.row.tail">{{line}}</li>
+      </ul>
+    </dd>
+  </dl>
+</div>
+
+<div class="col-md-12">
+  <uib-progressbar ng-if="vm.row.running" value="vm.row['progress']" type="{{ vm.row['durationLeft'] >= 0 ? 'success' : 'danger' }}"><b>{{vm.row['durationLeft'] | fmtField:'duration'}} {{vm.row['durationLeft'] >= 0 ? 'left' : 'over'}}</b></uib-progressbar>
+  <uib-progressbar ng-if="!vm.row.running" value="vm.row['progress']" type="{{ vm.row['exitCode'] == 0 ? 'success' : 'danger' }}"><b>{{vm.row['duration'] | fmtField:'duration'}}</b></uib-progressbar>
+</div>
+
+<div class="roller-footer">
+</div>
