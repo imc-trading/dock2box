@@ -42,12 +42,7 @@ func (ds *Datastore) QuerySubnets(q *qry.Query) (Subnets, error) {
 		return nil, err
 	}
 
-	r, err := q.Eval(subnets)
-	if err != nil {
-		return nil, err
-	}
-
-	return r.(Subnets), nil
+	return subnets, nil
 }
 
 func (ds *Datastore) OneSubnet(uuid string) (*Subnet, error) {

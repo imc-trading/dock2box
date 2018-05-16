@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/mickep76/qry"
 	"github.com/pborman/uuid"
 )
 
@@ -31,7 +30,7 @@ func NewImage(registry string, repo string, name string, tag string) *Image {
 	}
 }
 
-func (ds *Datastore) QueryImages(q *qry.Query) (Images, error) {
+func (ds *Datastore) AllImages() (Images, error) {
 	kvs, err := ds.Values("images")
 	if err != nil {
 		return nil, err
@@ -42,12 +41,7 @@ func (ds *Datastore) QueryImages(q *qry.Query) (Images, error) {
 		return nil, err
 	}
 
-	r, err := q.Eval(images)
-	if err != nil {
-		return nil, err
-	}
-
-	return r.(Images), nil
+	return images, nil
 }
 
 func (ds *Datastore) OneImage(uuid string) (*Image, error) {

@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/mickep76/qry"
 	"github.com/pborman/uuid"
 )
 
@@ -25,7 +24,7 @@ func NewTenant(name string) *Tenant {
 	}
 }
 
-func (ds *Datastore) QueryTenants(q *qry.Query) (Tenants, error) {
+func (ds *Datastore) QueryTenants() (Tenants, error) {
 	kvs, err := ds.Values("tenants")
 	if err != nil {
 		return nil, err
@@ -36,12 +35,7 @@ func (ds *Datastore) QueryTenants(q *qry.Query) (Tenants, error) {
 		return nil, err
 	}
 
-	r, err := q.Eval(tenants)
-	if err != nil {
-		return nil, err
-	}
-
-	return r.(Tenants), nil
+	return tenants, nil
 }
 
 func (ds *Datastore) OneTenant(uuid string) (*Tenant, error) {

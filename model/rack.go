@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/mickep76/qry"
 	"github.com/pborman/uuid"
 )
 
@@ -29,7 +28,7 @@ func NewRack(name string) *Rack {
 	}
 }
 
-func (ds *Datastore) QueryRacks(q *qry.Query) (Racks, error) {
+func (ds *Datastore) AllRacks() (Racks, error) {
 	kvs, err := ds.Values("racks")
 	if err != nil {
 		return nil, err
@@ -40,12 +39,7 @@ func (ds *Datastore) QueryRacks(q *qry.Query) (Racks, error) {
 		return nil, err
 	}
 
-	r, err := q.Eval(racks)
-	if err != nil {
-		return nil, err
-	}
-
-	return r.(Racks), nil
+	return racks, nil
 }
 
 func (ds *Datastore) OneRack(uuid string) (*Rack, error) {

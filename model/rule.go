@@ -35,7 +35,7 @@ func NewRule(name string, descr string, value interface{}, code string, file str
 }
 
 func (ds *Datastore) QueryRules(q *qry.Query) (Rules, error) {
-	r, err := q.Eval(rules)
+	r, err := q.Query(rules)
 	if err != nil {
 		return nil, err
 	}

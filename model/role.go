@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/mickep76/qry"
 	"github.com/pborman/uuid"
 )
 
@@ -25,7 +24,7 @@ func NewRole(name string) *Role {
 	}
 }
 
-func (ds *Datastore) QueryRoles(q *qry.Query) (Roles, error) {
+func (ds *Datastore) AllRoles() (Roles, error) {
 	kvs, err := ds.Values("roles")
 	if err != nil {
 		return nil, err
@@ -36,12 +35,7 @@ func (ds *Datastore) QueryRoles(q *qry.Query) (Roles, error) {
 		return nil, err
 	}
 
-	r, err := q.Eval(roles)
-	if err != nil {
-		return nil, err
-	}
-
-	return r.(Roles), nil
+	return roles, nil
 }
 
 func (ds *Datastore) OneRole(uuid string) (*Role, error) {

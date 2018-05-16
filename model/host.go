@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/mickep76/qry"
 	"github.com/pborman/uuid"
 )
 
@@ -45,7 +44,7 @@ func NewHost(name string, hwAddr string) *Host {
 	}
 }
 
-func (ds *Datastore) QueryHosts(q *qry.Query) (Hosts, error) {
+func (ds *Datastore) AllHosts() (Hosts, error) {
 	kvs, err := ds.Values("hosts")
 	if err != nil {
 		return nil, err
@@ -56,12 +55,7 @@ func (ds *Datastore) QueryHosts(q *qry.Query) (Hosts, error) {
 		return nil, err
 	}
 
-	r, err := q.Eval(hosts)
-	if err != nil {
-		return nil, err
-	}
-
-	return r.(Hosts), nil
+	return hosts, nil
 }
 
 func (ds *Datastore) OneHost(uuid string) (*Host, error) {

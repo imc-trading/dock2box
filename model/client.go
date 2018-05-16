@@ -2,10 +2,10 @@ package model
 
 import (
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/mickep76/kvstore"
-	"github.com/mickep76/qry"
 	"github.com/pborman/uuid"
 )
 
@@ -21,14 +21,22 @@ type Client struct {
 type Clients []*Client
 
 func NewClient(name string) *Client {
+	hw, errs := NewHardware()
+	if len(errs) > 0 {
+		for _, err := range errs {
+			log.Print(err)
+		}
+	}
+
 	return &Client{
-		UUID:    uuid.New(),
-		Created: time.Now(),
-		Name:    name,
+		UUID:     uuid.New(),
+		Created:  time.Now(),
+		Name:     name,
+		Hardware: hw,
 	}
 }
 
-func (ds *Datastore) QueryClients(q *qry.Query) (Clients, error) {
+func (ds *Datastore) AllClients() (Clients, error) {
 	kvs, err := ds.Values("clients")
 	if err != nil {
 		return nil, err
@@ -39,12 +47,7 @@ func (ds *Datastore) QueryClients(q *qry.Query) (Clients, error) {
 		return nil, err
 	}
 
-	r, err := q.Eval(clients)
-	if err != nil {
-		return nil, err
-	}
-
-	return r.(Clients), nil
+	return clients, nil
 }
 
 func (ds *Datastore) OneClient(uuid string) (*Client, error) {

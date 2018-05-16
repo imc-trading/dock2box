@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/mickep76/qry"
 	"github.com/pborman/uuid"
 )
 
@@ -30,7 +29,7 @@ func NewSite(name string) *Site {
 	}
 }
 
-func (ds *Datastore) QuerySites(q *qry.Query) (Sites, error) {
+func (ds *Datastore) AllSites() (Sites, error) {
 	kvs, err := ds.Values("sites")
 	if err != nil {
 		return nil, err
@@ -41,12 +40,7 @@ func (ds *Datastore) QuerySites(q *qry.Query) (Sites, error) {
 		return nil, err
 	}
 
-	r, err := q.Eval(sites)
-	if err != nil {
-		return nil, err
-	}
-
-	return r.(Sites), nil
+	return sites, nil
 }
 
 func (ds *Datastore) OneSite(uuid string) (*Site, error) {

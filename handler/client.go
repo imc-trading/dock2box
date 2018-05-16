@@ -9,7 +9,7 @@ import (
 )
 
 func (h *Handler) AllClients(w http.ResponseWriter, r *http.Request) {
-	q, err := qry.FromURL(r.URL.Query())
+	all, err := h.ds.AllClients()
 	if err != nil {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		w.WriteHeader(http.StatusBadRequest)
@@ -17,17 +17,31 @@ func (h *Handler) AllClients(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	v, err := h.ds.QueryClients(q)
-	if err != nil {
-		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(err.Error()))
-		return
+	var b []byte
+	vals := r.URL.Query()
+	if len(vals) > 0 {
+		q, err := qry.FromURL(r.URL.Query())
+		if err != nil {
+			w.Header().Set("Content-Type", "text/html; charset=utf-8")
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		filtered, err := q.Query(all)
+		if err != nil {
+			w.Header().Set("Content-Type", "text/html; charset=utf-8")
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		b, _ = encdec.ToBytes("json", filtered, encdec.WithIndent("  "))
+	} else {
+		b, _ = encdec.ToBytes("json", all, encdec.WithIndent("  "))
 	}
 
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
-
-	b, _ := encdec.ToBytes("json", v, encdec.WithIndent("  "))
 	w.Write(b)
 }

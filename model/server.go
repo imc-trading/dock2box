@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/mickep76/kvstore"
-	"github.com/mickep76/qry"
 	"github.com/pborman/uuid"
 )
 
@@ -26,7 +25,7 @@ func NewServer(name string) *Server {
 	}
 }
 
-func (ds *Datastore) QueryServers(q *qry.Query) (Servers, error) {
+func (ds *Datastore) AllServers() (Servers, error) {
 	kvs, err := ds.Values("servers")
 	if err != nil {
 		return nil, err
@@ -37,12 +36,7 @@ func (ds *Datastore) QueryServers(q *qry.Query) (Servers, error) {
 		return nil, err
 	}
 
-	r, err := q.Eval(servers)
-	if err != nil {
-		return nil, err
-	}
-
-	return r.(Servers), nil
+	return servers, nil
 }
 
 func (ds *Datastore) OneServer(uuid string) (*Server, error) {

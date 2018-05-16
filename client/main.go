@@ -5,7 +5,6 @@ import (
 	"log"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/mickep76/kvstore"
 	_ "github.com/mickep76/kvstore/etcdv3"
@@ -33,16 +32,21 @@ func main() {
 	// Find existing client in datastore.
 	log.Printf("find existing client in datastore")
 	hostname, _ := os.Hostname()
-	clients, err := ds.QueryClients(qry.Eq("Name", hostname))
+	clients, err := ds.AllClients()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	filtered, err := qry.New().Eq("Name", hostname).Query(clients)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	var c *model.Client
-	if len(clients) > 0 {
+	if len(filtered.(model.Clients)) > 0 {
 		// Update client in datastore.
 		log.Printf("update client in datastore")
-		c = clients[0]
+		c = filtered.(model.Clients)[0]
 		if err := ds.UpdateClient(c); err != nil {
 			log.Fatal(err)
 		}
@@ -56,17 +60,6 @@ func main() {
 			log.Fatal(err)
 		}
 	}
-
-	// Update client in etcd after 10 seconds.
-	timer := time.NewTimer(10 * time.Second)
-	go func() {
-		<-timer.C
-
-		log.Printf("update client in etcd")
-		if err := ds.UpdateClient(c); err != nil {
-			log.Fatal(err)
-		}
-	}()
 
 	// Create lease keepalive.
 	log.Printf("create lease keepalive")
