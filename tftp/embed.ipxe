@@ -1,0 +1,75 @@
+#!ipxe
+
+:shell
+prompt --key 0x02 --timeout 2000 "Press Ctrl-B for the iPXE shell..." || goto start
+shell
+exit
+
+:start
+dhcp || goto shell
+
+# Console framebuffer size
+console --x 800 --y 600
+
+# Console framebuffer picture
+console --picture http://dock2box/boot/img/dock2box-800x600.png --left 250 --top 0
+
+# Default colors
+colour --rgb 0x888888 0
+colour --rgb 0xdddddd 1
+colour --rgb 0x029bc6 2
+colour --rgb 0x1b9cc5 3
+
+# User interface
+cpair --foreground 0 1
+
+# Highlighted text
+cpair --foreground 1 --background 4 2
+
+# Separator
+cpair --foreground 3 3
+
+# Menu
+imgfree
+
+menu
+item --gap -- IP...... : ${netX/ip}
+item --gap -- HWAddr.. : ${netX/mac}
+item --gap -- SN...... : ${serial}
+item --gap --
+item dock2box Dock2Box
+item dock2box_debug Dock2Box Debug
+item dock2box_dev Dock2Box Dev
+item dock2box_dev_debug Dock2Box Dev Debug
+item --gap --
+item exit Exit PXE
+choose --default dock2box --timeout 10000 selected
+goto ${selected}
+
+:dock2box
+kernel http://dock2box/boot/kernel quiet video=800x600-32 splash server=dock2box:2379
+initrd http://dock2box/boot/initrd
+boot
+goto start
+
+:dock2box_debug
+kernel http://dock2box/boot/kernel video=800x600-32 debug server=dock2box:2379
+initrd http://dock2box/boot/initrd
+boot
+goto start
+
+:dock2box_dev
+kernel http://dock2box-dev/boot/kernel quiet video=800x600-32 splash server=dock2box-dev:2379
+initrd http://dock2box-dev/boot/initrd
+boot
+goto start
+
+:dock2box_dev_debug
+kernel http://dock2box-dev/boot/kernel video=800x600-32 debug server=dock2box-dev:2379
+initrd http://dock2box-dev/boot/initrd
+boot
+goto start
+
+:exit
+exit 0
+goto start

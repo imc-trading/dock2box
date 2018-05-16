@@ -1,0 +1,5 @@
+/openonload-*
+/.certs-cache
+/initrd
+/kernel
+/client
