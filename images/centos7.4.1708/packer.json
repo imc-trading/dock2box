@@ -1,0 +1,30 @@
+{
+  "variables": {
+    "iso_url": "http://mirrors.mit.edu/centos/7/isos/x86_64/CentOS-7-x86_64-NetInstall-1708.iso",
+    "iso_checksum": "fe3d960cce4d2c1c9f1b66817fe87cc0ee1a1c6c5dd126204cb5c33d51a45620"
+  },
+  "builders": [
+    {
+      "type": "vmware-iso",
+      "vm_name": "{{user `vm_name`}}",
+      "iso_checksum_type": "sha256",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "iso_url": "{{user `iso_url`}}",
+      "output_directory": "packer_output",
+      "ssh_username": "dock2box",
+      "ssh_password": "D0ck2B0x",
+      "ssh_wait_timeout": "60m",
+      "disk_size": "9000",
+      "http_directory": ".",
+      "vmx_data": {
+        "memsize": "4096",
+        "numvcpus": "2",
+        "cpuid.coresPerSocket": "1"
+      },
+      "boot_command": [
+        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter>"
+      ],
+      "shutdown_command": "echo dock2box | sudo -S /sbin/halt -h -p"
+    }
+  ]
+}
