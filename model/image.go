@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/mickep76/qry"
 	"github.com/pborman/uuid"
 )
 
@@ -42,6 +43,20 @@ func (ds *Datastore) AllImages() (Images, error) {
 	}
 
 	return images, nil
+}
+
+func (ds *Datastore) QueryImages(q *qry.Query) (Images, error) {
+	images, err := ds.AllImages()
+	if err != nil {
+		return nil, err
+	}
+
+	filtered, err := q.Query(images)
+	if err != nil {
+		return nil, err
+	}
+
+	return filtered.(Images), nil
 }
 
 func (ds *Datastore) OneImage(uuid string) (*Image, error) {

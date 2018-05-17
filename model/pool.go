@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/mickep76/qry"
 	"github.com/pborman/uuid"
 )
 
@@ -36,6 +37,20 @@ func (ds *Datastore) AllPools() (Pools, error) {
 	}
 
 	return pools, nil
+}
+
+func (ds *Datastore) QueryPools(q *qry.Query) (Pools, error) {
+	pools, err := ds.AllPools()
+	if err != nil {
+		return nil, err
+	}
+
+	filtered, err := q.Query(pools)
+	if err != nil {
+		return nil, err
+	}
+
+	return filtered.(Pools), nil
 }
 
 func (ds *Datastore) OnePool(uuid string) (*Pool, error) {

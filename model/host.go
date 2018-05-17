@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/mickep76/qry"
 	"github.com/pborman/uuid"
 )
 
@@ -56,6 +57,20 @@ func (ds *Datastore) AllHosts() (Hosts, error) {
 	}
 
 	return hosts, nil
+}
+
+func (ds *Datastore) QueryHosts(q *qry.Query) (Hosts, error) {
+	hosts, err := ds.AllHosts()
+	if err != nil {
+		return nil, err
+	}
+
+	filtered, err := q.Query(hosts)
+	if err != nil {
+		return nil, err
+	}
+
+	return filtered.(Hosts), nil
 }
 
 func (ds *Datastore) OneHost(uuid string) (*Host, error) {

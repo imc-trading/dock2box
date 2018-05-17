@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/mickep76/qry"
 	"github.com/pborman/uuid"
 )
 
@@ -36,6 +37,20 @@ func (ds *Datastore) AllRoles() (Roles, error) {
 	}
 
 	return roles, nil
+}
+
+func (ds *Datastore) QueryRoles(q *qry.Query) (Roles, error) {
+	roles, err := ds.AllRoles()
+	if err != nil {
+		return nil, err
+	}
+
+	filtered, err := q.Query(roles)
+	if err != nil {
+		return nil, err
+	}
+
+	return filtered.(Roles), nil
 }
 
 func (ds *Datastore) OneRole(uuid string) (*Role, error) {
