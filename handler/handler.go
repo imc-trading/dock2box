@@ -32,3 +32,7 @@ func write(w http.ResponseWriter, v interface{}) {
 	w.WriteHeader(http.StatusOK)
 	w.Write(b)
 }
+
+func writeDelete(w http.ResponseWriter) {
+	w.WriteHeader(http.StatusNoContent)
+}

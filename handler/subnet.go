@@ -74,3 +74,14 @@ func (h *Handler) UpdateSubnet(w http.ResponseWriter, r *http.Request) {
 
 	write(w, subnet)
 }
+
+func (h *Handler) DeleteSubnet(w http.ResponseWriter, r *http.Request) {
+	uuid := mux.Vars(r)["uuid"]
+
+	if err := h.ds.DeleteSubnet(uuid); err != nil {
+		writeError(w, err)
+		return
+	}
+
+	writeDelete(w)
+}

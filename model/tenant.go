@@ -80,3 +80,10 @@ func (ds *Datastore) UpdateTenant(tenant *Tenant) error {
 	tenant.Updated = &now
 	return ds.Set(fmt.Sprintf("tenants/%s", tenant.UUID), tenant)
 }
+
+func (ds *Datastore) DeleteTenant(uuid string) error {
+	if err := ds.Delete(fmt.Sprintf("tenants/%s", uuid)); err != nil {
+		return err
+	}
+	return nil
+}

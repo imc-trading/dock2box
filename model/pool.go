@@ -80,3 +80,10 @@ func (ds *Datastore) UpdatePool(pool *Pool) error {
 	pool.Updated = &now
 	return ds.Set(fmt.Sprintf("pools/%s", pool.UUID), pool)
 }
+
+func (ds *Datastore) DeletePool(uuid string) error {
+	if err := ds.Delete(fmt.Sprintf("pools/%s", uuid)); err != nil {
+		return err
+	}
+	return nil
+}

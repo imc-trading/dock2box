@@ -80,3 +80,10 @@ func (ds *Datastore) UpdateRole(role *Role) error {
 	role.Updated = &now
 	return ds.Set(fmt.Sprintf("roles/%s", role.UUID), role)
 }
+
+func (ds *Datastore) DeleteRole(uuid string) error {
+	if err := ds.Delete(fmt.Sprintf("roles/%s", uuid)); err != nil {
+		return err
+	}
+	return nil
+}

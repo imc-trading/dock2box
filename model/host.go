@@ -100,3 +100,10 @@ func (ds *Datastore) UpdateHost(host *Host) error {
 	host.Updated = &now
 	return ds.Set(fmt.Sprintf("hosts/%s", host.UUID), host)
 }
+
+func (ds *Datastore) DeleteHost(uuid string) error {
+	if err := ds.Delete(fmt.Sprintf("hosts/%s", uuid)); err != nil {
+		return err
+	}
+	return nil
+}
