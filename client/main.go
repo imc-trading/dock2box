@@ -32,21 +32,16 @@ func main() {
 	// Find existing client in datastore.
 	log.Printf("find existing client in datastore")
 	hostname, _ := os.Hostname()
-	clients, err := ds.AllClients()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	filtered, err := qry.New().Eq("Name", hostname).Query(clients)
+	clients, err := ds.QueryClients(qry.New().Eq("Name", hostname))
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	var c *model.Client
-	if len(filtered.(model.Clients)) > 0 {
+	if len(clients) > 0 {
 		// Update client in datastore.
 		log.Printf("update client in datastore")
-		c = filtered.(model.Clients)[0]
+		c = clients[0]
 		if err := ds.UpdateClient(c); err != nil {
 			log.Fatal(err)
 		}

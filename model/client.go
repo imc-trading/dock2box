@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/mickep76/kvstore"
+	"github.com/mickep76/qry"
 	"github.com/pborman/uuid"
 )
 
@@ -48,6 +49,20 @@ func (ds *Datastore) AllClients() (Clients, error) {
 	}
 
 	return clients, nil
+}
+
+func (ds *Datastore) QueryClients(q *qry.Query) (Clients, error) {
+	clients, err := ds.AllClients()
+	if err != nil {
+		return nil, err
+	}
+
+	filtered, err := q.Query(clients)
+	if err != nil {
+		return nil, err
+	}
+
+	return filtered.(Clients), nil
 }
 
 func (ds *Datastore) OneClient(uuid string) (*Client, error) {
