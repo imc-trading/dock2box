@@ -38,6 +38,10 @@ func NewRule(name string, descr string, value interface{}, code string, file str
 	}
 }
 
+func (ds *Datastore) AllRules(q *qry.Query) (Rules, error) {
+	return rules, nil
+}
+
 func (ds *Datastore) QueryRules(q *qry.Query) (Rules, error) {
 	r, err := q.Query(rules)
 	if err != nil {
