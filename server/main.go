@@ -113,13 +113,91 @@ func main() {
 	router := mux.NewRouter()
 	h := handler.NewHandler(ds)
 
+	/* client
+	 * host
+	 * image
+	 * pool
+	 * rack
+	 * role
+	 * server
+	 * site
+	 * subnet
+	 * tenant
+	 */
+
 	// Client handlers.
 	log.Printf("add route /api/clients")
 	router.HandleFunc("/api/clients", h.AllClients).Methods("GET")
+	router.HandleFunc("/api/clients/{uuid}", h.OneClient).Methods("GET")
+
+	// Host handlers.
+	log.Printf("add route /api/hosts")
+	router.HandleFunc("/api/hosts", h.AllHosts).Methods("GET")
+	router.HandleFunc("/api/hosts", h.CreateHost).Methods("POST")
+	router.HandleFunc("/api/hosts/{uuid}", h.OneHost).Methods("GET")
+	router.HandleFunc("/api/hosts/{uuid}", h.UpdateHost).Methods("PUT")
+	//      router.HandleFunc("/api/hosts/{uuid}", h.DeleteHost).Methods("DELETE")
+
+	// Image handlers.
+	log.Printf("add route /api/images")
+	router.HandleFunc("/api/images", h.AllImages).Methods("GET")
+	router.HandleFunc("/api/images", h.CreateImage).Methods("POST")
+	router.HandleFunc("/api/images/{uuid}", h.OneImage).Methods("GET")
+	router.HandleFunc("/api/images/{uuid}", h.UpdateImage).Methods("PUT")
+	//      router.HandleFunc("/api/images/{uuid}", h.DeleteImage).Methods("DELETE")
+
+	// Pool handlers.
+	log.Printf("add route /api/pools")
+	router.HandleFunc("/api/pools", h.AllPools).Methods("GET")
+	router.HandleFunc("/api/pools", h.CreatePool).Methods("POST")
+	router.HandleFunc("/api/pools/{uuid}", h.OnePool).Methods("GET")
+	router.HandleFunc("/api/pools/{uuid}", h.UpdatePool).Methods("PUT")
+	//      router.HandleFunc("/api/pools/{uuid}", h.DeletePool).Methods("DELETE")
+
+	// Rack handlers.
+	log.Printf("add route /api/racks")
+	router.HandleFunc("/api/racks", h.AllRacks).Methods("GET")
+	router.HandleFunc("/api/racks", h.CreateRack).Methods("POST")
+	router.HandleFunc("/api/racks/{uuid}", h.OneRack).Methods("GET")
+	router.HandleFunc("/api/racks/{uuid}", h.UpdateRack).Methods("PUT")
+	//      router.HandleFunc("/api/racks/{uuid}", h.DeleteRack).Methods("DELETE")
+
+	// Role handlers.
+	log.Printf("add route /api/roles")
+	router.HandleFunc("/api/roles", h.AllRoles).Methods("GET")
+	router.HandleFunc("/api/roles", h.CreateRole).Methods("POST")
+	router.HandleFunc("/api/roles/{uuid}", h.OneRole).Methods("GET")
+	router.HandleFunc("/api/roles/{uuid}", h.UpdateRole).Methods("PUT")
+	//      router.HandleFunc("/api/roles/{uuid}", h.DeleteRole).Methods("DELETE")
 
 	// Server handlers.
 	log.Printf("add route /api/servers")
 	router.HandleFunc("/api/servers", h.AllServers).Methods("GET")
+	router.HandleFunc("/api/servers/{uuid}", h.OneServer).Methods("GET")
+
+	// Site handlers.
+	log.Printf("add route /api/sites")
+	router.HandleFunc("/api/sites", h.AllSites).Methods("GET")
+	router.HandleFunc("/api/sites", h.CreateSite).Methods("POST")
+	router.HandleFunc("/api/sites/{uuid}", h.OneSite).Methods("GET")
+	router.HandleFunc("/api/sites/{uuid}", h.UpdateSite).Methods("PUT")
+	//	router.HandleFunc("/api/sites/{uuid}", h.DeleteSite).Methods("DELETE")
+
+	// Subnet handlers.
+	log.Printf("add route /api/subnets")
+	router.HandleFunc("/api/subnets", h.AllSubnets).Methods("GET")
+	router.HandleFunc("/api/subnets", h.CreateSubnet).Methods("POST")
+	router.HandleFunc("/api/subnets/{uuid}", h.OneSubnet).Methods("GET")
+	router.HandleFunc("/api/subnets/{uuid}", h.UpdateSubnet).Methods("PUT")
+	//      router.HandleFunc("/api/subnets/{uuid}", h.DeleteSubnet).Methods("DELETE")
+
+	// Tenant handlers.
+	log.Printf("add route /api/tenants")
+	router.HandleFunc("/api/tenants", h.AllTenants).Methods("GET")
+	router.HandleFunc("/api/tenants", h.CreateTenant).Methods("POST")
+	router.HandleFunc("/api/tenants/{uuid}", h.OneTenant).Methods("GET")
+	router.HandleFunc("/api/tenants/{uuid}", h.UpdateTenant).Methods("PUT")
+	//      router.HandleFunc("/api/tenants/{uuid}", h.DeleteTenant).Methods("DELETE")
 
 	// Start https listener.
 	log.Printf("start http listener")
