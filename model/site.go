@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/mickep76/qry"
 	"github.com/pborman/uuid"
 )
 
@@ -41,6 +42,20 @@ func (ds *Datastore) AllSites() (Sites, error) {
 	}
 
 	return sites, nil
+}
+
+func (ds *Datastore) QuerySites(q *qry.Query) (Sites, error) {
+	sites, err := ds.AllSites()
+	if err != nil {
+		return nil, err
+	}
+
+	filtered, err := q.Query(sites)
+	if err != nil {
+		return nil, err
+	}
+
+	return filtered.(Sites), nil
 }
 
 func (ds *Datastore) OneSite(uuid string) (*Site, error) {
