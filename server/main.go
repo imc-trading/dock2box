@@ -168,42 +168,42 @@ func main() {
 
 	// Host handlers.
 	log.Printf("add route /api/hosts")
-	router.HandleFunc("/api/hosts", h.AllHosts).Methods("GET")
-	router.HandleFunc("/api/hosts", h.CreateHost).Methods("POST")
-	router.HandleFunc("/api/hosts/{uuid}", h.OneHost).Methods("GET")
-	router.HandleFunc("/api/hosts/{uuid}", h.UpdateHost).Methods("PUT")
+	router.Handle("/api/hosts", j.Authorized(http.HandlerFunc(h.AllHosts))).Methods("GET")
+	router.Handle("/api/hosts", j.Authorized(http.HandlerFunc(h.CreateHost))).Methods("POST")
+	router.Handle("/api/hosts/{uuid}", j.Authorized(http.HandlerFunc(h.OneHost))).Methods("GET")
+	router.Handle("/api/hosts/{uuid}", j.Authorized(http.HandlerFunc(h.UpdateHost))).Methods("PUT")
 	//      router.HandleFunc("/api/hosts/{uuid}", h.DeleteHost).Methods("DELETE")
 
 	// Image handlers.
 	log.Printf("add route /api/images")
-	router.HandleFunc("/api/images", h.AllImages).Methods("GET")
-	router.HandleFunc("/api/images", h.CreateImage).Methods("POST")
-	router.HandleFunc("/api/images/{uuid}", h.OneImage).Methods("GET")
-	router.HandleFunc("/api/images/{uuid}", h.UpdateImage).Methods("PUT")
+	router.Handle("/api/images", j.Authorized(http.HandlerFunc(h.AllImages))).Methods("GET")
+	router.Handle("/api/images", j.Authorized(http.HandlerFunc(h.CreateImage))).Methods("POST")
+	router.Handle("/api/images/{uuid}", j.Authorized(http.HandlerFunc(h.OneImage))).Methods("GET")
+	router.Handle("/api/images/{uuid}", j.Authorized(http.HandlerFunc(h.UpdateImage))).Methods("PUT")
 	//      router.HandleFunc("/api/images/{uuid}", h.DeleteImage).Methods("DELETE")
 
 	// Pool handlers.
 	log.Printf("add route /api/pools")
-	router.HandleFunc("/api/pools", h.AllPools).Methods("GET")
-	router.HandleFunc("/api/pools", h.CreatePool).Methods("POST")
-	router.HandleFunc("/api/pools/{uuid}", h.OnePool).Methods("GET")
-	router.HandleFunc("/api/pools/{uuid}", h.UpdatePool).Methods("PUT")
+	router.Handle("/api/pools", j.Authorized(http.HandlerFunc(h.AllPools))).Methods("GET")
+	router.Handle("/api/pools", j.Authorized(http.HandlerFunc(h.CreatePool))).Methods("POST")
+	router.Handle("/api/pools/{uuid}", j.Authorized(http.HandlerFunc(h.OnePool))).Methods("GET")
+	router.Handle("/api/pools/{uuid}", j.Authorized(http.HandlerFunc(h.UpdatePool))).Methods("PUT")
 	//      router.HandleFunc("/api/pools/{uuid}", h.DeletePool).Methods("DELETE")
 
 	// Rack handlers.
 	log.Printf("add route /api/racks")
-	router.HandleFunc("/api/racks", h.AllRacks).Methods("GET")
-	router.HandleFunc("/api/racks", h.CreateRack).Methods("POST")
-	router.HandleFunc("/api/racks/{uuid}", h.OneRack).Methods("GET")
-	router.HandleFunc("/api/racks/{uuid}", h.UpdateRack).Methods("PUT")
+	router.Handle("/api/racks", j.Authorized(http.HandlerFunc(h.AllRacks))).Methods("GET")
+	router.Handle("/api/racks", j.Authorized(http.HandlerFunc(h.CreateRack))).Methods("POST")
+	router.Handle("/api/racks/{uuid}", j.Authorized(http.HandlerFunc(h.OneRack))).Methods("GET")
+	router.Handle("/api/racks/{uuid}", j.Authorized(http.HandlerFunc(h.UpdateRack))).Methods("PUT")
 	//      router.HandleFunc("/api/racks/{uuid}", h.DeleteRack).Methods("DELETE")
 
 	// Role handlers.
 	log.Printf("add route /api/roles")
-	router.HandleFunc("/api/roles", h.AllRoles).Methods("GET")
-	router.HandleFunc("/api/roles", h.CreateRole).Methods("POST")
-	router.HandleFunc("/api/roles/{uuid}", h.OneRole).Methods("GET")
-	router.HandleFunc("/api/roles/{uuid}", h.UpdateRole).Methods("PUT")
+	router.Handle("/api/roles", j.Authorized(http.HandlerFunc(h.AllRoles))).Methods("GET")
+	router.Handle("/api/roles", j.Authorized(http.HandlerFunc(h.CreateRole))).Methods("POST")
+	router.Handle("/api/roles/{uuid}", j.Authorized(http.HandlerFunc(h.OneRole))).Methods("GET")
+	router.Handle("/api/roles/{uuid}", j.Authorized(http.HandlerFunc(h.UpdateRole))).Methods("PUT")
 	//      router.HandleFunc("/api/roles/{uuid}", h.DeleteRole).Methods("DELETE")
 
 	// Server handlers.
@@ -213,26 +213,26 @@ func main() {
 
 	// Site handlers.
 	log.Printf("add route /api/sites")
-	router.HandleFunc("/api/sites", h.AllSites).Methods("GET")
-	router.HandleFunc("/api/sites", h.CreateSite).Methods("POST")
-	router.HandleFunc("/api/sites/{uuid}", h.OneSite).Methods("GET")
-	router.HandleFunc("/api/sites/{uuid}", h.UpdateSite).Methods("PUT")
+	router.Handle("/api/sites", j.Authorized(http.HandlerFunc(h.AllSites))).Methods("GET")
+	router.Handle("/api/sites", j.Authorized(http.HandlerFunc(h.CreateSite))).Methods("POST")
+	router.Handle("/api/sites/{uuid}", j.Authorized(http.HandlerFunc(h.OneSite))).Methods("GET")
+	router.Handle("/api/sites/{uuid}", j.Authorized(http.HandlerFunc(h.UpdateSite))).Methods("PUT")
 	//	router.HandleFunc("/api/sites/{uuid}", h.DeleteSite).Methods("DELETE")
 
 	// Subnet handlers.
 	log.Printf("add route /api/subnets")
-	router.HandleFunc("/api/subnets", h.AllSubnets).Methods("GET")
-	router.HandleFunc("/api/subnets", h.CreateSubnet).Methods("POST")
-	router.HandleFunc("/api/subnets/{uuid}", h.OneSubnet).Methods("GET")
-	router.HandleFunc("/api/subnets/{uuid}", h.UpdateSubnet).Methods("PUT")
+	router.Handle("/api/subnets", j.Authorized(http.HandlerFunc(h.AllSubnets))).Methods("GET")
+	router.Handle("/api/subnets", j.Authorized(http.HandlerFunc(h.CreateSubnet))).Methods("POST")
+	router.Handle("/api/subnets/{uuid}", j.Authorized(http.HandlerFunc(h.OneSubnet))).Methods("GET")
+	router.Handle("/api/subnets/{uuid}", j.Authorized(http.HandlerFunc(h.UpdateSubnet))).Methods("PUT")
 	//      router.HandleFunc("/api/subnets/{uuid}", h.DeleteSubnet).Methods("DELETE")
 
 	// Tenant handlers.
 	log.Printf("add route /api/tenants")
-	router.HandleFunc("/api/tenants", h.AllTenants).Methods("GET")
-	router.HandleFunc("/api/tenants", h.CreateTenant).Methods("POST")
-	router.HandleFunc("/api/tenants/{uuid}", h.OneTenant).Methods("GET")
-	router.HandleFunc("/api/tenants/{uuid}", h.UpdateTenant).Methods("PUT")
+	router.Handle("/api/tenants", j.Authorized(http.HandlerFunc(h.AllTenants))).Methods("GET")
+	router.Handle("/api/tenants", j.Authorized(http.HandlerFunc(h.CreateTenant))).Methods("POST")
+	router.Handle("/api/tenants/{uuid}", j.Authorized(http.HandlerFunc(h.OneTenant))).Methods("GET")
+	router.Handle("/api/tenants/{uuid}", j.Authorized(http.HandlerFunc(h.UpdateTenant))).Methods("PUT")
 	//      router.HandleFunc("/api/tenants/{uuid}", h.DeleteTenant).Methods("DELETE")
 
 	// Start https listener.
