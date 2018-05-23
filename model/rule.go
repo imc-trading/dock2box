@@ -79,3 +79,10 @@ func RunRules(h *Host, rules Rules) (map[string]string, error) {
 
 	return res, nil
 }
+
+func (ds *Datastore) DeleteRule(uuid string) error {
+	if err := ds.Delete(fmt.Sprintf("rules/%s", uuid)); err != nil {
+		return err
+	}
+	return nil
+}

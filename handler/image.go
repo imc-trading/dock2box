@@ -74,3 +74,14 @@ func (h *Handler) UpdateImage(w http.ResponseWriter, r *http.Request) {
 
 	write(w, image)
 }
+
+func (h *Handler) DeleteImage(w http.ResponseWriter, r *http.Request) {
+	uuid := mux.Vars(r)["uuid"]
+
+	if err := h.ds.DeleteImage(uuid); err != nil {
+		writeError(w, err)
+		return
+	}
+
+	writeDelete(w)
+}

@@ -74,3 +74,14 @@ func (h *Handler) UpdateRack(w http.ResponseWriter, r *http.Request) {
 
 	write(w, rack)
 }
+
+func (h *Handler) DeleteRack(w http.ResponseWriter, r *http.Request) {
+	uuid := mux.Vars(r)["uuid"]
+
+	if err := h.ds.DeleteRack(uuid); err != nil {
+		writeError(w, err)
+		return
+	}
+
+	writeDelete(w)
+}

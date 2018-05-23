@@ -86,3 +86,10 @@ func (ds *Datastore) UpdateSubnet(subnet *Subnet) error {
 	subnet.Updated = &now
 	return ds.Set(fmt.Sprintf("subnets/%s", subnet.UUID), subnet)
 }
+
+func (ds *Datastore) DeleteSubnet(uuid string) error {
+	if err := ds.Delete(fmt.Sprintf("subnets/%s", uuid)); err != nil {
+		return err
+	}
+	return nil
+}
