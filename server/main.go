@@ -50,18 +50,18 @@ var clientHandler = kvstore.WatchHandler(func(kv kvstore.KeyValue) {
 
 func main() {
 	// Parse arguments.
-	backend := flag.String("backend", "etcdv3", "Key/value store backend.")
-	prefix := flag.String("prefix", "/dock2box", "Key/value store prefix.")
-	endpoints := flag.String("endpoints", "127.0.0.1:2379", "Comma-delimited list of hosts in the key/value store cluster.")
-	timeout := flag.Int("timeout", 5, "Connection timeout for key/value cluster in seconds.")
-	keepalive := flag.Int("keepalive", 5, "Connection keepalive for key/value cluster in seconds.")
-	user := flag.String("user", "", "Key/avlue store user.")
-	password := flag.String("password", "", "Key/value store password.")
-	insecure := flag.Bool("insecure", false, "Insecure TLS.")
+	kvsBackend := flag.String("kvs-backend", "etcdv3", "Key/value store backend.")
+	kvsPrefix := flag.String("kvs-prefix", "/dock2box", "Key/value store prefix.")
+	kvsEndpoints := flag.String("kvs-endpoints", "127.0.0.1:2379", "Comma-delimited list of hosts in the key/value store cluster.")
+	kvsTimeout := flag.Int("kvs-timeout", 5, "Connection timeout for key/value cluster in seconds.")
+	kvsKeepalive := flag.Int("kvs-keepalive", 5, "Connection keepalive for key/value cluster in seconds.")
+	kvsUser := flag.String("kvs-user", "", "Key/avlue store user.")
+	kvsPassword := flag.String("kvs-password", "", "Key/value store password.")
+	kvsInsecure := flag.Bool("kvs-insecure", false, "Insecure TLS.")
 
-	bind := flag.String("bind", "127.0.0.1:8080", "Bind to address and port.")
-	cert := flag.String("cert", "server.crt", "TLS HTTPS cert.")
-	key := flag.String("key", "server.key", "TLS HTTPS key.")
+	httpBind := flag.String("http-bind", "127.0.0.1:8080", "Bind to address and port.")
+	httpCert := flag.String("http-cert", "server.crt", "TLS HTTPS cert.")
+	httpKey := flag.String("http-key", "server.key", "TLS HTTPS key.")
 
 	authBackend := flag.String("auth-backend", "ad", "Auth. backend either ad or ldap.")
 	authEndpoint := flag.String("auth-endpoint", "ldap:389", "LDAP server and port.")
@@ -71,6 +71,7 @@ func main() {
 
 	jwtPrivKey := flag.String("jwt-priv-key", "private.rsa", "Private RSA key.")
 	jwtPubKey := flag.String("jwt-pub-key", "public.rsa", "Public RSA key.")
+
 	flag.Parse()
 
 	// Create auth. TLS config.
@@ -101,12 +102,12 @@ func main() {
 
 	// Create etcd TLS config.
 	etcdTLS := &tls.Config{
-		InsecureSkipVerify: *insecure,
+		InsecureSkipVerify: *kvsInsecure,
 	}
 
 	// Connect to etcd.
 	log.Printf("connect to etcd")
-	ds, err := model.NewDatastore(*backend, strings.Split(*endpoints, ","), *keepalive, kvstore.WithTimeout(*timeout), kvstore.WithEncoding("json"), kvstore.WithPrefix(*prefix), kvstore.WithUser(*user), kvstore.WithPassword(*password), kvstore.WithTLS(etcdTLS))
+	ds, err := model.NewDatastore(*kvsBackend, strings.Split(*kvsEndpoints, ","), *kvsKeepalive, kvstore.WithTimeout(*kvsTimeout), kvstore.WithEncoding("json"), kvstore.WithPrefix(*kvsPrefix), kvstore.WithUser(*kvsUser), kvstore.WithPassword(*kvsPassword), kvstore.WithTLS(etcdTLS))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -251,7 +252,7 @@ func main() {
 	// Start https listener.
 	log.Printf("start http listener")
 	logr := handlers.LoggingHandler(os.Stdout, router)
-	if err := http.ListenAndServeTLS(*bind, *cert, *key, logr); err != nil {
+	if err := http.ListenAndServeTLS(*httpBind, *httpCert, *httpKey, logr); err != nil {
 		log.Fatal("http listener:", err)
 	}
 }
