@@ -43,6 +43,11 @@ var clientHandler = kvstore.WatchHandler(func(kv kvstore.KeyValue) {
 	}
 })
 
+/* TODO:
+ * - User/pass and TLS for etcd
+ * - tasks prefixed by host like: /tasks/<host uuid>/<task uuid> to allow client to have a watcher
+ */
+
 func main() {
 	// Parse arguments.
 	backend := flag.String("backend", "etcdv3", "Key/value store backend.")
@@ -50,6 +55,9 @@ func main() {
 	endpoints := flag.String("endpoints", "127.0.0.1:2379", "Comma-delimited list of hosts in the key/value store cluster.")
 	timeout := flag.Int("timeout", 5, "Connection timeout for key/value cluster in seconds.")
 	keepalive := flag.Int("keepalive", 5, "Connection keepalive for key/value cluster in seconds.")
+	user := flag.String("user", "", "Key/avlue store user.")
+	password := flag.String("password", "", "Key/value store password.")
+	insecure := flag.Bool("insecure", false, "Insecure TLS.")
 
 	bind := flag.String("bind", "127.0.0.1:8080", "Bind to address and port.")
 	cert := flag.String("cert", "server.crt", "TLS HTTPS cert.")
@@ -65,14 +73,14 @@ func main() {
 	jwtPubKey := flag.String("jwt-pub-key", "public.rsa", "Public RSA key.")
 	flag.Parse()
 
-	// Create TLS config.
-	cfg := &tls.Config{
+	// Create auth. TLS config.
+	authTLS := &tls.Config{
 		InsecureSkipVerify: *authInsecure,
 		ServerName:         strings.Split(*authEndpoint, ":")[0], // Send SNI (Server Name Indication) for host that serves multiple aliases.
 	}
 
-	// Create new auth connection.
-	c, err := auth.Open(*authBackend, []string{*authEndpoint}, auth.TLS(cfg), auth.Domain(*authDomain), auth.Base(*authBase))
+	// Create new auth. connection.
+	c, err := auth.Open(*authBackend, []string{*authEndpoint}, auth.TLS(authTLS), auth.Domain(*authDomain), auth.Base(*authBase))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -91,9 +99,14 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// Create etcd TLS config.
+	etcdTLS := &tls.Config{
+		InsecureSkipVerify: *insecure,
+	}
+
 	// Connect to etcd.
 	log.Printf("connect to etcd")
-	ds, err := model.NewDatastore(*backend, strings.Split(*endpoints, ","), *keepalive, kvstore.WithTimeout(*timeout), kvstore.WithEncoding("json"), kvstore.WithPrefix(*prefix))
+	ds, err := model.NewDatastore(*backend, strings.Split(*endpoints, ","), *keepalive, kvstore.WithTimeout(*timeout), kvstore.WithEncoding("json"), kvstore.WithPrefix(*prefix), kvstore.WithUser(*user), kvstore.WithPassword(*password), kvstore.WithTLS(etcdTLS))
 	if err != nil {
 		log.Fatal(err)
 	}
