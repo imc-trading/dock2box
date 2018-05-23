@@ -12,13 +12,15 @@ import (
 
 type Handler struct {
 	ds   *model.Datastore
-	jwt  *auth.JWT
 	conn auth.Conn
+	jwt  *auth.JWT
 }
 
-func NewHandler(ds *model.Datastore) *Handler {
+func NewHandler(ds *model.Datastore, conn auth.Conn, jwt *auth.JWT) *Handler {
 	return &Handler{
-		ds: ds,
+		ds:   ds,
+		conn: conn,
+		jwt:  jwt,
 	}
 }
 

@@ -1,1 +1,5 @@
 /server
+/private.rsa
+/public.rsa
+/server.crt
+/server.key

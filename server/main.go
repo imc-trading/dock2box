@@ -82,14 +82,12 @@ func main() {
 	j := auth.NewJWT(auth.SignRS512, time.Duration(24)*time.Hour, time.Duration(5)*time.Minute)
 
 	// Load RSA private key.
-	j.LoadPrivateKey(*jwtPrivKey)
-	if err != nil {
+	if j.LoadPrivateKey(*jwtPrivKey); err != nil {
 		log.Fatal(err)
 	}
 
 	// Load RSA public key.
-	j.LoadPublicKey(*jwtPubKey)
-	if err != nil {
+	if err := j.LoadPublicKey(*jwtPubKey); err != nil {
 		log.Fatal(err)
 	}
 
@@ -155,24 +153,18 @@ func main() {
 	// Create new router.
 	log.Printf("create http router")
 	router := mux.NewRouter()
-	h := handler.NewHandler(ds)
+	h := handler.NewHandler(ds, c, j)
 
-	/* client
-	 * host
-	 * image
-	 * pool
-	 * rack
-	 * role
-	 * server
-	 * site
-	 * subnet
-	 * tenant
-	 */
+	// Auth. handlers.
+	log.Printf("add route /login, /renew, /verify")
+	router.HandleFunc("/login", h.Login).Methods("POST")
+	router.HandleFunc("/renew", h.Renew).Methods("GET")
+	router.HandleFunc("/verify", h.Verify).Methods("GET")
 
 	// Client handlers.
 	log.Printf("add route /api/clients")
-	router.HandleFunc("/api/clients", h.AllClients).Methods("GET")
-	router.HandleFunc("/api/clients/{uuid}", h.OneClient).Methods("GET")
+	router.Handle("/api/clients", j.Authorized(http.HandlerFunc(h.AllClients))).Methods("GET")
+	router.Handle("/api/clients/{uuid}", j.Authorized(http.HandlerFunc(h.OneClient))).Methods("GET")
 
 	// Host handlers.
 	log.Printf("add route /api/hosts")
@@ -216,8 +208,8 @@ func main() {
 
 	// Server handlers.
 	log.Printf("add route /api/servers")
-	router.HandleFunc("/api/servers", h.AllServers).Methods("GET")
-	router.HandleFunc("/api/servers/{uuid}", h.OneServer).Methods("GET")
+	router.Handle("/api/servers", j.Authorized(http.HandlerFunc(h.AllServers))).Methods("GET")
+	router.Handle("/api/servers/{uuid}", j.Authorized(http.HandlerFunc(h.OneServer))).Methods("GET")
 
 	// Site handlers.
 	log.Printf("add route /api/sites")
