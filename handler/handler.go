@@ -1,16 +1,19 @@
 package handler
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/imc-trading/dock2box/model"
 
-	"github.com/mickep76/encdec"
-	_ "github.com/mickep76/encdec/json"
+	"github.com/mickep76/auth"
+	_ "github.com/mickep76/auth/ldap"
 )
 
 type Handler struct {
-	ds *model.Datastore
+	ds   *model.Datastore
+	jwt  *auth.JWT
+	conn auth.Conn
 }
 
 func NewHandler(ds *model.Datastore) *Handler {
@@ -26,7 +29,7 @@ func writeError(w http.ResponseWriter, err error) {
 }
 
 func write(w http.ResponseWriter, v interface{}) {
-	b, _ := encdec.ToBytes("json", v, encdec.WithIndent("  "))
+	b, _ := json.MarshalIndent(v, "", "  ")
 
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)

@@ -1,14 +1,18 @@
 package main
 
 import (
+	"crypto/tls"
 	"flag"
 	"log"
 	"net/http"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	"github.com/mickep76/auth"
+	_ "github.com/mickep76/auth/ldap"
 	"github.com/mickep76/kvstore"
 	_ "github.com/mickep76/kvstore/etcdv3"
 	"github.com/mickep76/qry"
@@ -46,8 +50,48 @@ func main() {
 	endpoints := flag.String("endpoints", "127.0.0.1:2379", "Comma-delimited list of hosts in the key/value store cluster.")
 	timeout := flag.Int("timeout", 5, "Connection timeout for key/value cluster in seconds.")
 	keepalive := flag.Int("keepalive", 5, "Connection keepalive for key/value cluster in seconds.")
+
 	bind := flag.String("bind", "127.0.0.1:8080", "Bind to address and port.")
+	cert := flag.String("cert", "server.crt", "TLS HTTPS cert.")
+	key := flag.String("key", "server.key", "TLS HTTPS key.")
+
+	authBackend := flag.String("auth-backend", "ad", "Auth. backend either ad or ldap.")
+	authEndpoint := flag.String("auth-endpoint", "ldap:389", "LDAP server and port.")
+	authInsecure := flag.Bool("auth-insecure", false, "Insecure TLS.")
+	authDomain := flag.String("auth-domain", "", "AD Domain.")
+	authBase := flag.String("auth-base", "", "LDAP Base.")
+
+	jwtPrivKey := flag.String("jwt-priv-key", "private.rsa", "Private RSA key.")
+	jwtPubKey := flag.String("jwt-pub-key", "public.rsa", "Public RSA key.")
 	flag.Parse()
+
+	// Create TLS config.
+	cfg := &tls.Config{
+		InsecureSkipVerify: *authInsecure,
+		ServerName:         strings.Split(*authEndpoint, ":")[0], // Send SNI (Server Name Indication) for host that serves multiple aliases.
+	}
+
+	// Create new auth connection.
+	c, err := auth.Open(*authBackend, []string{*authEndpoint}, auth.TLS(cfg), auth.Domain(*authDomain), auth.Base(*authBase))
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer c.Close()
+
+	// Create JWT.
+	j := auth.NewJWT(auth.SignRS512, time.Duration(24)*time.Hour, time.Duration(5)*time.Minute)
+
+	// Load RSA private key.
+	j.LoadPrivateKey(*jwtPrivKey)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Load RSA public key.
+	j.LoadPublicKey(*jwtPubKey)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	// Connect to etcd.
 	log.Printf("connect to etcd")
@@ -202,7 +246,7 @@ func main() {
 	// Start https listener.
 	log.Printf("start http listener")
 	logr := handlers.LoggingHandler(os.Stdout, router)
-	if err := http.ListenAndServe(*bind, logr); err != nil {
+	if err := http.ListenAndServeTLS(*bind, *cert, *key, logr); err != nil {
 		log.Fatal("http listener:", err)
 	}
 }
