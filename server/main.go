@@ -136,7 +136,7 @@ func main() {
 	router.HandleFunc("/api/hosts", h.CreateHost).Methods("POST")
 	router.HandleFunc("/api/hosts/{uuid}", h.OneHost).Methods("GET")
 	router.HandleFunc("/api/hosts/{uuid}", h.UpdateHost).Methods("PUT")
-	router.HandleFunc("/api/hosts/{uuid}", h.DeleteHost).Methods("DELETE")
+	//      router.HandleFunc("/api/hosts/{uuid}", h.DeleteHost).Methods("DELETE")
 
 	// Image handlers.
 	log.Printf("add route /api/images")
@@ -144,7 +144,7 @@ func main() {
 	router.HandleFunc("/api/images", h.CreateImage).Methods("POST")
 	router.HandleFunc("/api/images/{uuid}", h.OneImage).Methods("GET")
 	router.HandleFunc("/api/images/{uuid}", h.UpdateImage).Methods("PUT")
-	router.HandleFunc("/api/images/{uuid}", h.DeleteImage).Methods("DELETE")
+	//      router.HandleFunc("/api/images/{uuid}", h.DeleteImage).Methods("DELETE")
 
 	// Pool handlers.
 	log.Printf("add route /api/pools")
@@ -152,7 +152,7 @@ func main() {
 	router.HandleFunc("/api/pools", h.CreatePool).Methods("POST")
 	router.HandleFunc("/api/pools/{uuid}", h.OnePool).Methods("GET")
 	router.HandleFunc("/api/pools/{uuid}", h.UpdatePool).Methods("PUT")
-	router.HandleFunc("/api/pools/{uuid}", h.DeletePool).Methods("DELETE")
+	//      router.HandleFunc("/api/pools/{uuid}", h.DeletePool).Methods("DELETE")
 
 	// Rack handlers.
 	log.Printf("add route /api/racks")
@@ -160,7 +160,7 @@ func main() {
 	router.HandleFunc("/api/racks", h.CreateRack).Methods("POST")
 	router.HandleFunc("/api/racks/{uuid}", h.OneRack).Methods("GET")
 	router.HandleFunc("/api/racks/{uuid}", h.UpdateRack).Methods("PUT")
-	router.HandleFunc("/api/racks/{uuid}", h.DeleteRack).Methods("DELETE")
+	//      router.HandleFunc("/api/racks/{uuid}", h.DeleteRack).Methods("DELETE")
 
 	// Role handlers.
 	log.Printf("add route /api/roles")
@@ -168,7 +168,7 @@ func main() {
 	router.HandleFunc("/api/roles", h.CreateRole).Methods("POST")
 	router.HandleFunc("/api/roles/{uuid}", h.OneRole).Methods("GET")
 	router.HandleFunc("/api/roles/{uuid}", h.UpdateRole).Methods("PUT")
-	router.HandleFunc("/api/roles/{uuid}", h.DeleteRole).Methods("DELETE")
+	//      router.HandleFunc("/api/roles/{uuid}", h.DeleteRole).Methods("DELETE")
 
 	// Server handlers.
 	log.Printf("add route /api/servers")
@@ -181,7 +181,7 @@ func main() {
 	router.HandleFunc("/api/sites", h.CreateSite).Methods("POST")
 	router.HandleFunc("/api/sites/{uuid}", h.OneSite).Methods("GET")
 	router.HandleFunc("/api/sites/{uuid}", h.UpdateSite).Methods("PUT")
-	router.HandleFunc("/api/sites/{uuid}", h.DeleteSite).Methods("DELETE")
+	//	router.HandleFunc("/api/sites/{uuid}", h.DeleteSite).Methods("DELETE")
 
 	// Subnet handlers.
 	log.Printf("add route /api/subnets")
@@ -189,7 +189,7 @@ func main() {
 	router.HandleFunc("/api/subnets", h.CreateSubnet).Methods("POST")
 	router.HandleFunc("/api/subnets/{uuid}", h.OneSubnet).Methods("GET")
 	router.HandleFunc("/api/subnets/{uuid}", h.UpdateSubnet).Methods("PUT")
-	router.HandleFunc("/api/subnets/{uuid}", h.DeleteSubnet).Methods("DELETE")
+	//      router.HandleFunc("/api/subnets/{uuid}", h.DeleteSubnet).Methods("DELETE")
 
 	// Tenant handlers.
 	log.Printf("add route /api/tenants")
@@ -197,7 +197,7 @@ func main() {
 	router.HandleFunc("/api/tenants", h.CreateTenant).Methods("POST")
 	router.HandleFunc("/api/tenants/{uuid}", h.OneTenant).Methods("GET")
 	router.HandleFunc("/api/tenants/{uuid}", h.UpdateTenant).Methods("PUT")
-	router.HandleFunc("/api/tenants/{uuid}", h.DeleteTenant).Methods("DELETE")
+	//      router.HandleFunc("/api/tenants/{uuid}", h.DeleteTenant).Methods("DELETE")
 
 	// Start https listener.
 	log.Printf("start http listener")

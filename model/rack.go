@@ -84,10 +84,3 @@ func (ds *Datastore) UpdateRack(rack *Rack) error {
 	rack.Updated = &now
 	return ds.Set(fmt.Sprintf("racks/%s", rack.UUID), rack)
 }
-
-func (ds *Datastore) DeleteRack(uuid string) error {
-	if err := ds.Delete(fmt.Sprintf("racks/%s", uuid)); err != nil {
-		return err
-	}
-	return nil
-}

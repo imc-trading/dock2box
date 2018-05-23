@@ -85,10 +85,3 @@ func (ds *Datastore) UpdateSite(site *Site) error {
 	site.Updated = &now
 	return ds.Set(fmt.Sprintf("sites/%s", site.UUID), site)
 }
-
-func (ds *Datastore) DeleteSite(uuid string) error {
-	if err := ds.Delete(fmt.Sprintf("sites/%s", uuid)); err != nil {
-		return err
-	}
-	return nil
-}

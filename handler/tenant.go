@@ -74,14 +74,3 @@ func (h *Handler) UpdateTenant(w http.ResponseWriter, r *http.Request) {
 
 	write(w, tenant)
 }
-
-func (h *Handler) DeleteTenant(w http.ResponseWriter, r *http.Request) {
-	uuid := mux.Vars(r)["uuid"]
-
-	if err := h.ds.DeleteTenant(uuid); err != nil {
-		writeError(w, err)
-		return
-	}
-
-	writeDelete(w)
-}

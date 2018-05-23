@@ -74,14 +74,3 @@ func (h *Handler) UpdatePool(w http.ResponseWriter, r *http.Request) {
 
 	write(w, pool)
 }
-
-func (h *Handler) DeletePool(w http.ResponseWriter, r *http.Request) {
-	uuid := mux.Vars(r)["uuid"]
-
-	if err := h.ds.DeletePool(uuid); err != nil {
-		writeError(w, err)
-		return
-	}
-
-	writeDelete(w)
-}

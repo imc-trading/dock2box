@@ -86,10 +86,3 @@ func (ds *Datastore) UpdateImage(image *Image) error {
 	image.Updated = &now
 	return ds.Set(fmt.Sprintf("images/%s", image.UUID), image)
 }
-
-func (ds *Datastore) DeleteImage(uuid string) error {
-	if err := ds.Delete(fmt.Sprintf("images/%s", uuid)); err != nil {
-		return err
-	}
-	return nil
-}

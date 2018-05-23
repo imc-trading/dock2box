@@ -74,14 +74,3 @@ func (h *Handler) UpdateSite(w http.ResponseWriter, r *http.Request) {
 
 	write(w, site)
 }
-
-func (h *Handler) DeleteSite(w http.ResponseWriter, r *http.Request) {
-	uuid := mux.Vars(r)["uuid"]
-
-	if err := h.ds.DeleteSite(uuid); err != nil {
-		writeError(w, err)
-		return
-	}
-
-	writeDelete(w)
-}

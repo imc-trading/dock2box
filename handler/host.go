@@ -74,14 +74,3 @@ func (h *Handler) UpdateHost(w http.ResponseWriter, r *http.Request) {
 
 	write(w, host)
 }
-
-func (h *Handler) DeleteHost(w http.ResponseWriter, r *http.Request) {
-	uuid := mux.Vars(r)["uuid"]
-
-	if err := h.ds.DeleteHost(uuid); err != nil {
-		writeError(w, err)
-		return
-	}
-
-	writeDelete(w)
-}

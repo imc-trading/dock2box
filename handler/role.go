@@ -74,14 +74,3 @@ func (h *Handler) UpdateRole(w http.ResponseWriter, r *http.Request) {
 
 	write(w, role)
 }
-
-func (h *Handler) DeleteRole(w http.ResponseWriter, r *http.Request) {
-	uuid := mux.Vars(r)["uuid"]
-
-	if err := h.ds.DeleteRole(uuid); err != nil {
-		writeError(w, err)
-		return
-	}
-
-	writeDelete(w)
-}
