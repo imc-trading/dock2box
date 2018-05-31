@@ -45,7 +45,7 @@ var clientHandler = kvstore.WatchHandler(func(kv kvstore.KeyValue) {
 
 /* TODO:
  * - User/pass and TLS for etcd
- * - tasks prefixed by host like: /tasks/<host uuid>/<task uuid> to allow client to have a watcher
+ * - Tasks prefixed by host like: /tasks/<host uuid>/<task uuid> to allow client to have a watcher
  */
 
 func main() {
@@ -240,6 +240,14 @@ func main() {
 	router.Handle("/api/subnets/{uuid}", j.Authorized(http.HandlerFunc(h.OneSubnet))).Methods("GET")
 	router.Handle("/api/subnets/{uuid}", j.Authorized(http.HandlerFunc(h.UpdateSubnet))).Methods("PUT")
 	router.Handle("/api/subnets/{uuid}", j.Authorized(http.HandlerFunc(h.DeleteSubnet))).Methods("DELETE")
+
+	// Task handlers.
+	log.Printf("add route /api/tasks")
+	router.Handle("/api/tasks", j.Authorized(http.HandlerFunc(h.AllTasks))).Methods("GET")
+	router.Handle("/api/tasks", j.Authorized(http.HandlerFunc(h.CreateTask))).Methods("POST")
+	router.Handle("/api/tasks/{uuid}", j.Authorized(http.HandlerFunc(h.OneTask))).Methods("GET")
+	router.Handle("/api/tasks/{uuid}", j.Authorized(http.HandlerFunc(h.UpdateTask))).Methods("PUT")
+	router.Handle("/api/tasks/{uuid}", j.Authorized(http.HandlerFunc(h.DeleteTask))).Methods("DELETE")
 
 	// Tenant handlers.
 	log.Printf("add route /api/tenants")

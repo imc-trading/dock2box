@@ -17,6 +17,7 @@ type Client struct {
 	Name     string     `json:"name"`
 	Hardware *Hardware  `json:"hardware,omitempty"`
 	HostUUID string     `json:"hostUUID"`
+	Host     *Host      `json:"host"`
 }
 
 type Clients []*Client
