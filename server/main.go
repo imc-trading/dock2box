@@ -43,11 +43,6 @@ var clientHandler = kvstore.WatchHandler(func(kv kvstore.KeyValue) {
 	}
 })
 
-/* TODO:
- * - User/pass and TLS for etcd
- * - Tasks prefixed by host like: /tasks/<host uuid>/<task uuid> to allow client to have a watcher
- */
-
 func main() {
 	// Parse arguments.
 	kvsBackend := flag.String("kvs-backend", "etcdv3", "Key/value store backend.")
