@@ -58,6 +58,9 @@ func main() {
 	kvsUser := flag.String("kvs-user", "", "Key/avlue store user.")
 	kvsPassword := flag.String("kvs-password", "", "Key/value store password.")
 	kvsInsecure := flag.Bool("kvs-insecure", false, "Insecure TLS.")
+	//	kvsCa := flag.String("kvs-ca", "", "Key/value store TLS CA certificate.")
+	//	kvsCert := flag.String("kvs-cert", "", "Key/value store TLS certificate.")
+	//	kvsKey := flag.String("kvs-key", "", "Key/value store TLS key.")
 
 	httpBind := flag.String("http-bind", "127.0.0.1:8080", "Bind to address and port.")
 	httpCert := flag.String("http-cert", "server.crt", "TLS HTTPS cert.")
