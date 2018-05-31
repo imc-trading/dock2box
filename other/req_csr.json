@@ -1,0 +1,20 @@
+{
+  "CN": "etcd",
+  "hosts": [
+    "etcd1",
+    "etcd2",
+    "etcd3",
+    "localhost"
+  ],
+  "key": {
+    "algo": "ecdsa",
+    "size": 384
+  },
+  "names": [
+    {
+      "L": "US",
+      "O": "etcd",
+      "OU": "etcd cluster"
+    }
+  ]
+}
