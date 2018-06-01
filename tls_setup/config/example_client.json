@@ -1,0 +1,18 @@
+{
+  "CN": "example-client",
+  "hosts": [
+    "localhost",
+    "127.0.0.1"
+  ],
+  "key": {
+    "algo": "ecdsa",
+    "size": 384
+  },
+  "names": [
+    {
+      "L": "US",
+      "O": "example",
+      "OU": "example client"
+    }
+  ]
+}

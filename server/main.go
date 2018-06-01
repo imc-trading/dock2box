@@ -53,9 +53,9 @@ func main() {
 	kvsUser := flag.String("kvs-user", "", "Key/avlue store user.")
 	kvsPassword := flag.String("kvs-password", "", "Key/value store password.")
 	kvsInsecure := flag.Bool("kvs-insecure", false, "Insecure TLS.")
-	//	kvsCa := flag.String("kvs-ca", "", "Key/value store TLS CA certificate.")
-	//	kvsCert := flag.String("kvs-cert", "", "Key/value store TLS certificate.")
-	//	kvsKey := flag.String("kvs-key", "", "Key/value store TLS key.")
+	kvsCA := flag.String("kvs-ca", "", "TLS server CA certificate.")
+	kvsCert := flag.String("kvs-cert", "", "TLS server certificate file.")
+	kvsKey := flag.String("kvs-key", "", "TLS server key file.")
 
 	httpBind := flag.String("http-bind", "127.0.0.1:8080", "Bind to address and port.")
 	httpCert := flag.String("http-cert", "server.crt", "TLS HTTPS cert.")
@@ -99,13 +99,14 @@ func main() {
 	}
 
 	// Create etcd TLS config.
-	etcdTLS := &tls.Config{
-		InsecureSkipVerify: *kvsInsecure,
+	kvsTLS, err := model.TLSConfig(*kvsCA, *kvsCert, *kvsKey, "", *kvsInsecure)
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	// Connect to etcd.
 	log.Printf("connect to etcd")
-	ds, err := model.NewDatastore(*kvsBackend, strings.Split(*kvsEndpoints, ","), *kvsKeepalive, kvstore.WithTimeout(*kvsTimeout), kvstore.WithEncoding("json"), kvstore.WithPrefix(*kvsPrefix), kvstore.WithUser(*kvsUser), kvstore.WithPassword(*kvsPassword), kvstore.WithTLS(etcdTLS))
+	ds, err := model.NewDatastore(*kvsBackend, strings.Split(*kvsEndpoints, ","), *kvsKeepalive, kvstore.WithTimeout(*kvsTimeout), kvstore.WithEncoding("json"), kvstore.WithPrefix(*kvsPrefix), kvstore.WithUser(*kvsUser), kvstore.WithPassword(*kvsPassword), kvstore.WithTLS(kvsTLS))
 	if err != nil {
 		log.Fatal(err)
 	}

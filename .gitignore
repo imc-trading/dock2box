@@ -1,5 +1,2 @@
-.DS_Store
-
-# Ignore packer cache and artifacts
-packer_cache
-packer_output
+/certs
+/data
