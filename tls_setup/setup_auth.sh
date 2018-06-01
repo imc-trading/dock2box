@@ -8,20 +8,20 @@ export ETCDCTL_API=3
 ${ETCDCTL} user add root:abc123
 
 # Create roles
-${ETCDCTL} role add example-server-rw
-${ETCDCTL} role add example-client-rw
+${ETCDCTL} role add d2b-server-rw
+${ETCDCTL} role add d2b-client-rw
 
 # Add permissions to roles
-${ETCDCTL} role grant-permission example-server-rw --prefix=true readwrite /example
-${ETCDCTL} role grant-permission example-client-rw --prefix=true readwrite /example/clients
+${ETCDCTL} role grant-permission d2b-server-rw --prefix=true readwrite /dock2box
+${ETCDCTL} role grant-permission d2b-client-rw --prefix=true readwrite /dock2box/clients
 
 # Create users
-${ETCDCTL} user add example-server:abc123
-${ETCDCTL} user add example-client:abc123
+${ETCDCTL} user add d2b-server:abc123
+${ETCDCTL} user add d2b-client:abc123
 
 # Grant role to user
-${ETCDCTL} user grant-role example-server example-server-rw
-${ETCDCTL} user grant-role example-client example-client-rw
+${ETCDCTL} user grant-role d2b-server d2b-server-rw
+${ETCDCTL} user grant-role d2b-client d2b-client-rw
 
 # Enable authentication
 ${ETCDCTL} auth enable

@@ -24,13 +24,13 @@ req:
 	cfssl gencert \
 	  -ca certs/ca.pem \
 	  -ca-key certs/ca.key \
-	  -config config/ca_cfg.json config/example_server.json | cfssljson -bare certs/example_server
-	mv certs/example_server-key.pem certs/example_server.key
+	  -config config/ca_cfg.json config/d2b_server.json | cfssljson -bare certs/d2b_server
+	mv certs/d2b_server-key.pem certs/d2b_server.key
 
 	cfssl gencert \
 	  -ca certs/ca.pem \
 	  -ca-key certs/ca.key \
-	  -config config/ca_cfg.json config/example_client.json | cfssljson -bare certs/example_client
-	mv certs/example_client-key.pem certs/example_client.key
+	  -config config/ca_cfg.json config/d2b_client.json | cfssljson -bare certs/d2b_client
+	mv certs/d2b_client-key.pem certs/d2b_client.key
 
 .PHONY: clean preq ca req

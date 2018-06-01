@@ -1,5 +1,5 @@
 {
-  "CN": "example-client",
+  "CN": "d2b-client",
   "hosts": [
     "localhost",
     "127.0.0.1"
@@ -11,8 +11,8 @@
   "names": [
     {
       "L": "US",
-      "O": "example",
-      "OU": "example client"
+      "O": "d2b",
+      "OU": "d2b client"
     }
   ]
 }
