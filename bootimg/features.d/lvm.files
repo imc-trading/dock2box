@@ -1,0 +1,16 @@
+/sbin/vgs
+/sbin/lvs
+/sbin/pvs
+/sbin/vgscan
+/sbin/lvscan
+/sbin/pvscan
+/sbin/vgcreate
+/sbin/lvcreate
+/sbin/pvcreate
+/sbin/vgremove
+/sbin/vgreduce
+/sbin/lvremove
+/sbin/pvremove
+/sbin/pvchange
+/sbin/lvchange
+/sbin/vgchange

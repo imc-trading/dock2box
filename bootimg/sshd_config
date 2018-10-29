@@ -1,0 +1,4 @@
+PasswordAuthentication yes
+PermitRootLogin yes
+RSAAuthentication yes
+PubkeyAuthentication yes

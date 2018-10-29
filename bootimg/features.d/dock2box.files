@@ -1,0 +1,5 @@
+/root/.ssh/authorized_keys
+/etc/dock2box.ppm
+/etc/redhat-release
+/opt/var/run/.saveme
+/var/log

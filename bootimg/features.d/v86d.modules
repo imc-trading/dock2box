@@ -1,0 +1,2 @@
+kernel/drivers/video/console/fbcon.ko
+kernel/drivers/video/fbdev/uvesafb.ko

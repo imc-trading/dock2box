@@ -1,0 +1,8 @@
+*
+!agent
+!models
+!common
+!vendor
+!certs
+!boot
+!glide.*

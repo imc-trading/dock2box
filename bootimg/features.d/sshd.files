@@ -1,0 +1,5 @@
+/usr/bin/ssh-keygen
+/etc/ssh/sshd_config
+/usr/sbin/sshd
+/etc/motd
+/usr/bin/scp

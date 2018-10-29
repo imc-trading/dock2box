@@ -1,0 +1,2 @@
+kernel/drivers/ata/ahci.ko
+kernel/drivers/ata/libahci.ko

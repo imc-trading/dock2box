@@ -1,0 +1,4 @@
+kernel/drivers/md/raid0.ko
+kernel/drivers/md/raid10.ko
+kernel/drivers/md/raid1.ko
+kernel/drivers/md/raid456.ko

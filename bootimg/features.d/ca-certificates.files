@@ -1,0 +1,6 @@
+/usr/share/ca-certificates/mozilla
+/usr/local/share/ca-certificates
+/etc/ca-certificates.conf
+/usr/sbin/update-ca-certificates
+/etc/ca-certificates/update.d/c_rehash
+/usr/bin/c_rehash

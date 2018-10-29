@@ -1,0 +1,3 @@
+/sbin/xfs_repair
+/sbin/fsck.xfs
+/sbin/mkfs.xfs

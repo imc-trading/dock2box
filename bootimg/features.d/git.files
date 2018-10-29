@@ -1,0 +1,5 @@
+/usr/bin/git
+/usr/libexec/git-core/git
+/usr/libexec/git-core/git-clone
+/usr/libexec/git-core/git-pull
+/usr/libexec/git-core/git-remote-https
